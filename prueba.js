@@ -1,3 +1,7 @@
+const hola = () => {
+  console.log("Hola soy Jessi desde Jessi");
+};
+
 
 // Prueba
 /// como sera esto 
@@ -16,3 +20,7 @@ for(;;){
     console.log(" :P ");
 }
 
+console.log("Prueba tiagogiraldo 2")
+
+
+console.log("esteban");
