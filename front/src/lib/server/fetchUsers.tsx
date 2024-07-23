@@ -1,0 +1,3 @@
+function fetchUser() {
+  //xd
+}
