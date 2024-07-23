@@ -2,12 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+.btn-primary {
+  @apply bg-gradient-to-r from-[#ff9f2e] to-[#f8263a] font-semibold text-white rounded-md p-1 px-2 ml-3 hover:from-[#e68a26] hover:to-[#d71f32] focus:scale-95;
+}
+
+.title {
+  @apply bg-gradient-to-r from-[#ff9f2e] to-[#f8263a] bg-clip-text font-extrabold text-transparent;
+}
+
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  margin: 0;
+  padding: 0;
 }
