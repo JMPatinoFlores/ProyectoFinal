@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Footer = () => {
   return (
@@ -22,17 +23,17 @@ const Footer = () => {
       <div className="w-full md:w-1/4 xl:w-1/4 p-4">
         <h5 className="uppercase text-lg mb-2">Acerca de</h5>
         <ul>
-          <li><a href="#">Nuestra historia</a></li>
+          <Link href="/history"><li>Nuestra historia</li></Link>
           <li><a href="#">Premios</a></li>
-          <li><a href="#">Nuestro equipo</a></li>
+          <Link href="/team"><li><a href="#">Nuestro equipo</a></li></Link>
           <li><a href="#">Trabaja con nosotros</a></li>
         </ul>
       </div>
       <div className="w-full md:w-1/4 xl:w-1/4 p-4">
         <h5 className="uppercase text-lg mb-2">Políticas</h5>
         <ul>
-          <li><a href="#">Políticas de privacidad</a></li>
-          <li><a href="#">Terminos y condiciones</a></li>
+          <Link href="/privacy-policy"><li><a href="#">Políticas de privacidad</a></li></Link>
+          <Link href="/terms-conditions"><li><a href="#">Terminos y condiciones</a></li></Link>
         </ul>
       </div>
       <div className="w-full md:w-1/4 xl:w-1/4 p-4">
