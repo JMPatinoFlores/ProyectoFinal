@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { UserContext, UserProvider } from "@/context/userContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,16 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <script
-          async
-          src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyBmFQiEuJqGnfeUKHZ7Qe2DupdKFw6X42w&libraries=places`}
-        ></script>
-      </head>
       <body className={inter.className}>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <UserProvider>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </UserProvider>
       </body>
     </html>
   );
