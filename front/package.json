@@ -9,12 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^1.16.6",
+    "dotenv": "^16.4.5",
     "formik": "^2.4.6",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/google.maps": "^3.55.12",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
