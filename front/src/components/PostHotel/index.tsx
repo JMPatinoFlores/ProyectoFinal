@@ -1,23 +1,28 @@
 "use client";
 
-import { validateRegisterForm } from "@/helpers/validateData";
-import { IRegisterValues } from "@/interfaces";
+import { validatePostHotel } from "@/helpers/validateData";
+import { IHotelRegister } from "@/interfaces";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import registerImage from "../../../public/planea.jpg";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 
-export default function RegisterForm() {
-  const initialValues: IRegisterValues = {
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
+export default function HotelRegister() {
+  const initialValues: IHotelRegister = {
     name: "",
-    lastname: "",
     email: "",
-    password: "",
-    confirmPassword: "",
-    phone: "",
     country: "",
     city: "",
     address: "",
-    birthDate: "",
+    location: "",
+    rooms: "",
+    services: "",
+    image: "",
   };
 
   const countryOptions = [
@@ -217,7 +222,7 @@ export default function RegisterForm() {
   ];
 
   const handleSubmit = async (
-    values: IRegisterValues,
+    values: IHotelRegister,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
     // Simulación de envío de datos
@@ -226,99 +231,72 @@ export default function RegisterForm() {
     setSubmitting(false);
   };
 
-  const today = new Date().toISOString().split("T")[0];
+  const mapRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (window.google && mapRef.current) {
+      const map = new window.google.maps.Map(mapRef.current, {
+        center: { lat: -31.397, lng: 150.644 },
+        zoom: 8,
+      });
+
+      map.addListener("click", (event: google.maps.MapMouseEvent) => {
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        const locationInput = document.getElementById(
+          "location"
+        ) as HTMLInputElement;
+        if (locationInput) {
+          locationInput.value = `${lat},${lng}`;
+        }
+      });
+    }
+  }, []);
 
   return (
     <div className="flex min-h-screen">
-      <div
-        className="hidden md:flex md:w-1/2 bg-cover bg-center"
-        style={{ backgroundImage: `url(${registerImage.src})` }}
-      >
-        <div className="flex items-center justify-center w-full h-full bg-black bg-opacity-40">
-          <div className="text-white text-center">
-            <h1 className="text-5xl font-bold mb-4">Explora el mundo</h1>
-            <p className="text-lg">
-              Destinos Impresionantes, Experiencias Inigualables.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="flex w-full md:w-1/2 justify-center items-center">
+      <div className="flex w-full justify-center items-center">
         <div className="w-full max-w-md p-8">
           <div className="flex justify-center mb-8">
             <h1 className="text-4xl mb-2 pb-2 text-center font-bold">
-              Registro
+              Publica tu hotel
             </h1>
           </div>
           <Formik
             initialValues={initialValues}
-            validate={validateRegisterForm}
+            validate={validatePostHotel}
             onSubmit={handleSubmit}
           >
-            {({ isSubmitting }) => (
+            {({ setFieldValue, isSubmitting }) => (
               <Form className="space-y-2">
-                <div className="flex justify-between">
-                  <div className="formDiv flex-1 mr-2">
-                    <label htmlFor="name" className="formLabel">
-                      Nombre
-                    </label>
-                    <Field
-                      type="text"
-                      name="name"
-                      placeholder="Nombre"
-                      className="formInput"
-                    />
-                    <ErrorMessage
-                      name="name"
-                      component="div"
-                      className="text-red-600 text-sm"
-                    />
-                  </div>
-                  <div className="formDiv flex-1">
-                    <label htmlFor="lastname" className="formLabel">
-                      Apellido
-                    </label>
-                    <Field
-                      type="text"
-                      name="lastname"
-                      placeholder="Apellido"
-                      className="formInput"
-                    />
-                    <ErrorMessage
-                      name="lastname"
-                      component="div"
-                      className="text-red-600 text-sm"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="birthDate" className="formLabel">
-                    Fecha de nacimiento
+                <div className="formDiv flex-1 mr-2">
+                  <label htmlFor="name" className="formLabel">
+                    Nombre del hotel
                   </label>
                   <Field
-                    type="date"
-                    name="birthDate"
-                    max={today}
+                    type="text"
+                    name="name"
+                    placeholder="Nombre"
                     className="formInput"
                   />
                   <ErrorMessage
-                    name="birthDate"
+                    name="name"
                     component="div"
                     className="text-red-600 text-sm"
                   />
                 </div>
-                <div>
-                  <label htmlFor="phone" className="formLabel">
-                    Teléfono
+                <div className="formDiv flex-1">
+                  <label htmlFor="email" className="formLabel">
+                    Correo electrónico del hotel
                   </label>
                   <Field
                     type="text"
-                    name="phone"
-                    placeholder="Teléfono"
+                    name="email"
+                    placeholder="ejemplo@mail.com"
                     className="formInput"
                   />
                   <ErrorMessage
-                    name="phone"
+                    name="email"
                     component="div"
                     className="text-red-600 text-sm"
                   />
@@ -359,7 +337,7 @@ export default function RegisterForm() {
                 </div>
                 <div>
                   <label htmlFor="address" className="formLabel">
-                    Dirección
+                    Dirección del hotel
                   </label>
                   <Field
                     type="text"
@@ -374,49 +352,77 @@ export default function RegisterForm() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="formLabel">
-                    Correo electrónico
+                  <label htmlFor="location" className="formLabel">
+                    Ubicación del hotel
                   </label>
                   <Field
-                    type="email"
-                    name="email"
-                    placeholder="ejemplo@mail.com"
+                    type="text"
+                    name="location"
+                    id="location"
+                    placeholder="Ubicación"
                     className="formInput"
+                    readOnly
                   />
+                  <div
+                    ref={mapRef}
+                    style={{
+                      height: "300px",
+                      width: "100%",
+                      marginTop: "10px",
+                    }}
+                  ></div>
                   <ErrorMessage
-                    name="email"
+                    name="location"
                     component="div"
                     className="text-red-600 text-sm"
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="formLabel">
-                    Contraseña
+                  <label htmlFor="rooms" className="formLabel">
+                    Habitaciones
                   </label>
                   <Field
-                    type="password"
-                    name="password"
-                    placeholder="********"
+                    type="text"
+                    name="rooms"
+                    placeholder="Habitaciones"
                     className="formInput"
                   />
                   <ErrorMessage
-                    name="password"
+                    name="rooms"
                     component="div"
                     className="text-red-600 text-sm"
                   />
                 </div>
                 <div>
-                  <label htmlFor="confirmPassword" className="formLabel">
-                    Confirma tu contraseña
+                  <label htmlFor="services" className="formLabel">
+                    Servicios que ofrece tu hotel
                   </label>
                   <Field
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="********"
+                    type="text"
+                    name="services"
+                    placeholder="Describe los servicios de tu hotel"
                     className="formInput"
                   />
                   <ErrorMessage
-                    name="confirmPassword"
+                    name="services"
+                    component="div"
+                    className="text-red-600 text-sm"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="image" className="formLabel">
+                    Subir imagen
+                  </label>
+                  <Field
+                    type="file"
+                    name="image"
+                    className="formInput"
+                    onChange={(event: HTMLFormElement) => {
+                      setFieldValue("image", event.currentTarget.files[0]);
+                    }}
+                  />
+                  <ErrorMessage
+                    name="image"
                     component="div"
                     className="text-red-600 text-sm"
                   />
@@ -427,17 +433,8 @@ export default function RegisterForm() {
                     className="btn-secondary"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Enviando..." : "Registrarse"}
+                    {isSubmitting ? "Enviando..." : "Publicar"}
                   </button>
-                  <div className="flex items-center justify-start">
-                    <h3 className="mr-2 text-sm">¿Ya tienes una cuenta?</h3>
-                    <Link
-                      href={"/register"}
-                      className="text-sm text-[#f8263a] hover:text-[#f8263a]"
-                    >
-                      Inicia sesión
-                    </Link>
-                  </div>
                 </div>
               </Form>
             )}
