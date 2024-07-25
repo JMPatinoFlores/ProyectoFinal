@@ -1,58 +1,15 @@
 'use client';
 
-import loader from '@/utils/google-maps-api-loader';
+import GoogleMapsData from '../../components/GoogleMapsData';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 
 function HotelDetail() {
-  const [mapElement, setMapElement] = useState<HTMLElement | null>(null);
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [address, setAddress] = useState<string>('');
-  const [location, setLocation] = useState<google.maps.LatLngLiteral | null>(null);
-
-  useEffect(() => {
-    const element = document.getElementById('map');
-    setMapElement(element);
-  }, []);
-
-  useEffect(() => {
-    if (!mapElement) return;
-
-    loader.importLibrary('places').then(() => {
-      const mapInstance = new google.maps.Map(mapElement ?? document.createElement('div'), {
-        center: { lat: -33.0456, lng: -71.5515 },
-        zoom: 12,
-      });
-      setMap(mapInstance);
-
-      const geocoder = new google.maps.Geocoder();
-
-      geocoder.geocode({ address: 'Avenida Borgono 12925, Renaca, Vina del Mar 2540407 Chile' }, (results, status) => {
-        if (status === 'OK' && results?.[0]) {
-          const location = results[0].geometry.location;
-          const latLngLiteral: google.maps.LatLngLiteral = {
-            lat: location.lat(),
-            lng: location.lng(),
-          };
-          setLocation(latLngLiteral);
-          setAddress(results[0].formatted_address);
-          mapInstance.setCenter(location);
-          const marker = new google.maps.Marker({
-            position: location,
-            map: mapInstance,
-            title: results[0].formatted_address,
-          });
-        } else {
-          console.error('Geocode failed:', status);
-        }
-      });
-    });
-  }, [mapElement]);
+  const { address, location } = GoogleMapsData();
 
   return (
     <div className="flex flex-wrap">
       <div className="w-1/2 px-4">
-        <div className="relative w-full h-64 mb-4">
+        <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden">
           <Image
             src="/francesca-saraco-_dS27XGgRyQ-unsplash.jpg"
             alt="Hotel Image"
@@ -60,20 +17,20 @@ function HotelDetail() {
             objectFit="cover"
           />
         </div>
-        <div className="relative w-full h-64 mb-4" id="map">
+        <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden" id="map">
           {address && <p>Address: {address}</p>}
           {location && <p>Location: {location.lat}, {location.lng}</p>}
         </div>
       </div>
       <div className="w-1/2 px-4">
         <div className="mb-4">
-          <h2 className="text-lg font-bold">Descripción</h2>
+          <h2 className="text-2xl font-bold">Descripción</h2>
           <p>
             Lorem ipsum dolor sit amet consectetur adipiscing elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.
           </p>
         </div>
         <div className="mb-4">
-          <h2 className="text-lg font-bold">Servicios del Hotel</h2>
+          <h2 className="text-2xl font-bold">Servicios del Hotel</h2>
           <ul>
             <li>Buffette</li>
             <li>Bar</li>
@@ -82,13 +39,13 @@ function HotelDetail() {
           </ul>
         </div>
         <div className="mb-4">
-          <h2 className="text-lg font-bold">Precio</h2>
+          <h2 className="text-2xl font-bold">Precio</h2>
           <p>
-            <span className="text-red-600 font-bold">100</span> USD/noche
+            <span className="text-3xl text-red-600 font-bold">100</span> USD/noche
           </p>
         </div>
         <div className="mb-4">
-          <h2 className="text-lg font-bold">Recomendaciones</h2>
+          <h2 className="text-2xl font-bold">Recomendaciones</h2>
           <ul>
             <li>Discotecas</li>
             <li>Restaurantes</li>
