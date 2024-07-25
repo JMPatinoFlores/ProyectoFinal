@@ -1,9 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({
-  name: 'USERS',
-})
-export class User {
+@Entity()
+export abstract class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -38,34 +36,41 @@ export class User {
 
   @Column({
     type: 'bigint',
+    nullable: false,
   })
   phone: number;
 
   @Column({
     type: 'varchar',
-    length: 20,
+    length: 50,
+    nullable: false,
   })
   country: string;
 
   @Column({
     type: 'varchar',
-    length: 20,
+    length: 50,
+    nullable: false,
   })
   city: string;
 
   @Column({
-    type: 'text',
+    type: 'varchar',
+    length: 100,
+    nullable: false,
   })
   address: string;
 
   @Column({
     type: 'varchar',
-    length: 8,
+    length: 100,
+    nullable: false,
   })
   birthDate: string;
 
   @Column({
-    default: true,
+    type: 'boolean',
+    default: false,
   })
   status: boolean;
 }
