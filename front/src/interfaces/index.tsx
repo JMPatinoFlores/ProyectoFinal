@@ -8,7 +8,7 @@ export interface IUser {
   country: string;
   city: string;
   address: string;
-  birthDate: string;
+  birthDate: string; //
 }
 
 export interface ILogin {
@@ -45,4 +45,83 @@ export interface IUserResponse {
   name: string;
   lastname: string;
   token: string;
+}
+
+export interface IRoom {
+  roomId: string;
+  numRoom: string;
+  type: IRoomType[];
+  status: boolean;
+  hotelId: string;
+}
+
+export interface IRoomType {
+  roomTypeId: string;
+  name: string;
+  capacity: number;
+  totalBathrooms: number;
+  totalBeds: number;
+  image: string[];
+  price: number;
+}
+
+export interface IHotelRegister {
+  name: string;
+  email: string;
+  country: string;
+  city: string;
+  address: string;
+  location: string;
+  rooms: string;
+  services: string;
+  image: string;
+}
+
+export interface IHotel {
+  hotelId: string;
+  name: string;
+  email: string;
+  country: string;
+  city: string;
+  address: string;
+  location: number[];
+  totalRooms: number;
+  availableRooms: IRoom[];
+  services: string[];
+  image: string[];
+  rating: number;
+  hotelAdminId: string;
+}
+
+export interface IHotelAdmin {
+  hotelAdminId: string;
+  hotelsNumber: number;
+  isAdmin: boolean;
+  userId: string;
+}
+
+export interface IReview {
+  reviewId: string;
+  userId: string;
+  hotelId: string;
+  comment: string;
+  date: string;
+  rating: number;
+}
+
+export interface IBooking {
+  bookingId: string;
+  date: string;
+  time: string;
+  status: boolean;
+  userId: string;
+}
+
+export interface IBookingDetails {
+  bookingDetailsId: string;
+  price: number;
+  checkInDate: string;
+  checkOutDate: string;
+  status: boolean;
+  bookingId: string;
 }
