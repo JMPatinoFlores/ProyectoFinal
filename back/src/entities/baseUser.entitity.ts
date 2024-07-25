@@ -72,5 +72,5 @@ export abstract class User {
     type: 'boolean',
     default: false,
   })
-  status: boolean;
+  isDeleted: boolean;
 }
