@@ -32,14 +32,14 @@ export class BookingDetails {
 
     @ManyToMany((type) => Hotel)
     @JoinTable({
-        name: 'bookingdetail_hotel',
+        name: 'bookingdetails_hotels',
         joinColumn: {
             name: 'hotel_Id',
             referencedColumnName: 'hotelId'
         },
         inverseJoinColumn: {
-            name: 'bookingdetail_id',
-            referencedColumnName: 'bookingDetailId'
+            name: 'bookingdetails_id',
+            referencedColumnName: 'bookingDetailsId'
         }
     })
     hotels: Hotel[];
