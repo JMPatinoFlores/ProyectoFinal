@@ -26,7 +26,7 @@ function HotelDetail() {
         <div className="mb-4">
           <h2 className="text-2xl font-bold">Descripción</h2>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipiscing elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.
+            Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.
           </p>
         </div>
         <div className="mb-4">
