@@ -25,4 +25,8 @@ export class BookingService {
     async cancelBooking(id: string) {
         return this.bookingRepository.cancelBooking(id)
     }
+
+    async postponeBooking(id: string, date: string) {
+        return this.bookingRepository.postponeBooking(id, date)
+    }
 }

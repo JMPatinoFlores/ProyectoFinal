@@ -27,11 +27,11 @@ export class CreateBookingDto {
 
     @IsArray()
     @ArrayMinSize(1, { message: 'El array roomsIds debe contener al menos 1 UUID de Rooms.' })
-    roomsIds: RoomUUID[]
+    roomsTypesAndAmounts: RoomUUID[]
 }
 
 class RoomUUID {
     @IsNotEmpty()
     @IsUUID()
-    id: string
+    type: string
 }

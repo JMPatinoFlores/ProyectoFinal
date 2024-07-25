@@ -32,4 +32,10 @@ export class BookingController {
     async cancelBooking(@Param('id', ParseUUIDPipe) id: string) {
         return this.bookingService.cancelBooking(id)
     }
+
+    @Put('postpone/:id')
+    @HttpCode(201)
+    async postponeBooking(@Param('id', ParseUUIDPipe) id: string, @Query('date') date: string) {
+        return this.bookingService.postponeBooking(id, date)
+    }
 }
