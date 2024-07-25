@@ -12,7 +12,7 @@ function Navbar() {
 
       <nav className="text-md font-medium">
         <Link
-          href="#"
+          href="/home"
           className="font-medium mr-6 hover:text-[#f83f3a] hover:border-b-2 hover:border-[#f83f3a] transition duration-300"
         >
           Inicio
