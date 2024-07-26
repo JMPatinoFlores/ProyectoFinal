@@ -21,4 +21,7 @@ export class Booking {
   @OneToOne(() => BookingDetails)
   @JoinColumn({ name: 'booking-details-id' })
   bookingDetails: BookingDetails;
+
+    @Column()
+    customer: string
 }
