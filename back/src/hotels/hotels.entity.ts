@@ -1,3 +1,4 @@
+import { Review } from "src/reviews/reviews.entity";
 import { RoomsType } from "src/roomstype/roomstype.entity";
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -48,10 +49,18 @@ export class Hotel {
     @JoinColumn()
     roomstype: RoomsType[];
 
+    @OneToMany((type) => Review, (reviews) => reviews.hotel)
+    @JoinColumn()
+    reviews: Review[];
+
+
     // @ManyToOne(() => HotelAdmin, (hoteladmin) => hoteladmin.hotels)
     // @JoinColumn('hoteladminId')
     // hotelAdmin: HotelAdmin;
 
-    // @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
+    //@ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
     // bookingDetails: BookingDetails[];
+
+
+
 }

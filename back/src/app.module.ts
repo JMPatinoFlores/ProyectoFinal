@@ -36,7 +36,7 @@ import { BookingDetailModule } from './bookingDetails/booking-detail.module';
     }),
     HotelsModule, 
     RoomsModule, 
-    RoomsTypeModule
+    RoomsTypeModule,
     CostumersModule,
     HotelAdminsModule,
     AuthModule,
