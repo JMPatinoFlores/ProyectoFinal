@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Hotel Aurora",
+    "price": 120,
+    "country": "Argentina",
+    "city": "Buenos Aires",
+    "distance": 5100,
+    "image": "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg"
+  },
+  {
+    "name": "Hotel Bella Vista",
+    "price": 150,
+    "country": "Perú",
+    "city": "Lima",
+    "distance": 2150,
+    "image": "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg"
+  },
+  {
+    "name": "Hotel Sun Paradise",
+    "price": 200,
+    "country": "México",
+    "city": "Cancún",
+    "distance": 2948,
+    "image": "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg"
+  },
+  {
+    "name": "Hotel Mountain Retreat",
+    "price": 180,
+    "country": "Ecuador",
+    "city": "Quito",
+    "distance": 1475,
+    "image": "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg"
+  }
+]

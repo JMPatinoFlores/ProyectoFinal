@@ -1,12 +1,25 @@
 import Link from "next/link";
 
-function ProductCard() {
+interface Hotel {
+  name: string;
+  price: number;
+  country: string;
+  city: string;
+  distance: number;
+  image: string;
+}
+
+interface ProductCardProps {
+  hotel: Hotel;
+}
+
+function ProductCard({ hotel }: ProductCardProps) {
   return (
     <div className="w-full max-w-xs">
       <Link href="#" className="group block">
         <div className="overflow-hidden rounded-lg transition-shadow shadow-none group-hover:shadow-lg">
           <img
-            src="/hotel.jpg"
+            src={hotel.image}
             alt="Hotel Image"
             width={300}
             height={300}
@@ -14,14 +27,14 @@ function ProductCard() {
           />
           <div className="p-2 md:p-4 flex flex-col space-y-1">
             <div className="flex items-center justify-between">
-              <div className="text-lg font-medium">Hotel Palacio</div>
-              <div className="text-primary font-medium">$99.99 USD</div>
+              <div className="text-lg font-medium">{hotel.name}</div>
+              <div className="text-primary font-medium">${hotel.price}</div>
             </div>
             <div className="flex items-center text-muted-foreground">
-              <span>Madrid, España</span>
+              <span>{hotel.city}, {hotel.country}</span>
             </div>
             <div className="flex items-center text-muted-foreground">
-              <span>2.5 km del centro</span>
+              <span>{hotel.distance} km de distancia</span>
             </div>
           </div>
         </div>
