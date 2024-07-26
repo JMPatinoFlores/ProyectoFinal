@@ -20,6 +20,7 @@ import { HotelAdminRepository } from './hotel-admins/hotel-admin.repository';
 import { BookingModule } from './bookings/booking.module';
 import { BookingDetailModule } from './bookingDetails/booking-detail.module';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({
