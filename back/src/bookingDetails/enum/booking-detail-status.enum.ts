@@ -1,4 +1,5 @@
-export enum BookingDetailStatus {
-    CONFIRMED = "Activo",
-    CANCELLED = "Cancelado",
+export enum BookingDetailsStatus {
+    COMPLETED = 'Completado',
+    ACTIVE = 'Activo',
+    CANCELLED = 'Cancelado'
 }

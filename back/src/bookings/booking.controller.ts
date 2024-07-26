@@ -35,7 +35,7 @@ export class BookingController {
 
     @Put('postpone/:id')
     @HttpCode(201)
-    async postponeBooking(@Param('id', ParseUUIDPipe) id: string, @Query('date') date: string) {
-        return this.bookingService.postponeBooking(id, date)
+    async postponeBooking(@Param('id', ParseUUIDPipe) id: string, @Query('checkInDate') checkInDate: string) {
+        return this.bookingService.postponeBooking(id, checkInDate)
     }
 }

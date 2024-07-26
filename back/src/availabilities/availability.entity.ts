@@ -3,19 +3,19 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 't
 
 @Entity()
 export class RoomAvailability {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     id: number;
 
-    @Column()
+    @Column({type: 'varchar', length: 24, nullable: false})
     startDate: string;
 
-    @Column()
+    @Column({ type: 'varchar', length: 24, nullable: false })
     endDate: string;
 
     @ManyToOne(() => Room, room => room.availabilities)
     @JoinColumn()
     room: Room;
 
-    @Column({ default: false })
+    @Column({ default: false, nullable: false })
     isAvailable: boolean;
 }

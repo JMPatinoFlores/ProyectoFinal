@@ -4,12 +4,12 @@ import { Booking } from "./booking.entity";
 import { Repository } from "typeorm";
 import { CreateBookingDto } from "./dtos/create-booking.dto";
 import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
-import { BookingDetailStatus } from "../bookingDetails/enum/booking-detail-status.enum"
 import { Customers } from "src/customers/customers.entitiy";
 import { RoomsType } from "src/roomstype/roomstype.entity";
 import { RoomAvailability } from "src/availabilities/availability.entity";
 import { Hotel } from "src/hotels/hotels.entity";
 import { Room } from "src/rooms/rooms.entity";
+import { BookingDetailsStatus } from "src/bookingDetails/enum/booking-detail-status.enum";
 
 @Injectable()
 export class BookingRepository {
@@ -98,7 +98,9 @@ export class BookingRepository {
             }
         }
 
-        let bookingDetails = this.bookingDetailsDBRepository.create({total, discount, checkInDate, checkOutDate, hotel})
+        let bookingDetails = this.bookingDetailsDBRepository.create({ total, discount, checkInDate, checkOutDate, hotel })
+        
+        let booking = this.bookingDBRepository.create({date, time, bookingDetails, })
         
         // let booking = this.bookingDBRepository.create({ date, time, customer })
         
@@ -113,18 +115,16 @@ export class BookingRepository {
     }
 
     async cancelBooking(id: string) {
-        console.log(id);
-        
-        // const booking = await this.bookingDBRepository.findOne({ where: { id }, relations: ['bookingDetails'] })
-        // await this.bookingDetailsDBRepository.update({ bookingDetailsId: booking.bookingDetails.id }, { status: BookingDetailStatus.CANCELLED })
+        const booking = await this.bookingDBRepository.findOne({ where: { bookingId: id }, relations: ['bookingDetails'] })
+        await this.bookingDetailsDBRepository.update({ bookingDetailsId: booking.bookingDetails.bookingDetailsId }, { status: BookingDetailsStatus.CANCELLED })
 
         return "Booking cancelado exitosamente."
     }
 
-    async postponeBooking(id: string, date: string) {
+    async postponeBooking(id: string, checkInDate: string) {
         // 2024-07-25T17:04:51.143Z
         const booking = await this.bookingDBRepository.findOneBy({ bookingId: id })
-        const newDate = new Date(date)
+        const newDate = new Date(checkInDate)
         const oldDate = new Date(booking.date)
         const differenceInMilliseconds = newDate.getTime() - oldDate.getTime()
         const millisecondsInADay = 24 * 60 * 60 * 1000

@@ -1,7 +1,7 @@
 import { Booking } from "src/bookings/booking.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { BookingDetailStatus } from "./enum/booking-detail-status.enum";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Hotel } from "src/hotels/hotels.entity";
+import { BookingDetailsStatus } from "./enum/booking-detail-status.enum";
 
 @Entity({ name: 'booking-details' })
 export class BookingDetails {
@@ -29,5 +29,8 @@ export class BookingDetails {
 
     @OneToMany(() => Hotel, (hotel) => hotel.bookingDetails)
     hotel: Hotel
+
+    @Column({default: BookingDetailsStatus.ACTIVE, nullable: false})
+    status: BookingDetailsStatus
 }
 
