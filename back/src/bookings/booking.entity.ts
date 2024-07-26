@@ -4,18 +4,18 @@ import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "ty
 @Entity({name: 'bookings'})
 export class Booking {
     @PrimaryGeneratedColumn('uuid')
-    id: string
+    bookingId: string
 
-    @Column()
+    @Column({type: 'varchar', length: 24})
     date: string
 
-    @Column()
+    @Column({type: 'varchar', length: 24})
     time: string
+
+    @Column({type: 'boolean', default: false})
+    isDeleted: boolean
 
     @OneToOne(() => BookingDetails)
     @JoinColumn({name: "booking-details-id"})
     bookingDetails: BookingDetails
-
-    @Column()
-    customer: string
 }

@@ -1,9 +1,13 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
+import { ArrayMinSize, IsArray, IsNotEmpty, IsNumber, IsObject, IsString, IsUUID } from "class-validator";
 
 export class CreateBookingDto {
     @IsNotEmpty()
     @IsUUID()
     customerId: string
+
+    @IsNotEmpty()
+    @IsUUID()
+    hotelToBookId: string
 
     @IsNotEmpty()
     @IsString()
@@ -25,13 +29,7 @@ export class CreateBookingDto {
     @IsString()
     checkOutDate: string
 
-    @IsArray()
-    @ArrayMinSize(1, { message: 'El array roomsIds debe contener al menos 1 UUID de Rooms.' })
-    roomsTypesAndAmounts: RoomUUID[]
-}
-
-class RoomUUID {
+    @IsObject()
     @IsNotEmpty()
-    @IsUUID()
-    type: string
+    roomsTypesAndAmounts: Record<string, number>
 }

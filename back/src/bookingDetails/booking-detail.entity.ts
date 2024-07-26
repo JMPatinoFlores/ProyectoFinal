@@ -1,47 +1,33 @@
 import { Booking } from "src/bookings/booking.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { BookingDetailStatus } from "./enum/booking-detail-status.enum";
+import { Hotel } from "src/hotels/hotels.entity";
 
 @Entity({ name: 'booking-details' })
 export class BookingDetails {
     @PrimaryGeneratedColumn('uuid')
-    id: string
+    bookingDetailsId: string
 
-    @Column()
+    @Column({type: 'int', nullable: false})
     total: number
 
-    @Column()
+    @Column({type: 'int', nullable: true})
     discount: number
 
-    @Column()
+    @Column({type: 'varchar', length: 24, nullable: false})
     checkInDate: string
 
-    @Column()
+    @Column({type: 'varchar', length: 24, nullable: false})
     checkOutDate: string
 
-    @Column()
-    status: BookingDetailStatus
+    @Column({type: 'boolean', default: false})
+    isDeleted: boolean
 
     @OneToOne(() => Booking)
     @JoinColumn({name: "booking-id"})
     booking: Booking
 
-    //Arreglar con relaciones de typeorm
-    // @Column()
-    // rooms: string
-
-    @ManyToMany((type) => Hotel)
-    @JoinTable({
-        name: 'bookingdetails_hotels',
-        joinColumn: {
-            name: 'hotel_Id',
-            referencedColumnName: 'hotelId'
-        },
-        inverseJoinColumn: {
-            name: 'bookingdetails_id',
-            referencedColumnName: 'bookingDetailsId'
-        }
-    })
-    hotels: Hotel[];
+    @OneToMany(() => Hotel, (hotel) => hotel.bookingDetails)
+    hotel: Hotel
 }
 

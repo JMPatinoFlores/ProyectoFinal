@@ -1,3 +1,4 @@
+import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
 import { RoomsType } from "src/roomstype/roomstype.entity";
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -54,4 +55,7 @@ export class Hotel {
 
     // @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
     // bookingDetails: BookingDetails[];
+
+    @ManyToOne(() => BookingDetails, (bookingDetails) => bookingDetails.hotel)
+    bookingDetails: BookingDetails[]
 }
