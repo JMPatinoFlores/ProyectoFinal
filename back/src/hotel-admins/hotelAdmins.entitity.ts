@@ -1,5 +1,5 @@
 import { User } from 'src/entities/baseUser.entitity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 
 @Entity({
   name: 'HOTEL_ADMINS',
@@ -16,4 +16,8 @@ export class HotelAdmins extends User {
     default: true,
   })
   isAdmin: boolean = true;
+
+  // @OneToMany((type) => Hotel, (hotel) => hotel.hoteladmin)
+  // @JoinColumn()
+  // hotels: Hotel[];
 }
