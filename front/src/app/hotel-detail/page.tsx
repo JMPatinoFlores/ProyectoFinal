@@ -61,5 +61,3 @@ function HotelDetail() {
 }
 
 export default HotelDetail;
-
-// Borrar esta linea
