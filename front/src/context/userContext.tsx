@@ -1,4 +1,5 @@
 "use client"
+
 import { ILogin, IUser, IUserContextType, IUserResponse } from "@/interfaces";
 import { postLogin, postRegister } from "@/lib/server/fetchUsers";
 import { createContext, useEffect, useState } from "react";

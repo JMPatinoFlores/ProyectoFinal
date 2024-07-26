@@ -17,6 +17,9 @@ import { AuthService } from './auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { CustomersRepository } from './customers/customers.repository';
 import { HotelAdminRepository } from './hotel-admins/hotel-admin.repository';
+import { BookingModule } from './bookings/booking.module';
+import { BookingDetailModule } from './bookingDetails/booking-detail.module';
+
 
 @Module({
   imports: [
@@ -32,6 +35,8 @@ import { HotelAdminRepository } from './hotel-admins/hotel-admin.repository';
     CostumersModule,
     HotelAdminsModule,
     AuthModule,
+    BookingModule,
+    BookingDetailModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
