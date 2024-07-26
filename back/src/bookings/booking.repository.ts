@@ -71,15 +71,15 @@ export class BookingRepository {
 
         if (rooms.length < 1) throw new NotFoundException('Rooms no encontrados.')
 
-        let bookingDetails = this.bookingDetailsDBRepository.create({total, discount, checkInDate, checkOutDate, status, rooms})
+        // let bookingDetails = this.bookingDetailsDBRepository.create({total, discount, checkInDate, checkOutDate, status, rooms})
         
         let booking = this.bookingDBRepository.create({ date, time, customer })
         
         // Agregar cuando estén implementadas las relaciones
 
-        const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails)
+        // const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails)
 
-        booking.bookingDetails = newBookingDetails
+        // booking.bookingDetails = newBookingDetails
 
         return await this.bookingDBRepository.save(booking)
 
