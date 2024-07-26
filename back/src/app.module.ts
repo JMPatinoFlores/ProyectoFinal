@@ -4,6 +4,9 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { typeOrmConfig } from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HotelsModule } from './hotels/hotels.modules';
+import { RoomsModule } from './rooms/rooms.modules';
+import { RoomsTypeModule } from './roomstype/roomstype.modules';
 import { CostumersModule } from './customers/custumers.module';
 import { HotelAdminsModule } from './hotel-admins/hotel-admins.module';
 import { HotelAdmins } from './hotel-admins/hotelAdmins.entitity';
@@ -17,6 +20,8 @@ import { AuthService } from './auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { CustomersRepository } from './customers/customers.repository';
 import { HotelAdminRepository } from './hotel-admins/hotel-admin.repository';
+import { BookingModule } from './bookings/booking.module';
+import { BookingDetailModule } from './bookingDetails/booking-detail.module';
 
 @Module({
   imports: [
@@ -29,9 +34,14 @@ import { HotelAdminRepository } from './hotel-admins/hotel-admin.repository';
       useFactory: (configService: ConfigService) =>
         configService.get('typeorm'),
     }),
+    HotelsModule, 
+    RoomsModule, 
+    RoomsTypeModule
     CostumersModule,
     HotelAdminsModule,
     AuthModule,
+    BookingModule,
+    BookingDetailModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
