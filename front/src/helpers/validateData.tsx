@@ -94,17 +94,19 @@ export const validatePostHotel = (values: IHotelRegister) => {
     errors.location = "Ubicación requerida";
   }
 
-  if (!values.rooms) {
-    errors.rooms = "Habitaciones requeridas";
-  }
-
   if (!values.services) {
     errors.services = "Agrega al menos un servicio";
   }
 
-  if (!values.image) {
-    errors.image = "Sube una imagen de tu hotel";
-  }
-
   return errors;
 };
+
+// export const validatePostHotelImage = (values: IHotelImage) => {
+//   const errors: Partial<IHotelImage> = {};
+
+//   if (!values.image) {
+//     errors.image = "Sube una foto de tu hotel";
+//   }
+
+//   return errors;
+// };
