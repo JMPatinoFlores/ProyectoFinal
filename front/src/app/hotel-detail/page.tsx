@@ -1,6 +1,6 @@
 'use client';
 
-import GoogleMapsData from '../../components/GoogleMapsData';
+import GoogleMapsData from '../../lib/googlemaps/googleMapsData';
 import Image from 'next/image';
 
 function HotelDetail() {
