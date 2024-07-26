@@ -123,14 +123,21 @@ export class BookingRepository {
 
     async postponeBooking(id: string, checkInDate: string) {
         // 2024-07-25T17:04:51.143Z
-        const booking = await this.bookingDBRepository.findOneBy({ bookingId: id })
+        const booking = await this.bookingDBRepository.findOne({ where: { bookingId: id }, relations: ['hotel', 'hotel.roomstype', 'hotel.roomstype.rooms', 'hotel.roomstype.rooms.availabilities']})
         const newDate = new Date(checkInDate)
         const oldDate = new Date(booking.date)
         const differenceInMilliseconds = newDate.getTime() - oldDate.getTime()
         const millisecondsInADay = 24 * 60 * 60 * 1000
         const differenceInDays = differenceInMilliseconds / millisecondsInADay
         if (differenceInDays > 5) {
-
+            for (const roomType of booking.bookingDetails.hotel.roomstype) {
+                const newRoomType = await this.roomTypeDBRepository.findOne({where: {roomsTypeId: roomType.roomsTypeId}, relations: ['roomstype.rooms', 'roomstype.rooms.availabilities']})
+                for (const room of newRoomType.rooms) {
+                    for (const availability of room.availabilities) {
+                        
+                    }
+                }
+            }
         }
     }
 }
