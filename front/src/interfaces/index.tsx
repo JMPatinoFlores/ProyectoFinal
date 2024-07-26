@@ -8,7 +8,7 @@ export interface IUser {
   country: string;
   city: string;
   address: string;
-  birthDate: string; //
+  birthDate: string;
 }
 
 export interface ILogin {
@@ -65,21 +65,33 @@ export interface IRoomType {
   price: number;
 }
 
+export interface IRoomTypeRegister {
+  name: string;
+  capacity: number;
+  totalBathrooms: number;
+  totalBeds: number;
+  price: number;
+}
+
 export interface IHotelRegister {
   name: string;
+  description: string;
   email: string;
   country: string;
   city: string;
   address: string;
   location: string;
-  rooms: string;
   services: string;
-  image: string;
+}
+
+export interface IHotelImage {
+  image: File[];
 }
 
 export interface IHotel {
   hotelId: string;
   name: string;
+  description: string;
   email: string;
   country: string;
   city: string;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import loader from '@/utils/google-maps-api-loader';
+import loader from './googleMapsApiLoader';
 
 interface GoogleMapsDataProps {
   address: string;
