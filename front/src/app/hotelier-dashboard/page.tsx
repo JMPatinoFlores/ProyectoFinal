@@ -3,8 +3,8 @@ function HotelierDashboard() {
     <div className="max-w-md mx-auto my-6">
       <div className="grid gap-6">
         <div className="grid gap-2">
-          <h1 className="text-2xl font-bold">Perfil de Usuario</h1>
-          <h2 className="text-muted-foreground">Tú información personal</h2>
+          <h1 className="text-2xl font-bold">Perfil de Hotelero</h1>
+          <h2 className="text-muted-foreground">Información del Hotel y Reservas Hechas</h2>
         </div>
         <div className="grid gap-2">
           <h2 className="text-sm font-bold">Nombre</h2>
@@ -31,18 +31,24 @@ function HotelierDashboard() {
       </div>
 
       <div className="relative overflow-x-auto">
-        <h1 className="text-2xl font-bold">Mis Habitaciones</h1>
+        <h1 className="text-2xl font-bold">Reservas</h1>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Número de habitación
+                Nombre 
               </th>
               <th scope="col" className="px-6 py-3">
-                camas
+                Habitación
               </th>
               <th scope="col" className="px-6 py-3">
-                Capacidad de personas
+                Personas
+              </th>
+              <th scope="col" className="px-6 py-3">
+                CheckIn
+              </th>
+              <th scope="col" className="px-6 py-3">
+                CheckOut
               </th>
             </tr>
           </thead>
@@ -52,16 +58,15 @@ function HotelierDashboard() {
                 scope="row"
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                B12
+                Mateo Gomez
               </th>
-              <td className="px-6 py-4">2</td>
+              <td className="px-6 py-4">B1</td>
               <td className="px-6 py-4">4</td>
+              <td className="px-6 py-4">25/08/2024</td>
+              <td className="px-6 py-4">28/08/2024</td>
             </tr>
           </tbody>
         </table>
-      </div>
-      <div className="mx-auto my-6 flex flex-col items-center">
-        <button className="btn-primary">Añadir Habitación</button>
       </div>
     </div>
   );
