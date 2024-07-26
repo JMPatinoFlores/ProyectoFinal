@@ -64,3 +64,13 @@ export class LoginCustomerDto extends PickType(CreateCustomerDto, [
   'email',
   'password',
 ]) {}
+
+export class UpdateCustomerInfoDto extends PickType(CreateCustomerDto, [
+  'name',
+  'lastName',
+  'email',
+  'phone',
+  'country',
+  'city',
+  'address',
+]) {}

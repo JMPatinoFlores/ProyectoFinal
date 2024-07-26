@@ -21,7 +21,7 @@ export abstract class User {
 
   @Column({
     type: 'varchar',
-    length: 50,
+    length: 80,
     nullable: false,
     unique: true,
   })

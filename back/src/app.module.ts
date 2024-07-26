@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { typeOrmConfig } from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CostumersModule } from './customers/custumers.module';
+
 import { HotelAdminsModule } from './hotel-admins/hotel-admins.module';
 import { HotelAdmins } from './hotel-admins/hotelAdmins.entitity';
 import { HotelAdminsController } from './hotel-admins/hotel-admins.controller';
@@ -17,6 +17,7 @@ import { AuthService } from './auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { CustomersRepository } from './customers/customers.repository';
 import { HotelAdminRepository } from './hotel-admins/hotel-admin.repository';
+import { CustomersModule } from './customers/customers.module';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { HotelAdminRepository } from './hotel-admins/hotel-admin.repository';
       useFactory: (configService: ConfigService) =>
         configService.get('typeorm'),
     }),
-    CostumersModule,
+    CustomersModule,
     HotelAdminsModule,
     AuthModule,
     JwtModule.register({
