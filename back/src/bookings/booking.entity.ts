@@ -18,7 +18,10 @@ export class Booking {
   @Column()
   time: string;
 
-  // @OneToOne(() => BookingDetails)
-  // @JoinColumn({ name: 'booking-details-id' })
-  // bookingDetails: BookingDetails;
+  @OneToOne(() => BookingDetails)
+  @JoinColumn({ name: 'booking-details-id' })
+  bookingDetails: BookingDetails;
+
+    @Column()
+    customer: string
 }
