@@ -1,4 +1,4 @@
-import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
+// import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
 import {
   Column,
   Entity,
@@ -22,6 +22,6 @@ export class Booking {
   @JoinColumn({ name: 'booking-details-id' })
   bookingDetails: BookingDetails;
 
-    @Column()
-    customer: string
+  @Column()
+  customer: string;
 }
