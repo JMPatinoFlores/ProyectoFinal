@@ -1,8 +1,11 @@
 // import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
+import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
+import { Customers } from 'src/customers/customers.entitiy';
 import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -22,6 +25,7 @@ export class Booking {
   @JoinColumn({ name: 'booking-details-id' })
   bookingDetails: BookingDetails;
 
-    @Column()
-    customer: string
+  @ManyToOne(() => Customers, (customer) => customer.bookings)
+  @JoinColumn({ name: 'customer-id' })
+  customer: Customers;
 }

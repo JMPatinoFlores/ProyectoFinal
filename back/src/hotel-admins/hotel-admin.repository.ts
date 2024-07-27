@@ -52,6 +52,9 @@ export class HotelAdminRepository {
     }
     const hotelAdmin = await this.hotelAdminsRepository.findOne({
       where: { id },
+      relations: {
+        hotels: true,
+      },
     });
     if (!hotelAdmin) return `No se encontro el administrador con ID: ${id}`;
     const { password, ...userNoPassword } = hotelAdmin;
