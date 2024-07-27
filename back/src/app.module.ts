@@ -7,7 +7,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HotelsModule } from './hotels/hotels.modules';
 import { RoomsModule } from './rooms/rooms.modules';
 import { RoomsTypeModule } from './roomstype/roomstype.modules';
-import { CostumersModule } from './customers/custumers.module';
 import { HotelAdminsModule } from './hotel-admins/hotel-admins.module';
 import { HotelAdmins } from './hotel-admins/hotelAdmins.entitity';
 import { HotelAdminsController } from './hotel-admins/hotel-admins.controller';
@@ -37,7 +36,7 @@ import { CustomersModule } from './customers/customers.module';
     }),
     HotelsModule, 
     RoomsModule, 
-    RoomsTypeModule
+    RoomsTypeModule,
     CustomersModule,
     HotelAdminsModule,
     AuthModule,
