@@ -1,4 +1,4 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsEmpty, IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min } from "class-validator";
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsEmpty, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from "class-validator";
 
 
 export class CreateHotelDto{
@@ -57,6 +57,9 @@ export class CreateHotelDto{
     @IsString({each: true})
     images: string[];
 
+    @IsUUID()
+    @IsNotEmpty()
+    hoteladminId:string;
     // @IsEmpty()
     // @IsBoolean()
     // status: boolean;

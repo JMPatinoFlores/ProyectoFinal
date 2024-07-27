@@ -20,7 +20,7 @@ export class ReviewsRepository{
     }
 
     async getDbReviewById(id: string): Promise<Review>{
-        const reviewFound: Review = await this.reviewsDbRepository.findOne({where:{reviewId:id}});
+        const reviewFound: Review = await this.reviewsDbRepository.findOne({where:{id}});
         if(!reviewFound) throw new NotFoundException("this comment does not exits");
         else return reviewFound;
     }
@@ -28,7 +28,7 @@ export class ReviewsRepository{
     async createReview(createreviewDto: CreateReviewDto): Promise<string> {
         const { hotelId, clienteId, ...reviewData } = createreviewDto;
 
-        const hotelFound: Hotel = await this.hotelDbRepository.findOne({where:{hotelId}});
+        const hotelFound: Hotel = await this.hotelDbRepository.findOne({where:{id:hotelId}});
         const customerFound :Customers = await this.customerDbRepository.findOne({where:{id:clienteId}});
         
         if(!customerFound) throw new NotFoundException("this customer is not available");
@@ -42,6 +42,6 @@ export class ReviewsRepository{
         });
 
         await this.reviewsDbRepository.save(newReview);
-        return newReview.reviewId;
+        return newReview.id;
     }
 }
