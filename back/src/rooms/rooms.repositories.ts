@@ -5,7 +5,6 @@ import { Repository } from "typeorm";
 import { CreateRoomDto } from "./rooms.dtos";
 import { RoomsType } from "src/roomstype/roomstype.entity";
 import { generateUniqueRandomNumbers } from "src/utils/generateRandonNumbers";
-import { log } from "console";
 import { LoadRoomsDto } from "./rooms.loadDtos";
 
 
@@ -25,14 +24,14 @@ export class RoomsRepository{
     }
     
     async getDbRoomById(id:string): Promise<Room>{
-        const roomById: Room = await this.roomDbRepository.findOne({where:{roomId:id}});
+        const roomById: Room = await this.roomDbRepository.findOne({where:{id}});
         if(!roomById) throw new NotFoundException("this room is not available");
         else return roomById;
     }
 
     async createDbRoom(roomDto: CreateRoomDto):Promise<string> {
         const { roomsTypeId, ...roomData } = roomDto;
-        const roomtypeFound: RoomsType = await this.roomstypeDbRepository.findOne({where:{roomsTypeId}});
+        const roomtypeFound: RoomsType = await this.roomstypeDbRepository.findOne({where:{id:roomsTypeId}});
 
         if(!roomtypeFound){
             throw new NotFoundException("Hotel with ID not found");
@@ -44,22 +43,18 @@ export class RoomsRepository{
             });
 
             await this.roomDbRepository.save(newRoom);
-            return newRoom.roomId;
+            return newRoom.id;
         }
     }
 
     async loadRooms(loadroomDto: LoadRoomsDto): Promise<string> {
         const { nIni, nEnd, quantity, roomsTypeId } = loadroomDto;
-        const roomtypeFound: RoomsType = await this.roomstypeDbRepository.findOne({ where: { roomsTypeId } });
+        const roomtypeFound: RoomsType = await this.roomstypeDbRepository.findOne({ where: {id: roomsTypeId } });
 
         if (!roomtypeFound) {
             throw new NotFoundException("RoomType with ID not found");
         }
 
-        console.log("este es nini", nIni);
-        console.log("este es nend",nEnd);
-        console.log("este es qunty",quantity);
-        
         const roomNumbers = generateUniqueRandomNumbers(nIni, nEnd, quantity);
         const createdRoomIds: string[] = [];
         console.log( roomNumbers);
@@ -80,18 +75,6 @@ export class RoomsRepository{
                 .execute();
         
         });
-
-        
-
-        // for (const roomNumber of roomNumbers) {
-        //     const newRoom = this.roomDbRepository.create({
-        //         roomNumber: roomNumber.toString(),
-        //         roomtype: roomtypeFound
-        //     });
-
-        //     const savedRoom = await this.roomDbRepository.save(newRoom);
-        //     createdRoomIds.push(savedRoom.roomId);
-        // }
 
         return "rooms reload";
     }

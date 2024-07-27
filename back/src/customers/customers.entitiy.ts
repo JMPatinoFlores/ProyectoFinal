@@ -1,8 +1,9 @@
+import { Booking } from 'src/bookings/booking.entity';
 import { User } from 'src/entities/baseUser.entitity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity({
-  name: 'COSTUMERS',
+  name: 'customers',
 })
 export class Customers extends User {
   @Column({
@@ -10,4 +11,7 @@ export class Customers extends User {
     default: false,
   })
   isAdmin: boolean = false;
+
+  @OneToMany(() => Booking, (booking) => booking.customer)
+  bookings: Booking[];
 }
