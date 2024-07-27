@@ -7,10 +7,10 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "t
 })
 export class Review {
     @PrimaryGeneratedColumn('uuid')
-    reviewId: string;
+    id: string;
 
     @Column({type:"varchar", length:100, nullable:false})
-    coment: string;
+    comment: string;
 
     @Column({type:"varchar", length:20, nullable:false})
     date: string;
@@ -22,7 +22,7 @@ export class Review {
     isDeleted: boolean;
 
     @ManyToOne(() => Hotel, (hotel) => hotel.reviews)
-    @JoinColumn({name:'hotel_id'})
+    @JoinColumn({name:'hotelId'})
     hotel: Hotel;
 
     @ManyToOne(() => Customers, (customer) => customer.reviews)

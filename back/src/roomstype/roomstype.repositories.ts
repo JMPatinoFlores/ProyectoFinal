@@ -21,14 +21,14 @@ export class RoomsTypeRepository{
     }
 
     async getDbRoomTypeById(id: string): Promise<RoomsType>{
-        const roomtypeId: RoomsType = await this.roomstypeDbRepository.findOne({where:{roomsTypeId:id}, relations:{rooms:true}});
+        const roomtypeId: RoomsType = await this.roomstypeDbRepository.findOne({where:{id}, relations:{rooms:true}});
         if(!roomtypeId) throw new NotFoundException("this room is not available");
         return roomtypeId;
     }
 
     async createDbRoomtype(roomtypeDto: CreateRoomTypeDto): Promise<string>{
         const {hotelId, ...roomtypeData} = roomtypeDto;
-        const hotelFound: Hotel = await this.hotelDbRepository.findOne({where:{hotelId}});
+        const hotelFound: Hotel = await this.hotelDbRepository.findOne({where:{id:hotelId}});
 
         if(!hotelFound){
             throw new NotFoundException("Hotel with ID not found");
@@ -40,7 +40,7 @@ export class RoomsTypeRepository{
             });
 
             await this.roomstypeDbRepository.save(newRoomtype);
-            return newRoomtype.roomsTypeId;
+            return newRoomtype.id;
         }
 
     }

@@ -20,5 +20,6 @@ export class HotelAdmins extends User {
 
   @OneToMany((type) => Hotel, (hotel) => hotel.hotelAdmin)
   @JoinColumn()
-  hotels: Hotel[];
+
+  hotels: Hotel[]; 
 }

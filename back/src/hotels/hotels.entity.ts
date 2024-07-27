@@ -1,4 +1,5 @@
 import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
+import { HotelAdmins } from "src/hotel-admins/hotelAdmins.entitity";
 import { Review } from "src/reviews/reviews.entity";
 import { Customers } from 'src/customers/customers.entitiy';
 import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entitity';
@@ -17,8 +18,8 @@ import {
   name: 'hotels',
 })
 export class Hotel {
-  @PrimaryGeneratedColumn('uuid')
-  hotelId: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   name: string;
@@ -64,14 +65,10 @@ export class Hotel {
     @JoinColumn()
     reviews: Review[];
 
-
   @ManyToOne(() => HotelAdmins, (hotelAdmin) => hotelAdmin.hotels)
   @JoinColumn({ name: 'hotelAdmin_id' })
   hotelAdmin: HotelAdmins[];
 
     @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
     bookingDetails: BookingDetails[];
-
-
-
 }

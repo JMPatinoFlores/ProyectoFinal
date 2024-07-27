@@ -3,11 +3,13 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Hotel } from "./hotels.entity";
 import { Repository } from "typeorm";
 import { CreateHotelDto } from "./hotels.dtos";
+import { HotelAdmins } from "src/hotel-admins/hotelAdmins.entitity";
 
 @Injectable()
 export class HotelsRepository{
     constructor(
-        @InjectRepository(Hotel) private readonly hotelDbRepository: Repository<Hotel>
+        @InjectRepository(Hotel) private readonly hotelDbRepository: Repository<Hotel>,
+        @InjectRepository(HotelAdmins) private readonly hotelAdminRepository: Repository<HotelAdmins>
     ){}
 
     async getDbHotels(): Promise<Hotel[]>  {
@@ -19,22 +21,25 @@ export class HotelsRepository{
     }
 
     async getDbHotelById(id: string): Promise<Hotel> {
-        const hotelById: Hotel = await this.hotelDbRepository.findOne({where: {hotelId:id}, relations:{roomstype: {rooms:true}}});
+        const hotelById: Hotel = await this.hotelDbRepository.findOne({where: {id}, relations:{roomstype: {rooms:true}}});
         if(!hotelById) throw new NotFoundException("this hotel is not available");
         else return hotelById; 
     }
 
     async createDbHotel(hotelDto: CreateHotelDto): Promise<string>{
-        const { ...hotelData } = hotelDto;
-        //conseguir el id del hoteladmin
+        const { hoteladminId,...hotelData } = hotelDto;
+        
+        const hoteladminFound = await this.hotelAdminRepository.findOne({where: {id:hoteladminId}});
+        if(!hoteladminFound)throw new NotFoundException("this Admin is not available");
 
         const newHotel = this.hotelDbRepository.create(
             {
                 ...hotelData,
+                hotelAdmin: hoteladminFound
             }
         );
         await this.hotelDbRepository.save(newHotel);
-        return newHotel.hotelId;     
+        return newHotel.id;     
     }
 
     async searchHotels(name: string) {
