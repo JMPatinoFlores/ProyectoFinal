@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Booking } from './booking.entity';
-import { Repository } from 'typeorm';
-import { CreateBookingDto } from './dtos/create-booking.dto';
-import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
-import { BookingDetailStatus } from '../bookingDetails/enum/booking-detail-status.enum';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Booking } from "./booking.entity";
+import { Repository } from "typeorm";
+import { CreateBookingDto } from "./dtos/create-booking.dto";
+import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
+import { BookingDetailStatus } from "../bookingDetails/enum/booking-detail-status.enum"
 
 @Injectable()
 export class BookingRepository {
