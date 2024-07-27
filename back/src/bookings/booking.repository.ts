@@ -26,16 +26,16 @@ export class BookingRepository {
     });
   }
 
-  //   async createBooking(bookingData: CreateBookingDto) {
-  //     const { date, time, customerId, discount, checkInDate, checkOutDate } =
-  //       bookingData;
-
-  //     // Remover
-  //     const roomsTypesAndAmounts = {
-  //       deluxe: 2,
-  //       familiar: 3,
-  //       matrimonial: 2,
-  //     };
+/*
+    async createBooking(bookingData: CreateBookingDto) {
+        const { date, time, customerId, discount, checkInDate, checkOutDate } = bookingData
+        
+        // Remover
+        const roomsTypesAndAmounts = {
+            deluxe: 2,
+            familiar: 3,
+            matrimonial: 2
+        }
 
   //     // Cambiar a typeorm
   //     const customer = 'Cliente de prueba.';
@@ -95,20 +95,15 @@ export class BookingRepository {
   //     return await this.bookingDBRepository.save(booking);
   //   }
 
-  async cancelBooking(id: string) {
-    console.log(id);
+*/
+    async cancelBooking(id: string) {
+        console.log(id);
+        
+        const booking = await this.bookingDBRepository.findOne({ where: { id }, relations: ['bookingDetails'] })
+        await this.bookingDetailsDBRepository.update({ id: booking.bookingDetails.id }, { status: BookingDetailStatus.CANCELLED })
 
-    const booking = await this.bookingDBRepository.findOne({
-      where: { id },
-      relations: ['bookingDetails'],
-    });
-    await this.bookingDetailsDBRepository.update(
-      { id: booking.bookingDetails.id },
-      { status: BookingDetailStatus.CANCELLED },
-    );
-
-    return 'Booking cancelado exitosamente.';
-  }
+        return "Booking cancelado exitosamente."
+    }
 
   async postponeBooking(id: string, date: string) {
     // 2024-07-25T17:04:51.143Z

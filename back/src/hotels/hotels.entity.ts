@@ -1,3 +1,5 @@
+import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
+import { Review } from "src/reviews/reviews.entity";
 import { Customers } from 'src/customers/customers.entitiy';
 import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entitity';
 import { RoomsType } from 'src/roomstype/roomstype.entity';
@@ -58,10 +60,18 @@ export class Hotel {
   @JoinColumn()
   roomstype: RoomsType[];
 
+    @OneToMany((type) => Review, (reviews) => reviews.hotel)
+    @JoinColumn()
+    reviews: Review[];
+
+
   @ManyToOne(() => HotelAdmins, (hotelAdmin) => hotelAdmin.hotels)
   @JoinColumn({ name: 'hotelAdmin_id' })
   hotelAdmin: HotelAdmins[];
 
-  //   @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
-  //   bookingDetails: BookingDetails[];
+    @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
+    bookingDetails: BookingDetails[];
+
+
+
 }
