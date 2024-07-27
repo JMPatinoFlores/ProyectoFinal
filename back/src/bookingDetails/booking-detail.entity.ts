@@ -1,12 +1,12 @@
 import { Booking } from "src/bookings/booking.entity";
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Hotel } from "src/hotels/hotels.entity";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { BookingDetailsStatus } from "./enum/booking-detail-status.enum";
+import { Hotel } from "src/hotels/hotels.entity";
 
 @Entity({ name: 'booking-details' })
 export class BookingDetails {
-    @PrimaryGeneratedColumn('uuid')
-    bookingDetailsId: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
     @Column({type: 'int', nullable: false})
     total: number
@@ -34,4 +34,3 @@ export class BookingDetails {
     @Column({default: BookingDetailsStatus.ACTIVE, nullable: false})
     status: BookingDetailsStatus
 }
-

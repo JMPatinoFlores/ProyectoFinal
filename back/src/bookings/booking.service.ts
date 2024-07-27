@@ -1,30 +1,30 @@
-import { Injectable } from "@nestjs/common";
-import { BookingRepository } from "./booking.repository";
-import { CreateBookingDto } from "./dtos/create-booking.dto";
+import { Injectable } from '@nestjs/common';
+import { BookingRepository } from './booking.repository';
+import { CreateBookingDto } from './dtos/create-booking.dto';
 
 @Injectable()
 export class BookingService {
-    constructor(private readonly bookingRepository: BookingRepository) { }
-    
-    async getBookings(page: number, limit: number) {
-        const bookings = await this.bookingRepository.getBookings()
-        const start = (page - 1) * limit
-        const end = start + limit
+  constructor(private readonly bookingRepository: BookingRepository) {}
 
-        return bookings.slice(start, end)
-    }
+  async getBookings(page: number, limit: number) {
+    const bookings = await this.bookingRepository.getBookings();
+    const start = (page - 1) * limit;
+    const end = start + limit;
 
-    async getBookingById(id: string) {
-        return await this.bookingRepository.getBookingById(id)
-    }
+    return bookings.slice(start, end);
+  }
 
-    async createBooking(bookingData: CreateBookingDto) {
-        return await this.bookingRepository.createBooking(bookingData)
-    }
+  async getBookingById(id: string) {
+    return await this.bookingRepository.getBookingById(id);
+  }
 
-    async cancelBooking(id: string) {
-        return this.bookingRepository.cancelBooking(id)
-    }
+    // async createBooking(bookingData: CreateBookingDto) {
+    //     return await this.bookingRepository.createBooking(bookingData)
+    // }
+
+  async cancelBooking(id: string) {
+    return this.bookingRepository.cancelBooking(id);
+  }
 
     async postponeBooking(id: string, checkInDate: string) {
         return this.bookingRepository.postponeBooking(id, checkInDate)

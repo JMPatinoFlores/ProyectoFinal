@@ -23,18 +23,22 @@ export class BookingRepository {
         @InjectRepository(Room) private readonly roomDBRepository: Repository<Room>
     ) { }
 
-    async getBookings() {
-        return await this.bookingDBRepository.find()
-    }
+  async getBookings() {
+    return await this.bookingDBRepository.find();
+  }
 
-    async getBookingById(id: string) {
-        return await this.bookingDBRepository.findOne({ where: { bookingId: id }, relations: ["bookingDetails"] })
+  async getBookingById(id: string) {
+    return await this.bookingDBRepository.findOne({
+      where: { bookingId: id },
+      relations: ['bookingDetails'],
+    });
     }
 
     async getBookingsByCustomerId(id: string) {
         
-    }
+  }
 
+/*
     async createBooking(bookingData: CreateBookingDto) {
         const { date, time, customerId, hotelToBookId, discount, checkInDate, checkOutDate, roomsTypesAndAmounts } = bookingData
 
@@ -108,10 +112,10 @@ export class BookingRepository {
         
         const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails)
 
-        return await this.bookingDBRepository.save(booking)
+  //     return await this.bookingDBRepository.save(booking);
+  //   }
 
-    }
-
+*/
     async cancelBooking(id: string) {
         const booking = await this.bookingDBRepository.findOne({ where: { bookingId: id }, relations: ['bookingDetails'] })
         await this.bookingDetailsDBRepository.update({ bookingDetailsId: booking.bookingDetails.bookingDetailsId }, { status: BookingDetailsStatus.CANCELLED })

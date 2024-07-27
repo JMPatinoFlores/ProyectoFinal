@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query } from "@nestjs/common";
 import { HotelsService } from "./hotels.services";
 import { CreateHotelDto } from "./hotels.dtos";
 
@@ -13,14 +13,20 @@ export class HotelsController{
         return this.hotelDbService.getDbHotels();
     }
 
-    @Get(':id')
-    getDbHotelById(@Param('id', ParseUUIDPipe) id:string){
-        return this.hotelDbService.getDbHotelById(id);
-    }
-
     @Post()
     createDbHotel(@Body() hotelDto: CreateHotelDto){
         return this.hotelDbService.createDbHotel(hotelDto);
+    }
+
+    @Get('search')
+    async searchHotels(@Query('name') name: string) {
+    const hotels = await this.hotelDbService.searchHotels(name);
+    return hotels;
+    }
+
+    @Get(':id')
+    getDbHotelById(@Param('id', ParseUUIDPipe) id:string){
+        return this.hotelDbService.getDbHotelById(id);
     }
 
 }

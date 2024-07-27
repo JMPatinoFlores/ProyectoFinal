@@ -8,7 +8,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 @Unique(['name', 'hotel'])
 export class RoomsType {
     @PrimaryGeneratedColumn('uuid')
-    roomsTypeId: string;
+    id: string;
 
     @Column({type:"varchar", length:20, nullable:false})
     name:string;
