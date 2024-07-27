@@ -57,9 +57,10 @@ export class AuthService {
     const adminHotel =
       await this.hotelAdminRepository.getHotelAdminByEmail(email);
 
-    if (customer) {
-      if (!customer) throw new BadRequestException('Credenciales incorrectas');
+    if (!customer && !adminHotel)
+      throw new BadRequestException('Credenciales incorrectas');
 
+    if (customer) {
       const validPassword = await bcrypt.compare(password, customer.password);
       if (!validPassword)
         throw new BadRequestException('Credenciales incorrectas');
@@ -79,9 +80,6 @@ export class AuthService {
       };
     }
     if (adminHotel) {
-      if (!adminHotel)
-        throw new BadRequestException('Credenciales incorrectas');
-
       const validPassword = await bcrypt.compare(password, adminHotel.password);
       if (!validPassword)
         throw new BadRequestException('Credenciales incorrectas');
