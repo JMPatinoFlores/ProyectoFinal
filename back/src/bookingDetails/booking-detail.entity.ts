@@ -28,6 +28,7 @@ export class BookingDetails {
     booking: Booking
 
     @OneToMany(() => Hotel, (hotel) => hotel.bookingDetails)
+    @JoinColumn({name: 'hotel-id'})
     hotel: Hotel
 
     @Column({default: BookingDetailsStatus.ACTIVE, nullable: false})

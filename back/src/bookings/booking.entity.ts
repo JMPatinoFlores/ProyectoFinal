@@ -21,7 +21,6 @@ export class Booking {
     bookingDetails: BookingDetails
 
     @ManyToOne(() => Customers, (customer) => customer.bookings)
+    @JoinColumn({ name: 'customer-id' })
     customer: Customers
-
-    
 }
