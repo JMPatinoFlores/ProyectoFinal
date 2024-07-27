@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
 import { HotelAdminsController } from './hotel-admins.controller';
 import { HotelAdminsService } from './hotel-admins.service';
+import { HotelAdminRepository } from './hotel-admin.repository';
+import { HotelAdmins } from './hotelAdmins.entitity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([HotelAdmins])],
   controllers: [HotelAdminsController],
-  providers: [HotelAdminsService],
+  providers: [HotelAdminsService, HotelAdminRepository],
+  exports: [HotelAdminRepository],
 })
 export class HotelAdminsModule {}

@@ -6,9 +6,15 @@ import { Customers } from 'src/customers/customers.entitiy';
 import { CustomersRepository } from 'src/customers/customers.repository';
 import { HotelAdminRepository } from 'src/hotel-admins/hotel-admin.repository';
 import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entitity';
+import { CustomersModule } from 'src/customers/customers.module';
+import { HotelAdminsModule } from 'src/hotel-admins/hotel-admins.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Customers, HotelAdmins])],
+  imports: [
+    TypeOrmModule.forFeature([Customers, HotelAdmins]),
+    CustomersModule,
+    HotelAdminsModule,
+  ],
   controllers: [AuthController],
   providers: [AuthService, CustomersRepository, HotelAdminRepository],
 })
