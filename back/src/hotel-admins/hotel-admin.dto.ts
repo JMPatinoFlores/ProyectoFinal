@@ -64,3 +64,14 @@ export class LoginHotelAdminDto extends PickType(CreateHotelAdminDto, [
   'email',
   'password',
 ]) {}
+
+export class UpdateHotelAdminInfoDto extends PickType(CreateHotelAdminDto, [
+  'name',
+  'lastName',
+  'email',
+  'phone',
+  'country',
+  'city',
+  'address',
+  'birthDate',
+]) {}

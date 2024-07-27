@@ -1,21 +1,31 @@
-import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+// import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
+import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
+import { Customers } from 'src/customers/customers.entitiy';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity({name: 'bookings'})
+@Entity({ name: 'bookings' })
 export class Booking {
-    @PrimaryGeneratedColumn('uuid')
-    id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    date: string
+  @Column()
+  date: string;
 
-    @Column()
-    time: string
+  @Column()
+  time: string;
 
-    @OneToOne(() => BookingDetails)
-    @JoinColumn({name: "booking-details-id"})
-    bookingDetails: BookingDetails
+  @OneToOne(() => BookingDetails)
+  @JoinColumn({ name: 'booking-details-id' })
+  bookingDetails: BookingDetails;
 
-    @Column()
-    customer: string
+  @ManyToOne(() => Customers, (customer) => customer.bookings)
+  @JoinColumn({ name: 'customer-id' })
+  customer: Customers;
 }
