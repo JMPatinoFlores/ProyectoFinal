@@ -100,17 +100,11 @@ export class BookingRepository {
 
         let bookingDetails = this.bookingDetailsDBRepository.create({ total, discount, checkInDate, checkOutDate, hotel })
         
-        let booking = this.bookingDBRepository.create({date, time, bookingDetails, })
+        let booking = this.bookingDBRepository.create({date, time, bookingDetails, customer})
         
-        // let booking = this.bookingDBRepository.create({ date, time, customer })
-        
-        // // Agregar cuando estén implementadas las relaciones
+        const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails)
 
-        // const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails)
-
-        // booking.bookingDetails = newBookingDetails
-
-        // return await this.bookingDBRepository.save(booking)
+        return await this.bookingDBRepository.save(booking)
 
     }
 
