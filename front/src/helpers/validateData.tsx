@@ -1,3 +1,4 @@
+import * as yup from "yup";
 import { IHotelRegister, ILogin, IRegisterValues } from "@/interfaces";
 
 export const validateRegisterForm = (values: IRegisterValues) => {
@@ -101,12 +102,6 @@ export const validatePostHotel = (values: IHotelRegister) => {
   return errors;
 };
 
-// export const validatePostHotelImage = (values: IHotelImage) => {
-//   const errors: Partial<IHotelImage> = {};
-
-//   if (!values.image) {
-//     errors.image = "Sube una foto de tu hotel";
-//   }
-
-//   return errors;
-// };
+export const validationSchema = yup.object().shape({
+  image: yup.mixed().required("La imagen es requerida"),
+});

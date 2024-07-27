@@ -365,40 +365,26 @@ export default function HotelRegister() {
                     className="text-red-600 text-sm"
                   />
                 </div> */}
-                {/* <div>
-                  <label htmlFor="rooms" className="formLabel">
-                    Habitaciones
-                  </label>
-                  <Field
-                    type="text"
-                    name="rooms"
-                    placeholder="Habitaciones"
-                    className="formInput"
-                  />
-                  <ErrorMessage
-                    name="rooms"
-                    component="div"
-                    className="text-red-600 text-sm"
-                  />
-                </div> */}
                 <div>
-                  <label htmlFor="services" className="formLabel">
-                    Servicios que ofrece tu hotel
-                  </label>
-                  <Field
-                    type="text"
-                    name="services"
-                    placeholder="Describe los servicios de tu hotel"
-                    className="formInput"
-                  />
-                  <ErrorMessage
-                    name="services"
-                    component="div"
-                    className="text-red-600 text-sm"
-                  />
+                  <div>
+                    <label htmlFor="services" className="formLabel">
+                      Servicios que ofrece tu hotel
+                    </label>
+                    <Field
+                      type="text"
+                      name="services"
+                      placeholder="Describe los servicios de tu hotel"
+                      className="formInput"
+                    />
+                    <ErrorMessage
+                      name="services"
+                      component="div"
+                      className="text-red-600 text-sm"
+                    />
+                  </div>
                 </div>
                 <div>
-                  <Link href={"#"}>
+                  <Link href={"/post-hotel-image"}>
                     <button
                       type="submit"
                       className="btn-secondary"

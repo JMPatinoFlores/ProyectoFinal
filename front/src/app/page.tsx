@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Landing() {
   return (
@@ -32,9 +33,11 @@ export default function Landing() {
             <h2 className="font-bold text-3xl sm:text-4xl mb-4 sm:mb-8">
               Comienza Aquí
             </h2>
-            <button className="btn-primary text-xl sm:text-2xl py-2 px-4">
-              Comenzar
-            </button>
+            <Link href={"/home"}>
+              <button className="btn-primary text-xl sm:text-2xl uppercase">
+                Comenzar
+              </button>
+            </Link>
           </div>
         </div>
       </div>
