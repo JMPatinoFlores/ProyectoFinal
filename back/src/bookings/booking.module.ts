@@ -9,9 +9,10 @@ import { Room } from 'src/rooms/rooms.entity';
 import { RoomsType } from 'src/roomstype/roomstype.entity';
 import { Hotel } from 'src/hotels/hotels.entity';
 import { RoomAvailability } from 'src/availabilities/availability.entity';
+import { Customers } from 'src/customers/customers.entitiy';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Booking, BookingDetails, Room, RoomsType, Hotel, RoomAvailability])],
+    imports: [TypeOrmModule.forFeature([Booking, BookingDetails, Room, RoomsType, Hotel, RoomAvailability, Customers])],
     controllers: [BookingController],
     providers: [BookingService, BookingRepository]
 })

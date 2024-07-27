@@ -31,6 +31,10 @@ export class BookingRepository {
         return await this.bookingDBRepository.findOne({ where: { bookingId: id }, relations: ["bookingDetails"] })
     }
 
+    async getBookingsByCustomerId(id: string) {
+        
+    }
+
     async createBooking(bookingData: CreateBookingDto) {
         const { date, time, customerId, hotelToBookId, discount, checkInDate, checkOutDate, roomsTypesAndAmounts } = bookingData
 
@@ -125,10 +129,40 @@ export class BookingRepository {
         const differenceInDays = differenceInMilliseconds / millisecondsInADay
         if (differenceInDays > 5) {
             for (const roomType of booking.bookingDetails.hotel.roomstype) {
+                let isBooked = false
                 const newRoomType = await this.roomTypeDBRepository.findOne({where: {roomsTypeId: roomType.roomsTypeId}, relations: ['roomstype.rooms', 'roomstype.rooms.availabilities']})
                 for (const room of newRoomType.rooms) {
+                    if (isBooked) break
                     for (const availability of room.availabilities) {
+                        if (isBooked) break
+                        let newCheckInDate: number | string = new Date(checkInDate).getTime()
+                        const oldCheckInDate = new Date(booking.bookingDetails.checkInDate).getTime()
+                        const timeToPostpone = newCheckInDate - oldCheckInDate
+                        const oldCheckOutDate = new Date(booking.bookingDetails.checkOutDate)
+                        let newCheckOutDate: number | string = oldCheckOutDate.setTime(oldCheckOutDate.getTime() + timeToPostpone)
+                        const availabilityStartDate = new Date(availability.startDate).getTime()
+                        const availabilityEndDate = new Date(availability.endDate).getTime()
+
+                        if ((newCheckInDate < availabilityStartDate && newCheckOutDate < availabilityEndDate) || (newCheckInDate > availabilityStartDate && newCheckOutDate < availabilityEndDate) || (newCheckInDate > availabilityStartDate && newCheckOutDate > availabilityEndDate)) {
+                            throw new BadRequestException('Fechas para el booking no disponibles.')
+                        }
+
+                        newCheckInDate = new Date(newCheckInDate).toISOString()
+                        newCheckOutDate = new Date(newCheckOutDate).toISOString()
+
+                        await this.bookingDetailsDBRepository.update({ bookingDetailsId: booking.bookingDetails.bookingDetailsId }, { checkInDate: newCheckInDate, checkOutDate: newCheckOutDate })
+
+                        const availabilityToRelate = this.roomAvailabilityDBRepository.create({ startDate: newCheckInDate, endDate: newCheckOutDate, room: room })
                         
+                        const roomToRelate = this.roomDBRepository.create({ roomId: room.roomId, roomtype: newRoomType })
+                        
+                        const roomTypeToRelate = this.roomTypeDBRepository.create({ roomsTypeId: newRoomType.roomsTypeId, hotel: booking.bookingDetails.hotel })
+
+                        await this.roomAvailabilityDBRepository.save(availabilityToRelate)
+                        await this.roomDBRepository.save(roomToRelate)
+                        await this.roomTypeDBRepository.save(roomTypeToRelate)
+                        
+                        isBooked = true
                     }
                 }
             }
