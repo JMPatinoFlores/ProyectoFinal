@@ -3,26 +3,20 @@
 import { validatePostHotel } from "@/helpers/validateData";
 import { IHotelRegister } from "@/interfaces";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
-
-declare global {
-  interface Window {
-    google: any;
-  }
-}
+import continueImage from "../../../public/continue.png";
 
 export default function HotelRegister() {
   const initialValues: IHotelRegister = {
     name: "",
+    description: "",
     email: "",
     country: "",
     city: "",
     address: "",
     location: "",
-    rooms: "",
     services: "",
-    image: "",
   };
 
   const countryOptions = [
@@ -231,28 +225,6 @@ export default function HotelRegister() {
     setSubmitting(false);
   };
 
-  const mapRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (window.google && mapRef.current) {
-      const map = new window.google.maps.Map(mapRef.current, {
-        center: { lat: -31.397, lng: 150.644 },
-        zoom: 8,
-      });
-
-      map.addListener("click", (event: google.maps.MapMouseEvent) => {
-        const lat = event.latLng.lat();
-        const lng = event.latLng.lng();
-        const locationInput = document.getElementById(
-          "location"
-        ) as HTMLInputElement;
-        if (locationInput) {
-          locationInput.value = `${lat},${lng}`;
-        }
-      });
-    }
-  }, []);
-
   return (
     <div className="flex min-h-screen">
       <div className="flex w-full justify-center items-center">
@@ -281,6 +253,22 @@ export default function HotelRegister() {
                   />
                   <ErrorMessage
                     name="name"
+                    component="div"
+                    className="text-red-600 text-sm"
+                  />
+                </div>
+                <div className="formDiv flex-1 mr-2">
+                  <label htmlFor="description" className="formLabel">
+                    Descripción del hotel
+                  </label>
+                  <Field
+                    type="text"
+                    name="description"
+                    placeholder="Nombre"
+                    className="formInput"
+                  />
+                  <ErrorMessage
+                    name="description"
                     component="div"
                     className="text-red-600 text-sm"
                   />
@@ -351,7 +339,7 @@ export default function HotelRegister() {
                     className="text-red-600 text-sm"
                   />
                 </div>
-                <div>
+                {/* <div>
                   <label htmlFor="location" className="formLabel">
                     Ubicación del hotel
                   </label>
@@ -376,8 +364,8 @@ export default function HotelRegister() {
                     component="div"
                     className="text-red-600 text-sm"
                   />
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <label htmlFor="rooms" className="formLabel">
                     Habitaciones
                   </label>
@@ -392,7 +380,7 @@ export default function HotelRegister() {
                     component="div"
                     className="text-red-600 text-sm"
                   />
-                </div>
+                </div> */}
                 <div>
                   <label htmlFor="services" className="formLabel">
                     Servicios que ofrece tu hotel
@@ -410,31 +398,27 @@ export default function HotelRegister() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="image" className="formLabel">
-                    Subir imagen
-                  </label>
-                  <Field
-                    type="file"
-                    name="image"
-                    className="formInput"
-                    onChange={(event: HTMLFormElement) => {
-                      setFieldValue("image", event.currentTarget.files[0]);
-                    }}
-                  />
-                  <ErrorMessage
-                    name="image"
-                    component="div"
-                    className="text-red-600 text-sm"
-                  />
-                </div>
-                <div>
-                  <button
-                    type="submit"
-                    className="btn-secondary"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Enviando..." : "Publicar"}
-                  </button>
+                  <Link href={"#"}>
+                    <button
+                      type="submit"
+                      className="btn-secondary"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        "Enviando..."
+                      ) : (
+                        <div className="flex items-center">
+                          <h1 className="mr-1">Continuar</h1>
+                          <Image
+                            src={continueImage}
+                            alt="Continuar"
+                            width={24}
+                            height={24}
+                          />
+                        </div>
+                      )}
+                    </button>
+                  </Link>
                 </div>
               </Form>
             )}
