@@ -21,11 +21,11 @@ export class BookingController {
         return await this.bookingService.getBookingById(id)
     }
 
-    @Post()
-    @HttpCode(201)
-    async createBooking(@Body() bookingData: CreateBookingDto) {
-        return await this.bookingService.createBooking(bookingData)
-    }
+    // @Post()
+    // @HttpCode(201)
+    // async createBooking(@Body() bookingData: CreateBookingDto) {
+    //     return await this.bookingService.createBooking(bookingData)
+    // }
 
     @Put('cancel/:id')
     @HttpCode(201)

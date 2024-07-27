@@ -21,6 +21,7 @@ export class BookingRepository {
         return await this.bookingDBRepository.findOne({ where: { id }, relations: ["bookingDetails"] })
     }
 
+/*
     async createBooking(bookingData: CreateBookingDto) {
         const { date, time, customerId, discount, checkInDate, checkOutDate } = bookingData
         
@@ -85,6 +86,7 @@ export class BookingRepository {
 
     }
 
+*/
     async cancelBooking(id: string) {
         console.log(id);
         

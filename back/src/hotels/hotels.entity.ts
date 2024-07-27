@@ -1,3 +1,4 @@
+import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
 import { Review } from "src/reviews/reviews.entity";
 import { RoomsType } from "src/roomstype/roomstype.entity";
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -58,8 +59,8 @@ export class Hotel {
     // @JoinColumn('hoteladminId')
     // hotelAdmin: HotelAdmin;
 
-    //@ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
-    // bookingDetails: BookingDetails[];
+    @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
+    bookingDetails: BookingDetails[];
 
 
 

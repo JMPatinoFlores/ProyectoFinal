@@ -1,3 +1,4 @@
+import { Customers } from "src/customers/customers.entitiy";
 import { Hotel } from "src/hotels/hotels.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -24,5 +25,8 @@ export class Review {
     @JoinColumn({name:'hotel_id'})
     hotel: Hotel;
 
+    @ManyToOne(() => Customers, (customer) => customer.reviews)
+    @JoinColumn({name:'customerId'})
+    customer: Customers;
     
 }

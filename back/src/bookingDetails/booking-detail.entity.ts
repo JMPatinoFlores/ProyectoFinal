@@ -1,6 +1,7 @@
 import { Booking } from "src/bookings/booking.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { BookingDetailStatus } from "./enum/booking-detail-status.enum";
+import { Hotel } from "src/hotels/hotels.entity";
 
 @Entity({ name: 'booking-details' })
 export class BookingDetails {
@@ -34,12 +35,12 @@ export class BookingDetails {
     @JoinTable({
         name: 'bookingdetails_hotels',
         joinColumn: {
-            name: 'hotel_Id',
-            referencedColumnName: 'hotelId'
+            name: 'bookingdetails_id',
+            referencedColumnName: 'id' //bookingDetailsId
         },
         inverseJoinColumn: {
-            name: 'bookingdetails_id',
-            referencedColumnName: 'bookingDetailsId'
+            name: 'hotel_Id',
+            referencedColumnName: 'hotelId',
         }
     })
     hotels: Hotel[];

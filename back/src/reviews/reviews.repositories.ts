@@ -4,14 +4,14 @@ import { Repository } from "typeorm";
 import { Review } from "./reviews.entity";
 import { CreateReviewDto } from "./reviews.dtos";
 import { Hotel } from "src/hotels/hotels.entity";
-
-
+import { Customers } from "src/customers/customers.entitiy";
 
 @Injectable()
 export class ReviewsRepository{
     constructor(
         @InjectRepository(Review) private readonly reviewsDbRepository: Repository<Review>,
-        @InjectRepository(Hotel) private readonly hotelDbRepository: Repository<Hotel>
+        @InjectRepository(Hotel) private readonly hotelDbRepository: Repository<Hotel>,
+        @InjectRepository(Customers) private readonly customerDbRepository: Repository<Customers>
     ){}
 
     async getDbReviews(): Promise<Review[]>{
@@ -26,18 +26,22 @@ export class ReviewsRepository{
     }
 
     async createReview(createreviewDto: CreateReviewDto): Promise<string> {
-        const { hotelId, ...reviewData } = createreviewDto;
+        const { hotelId, clienteId, ...reviewData } = createreviewDto;
 
         const hotelFound: Hotel = await this.hotelDbRepository.findOne({where:{hotelId}});
+        const customerFound :Customers = await this.customerDbRepository.findOne({where:{id:clienteId}});
         
+        if(!customerFound) throw new NotFoundException("this customer is not available");
+
         if(!hotelFound) throw new NotFoundException("this hotel is not available");
+
         const newReview  = this.reviewsDbRepository.create({
             ...reviewData,
-            hotel: hotelFound
+            hotel: hotelFound,
+            customer:customerFound
         });
 
         await this.reviewsDbRepository.save(newReview);
         return newReview.reviewId;
-
     }
 }

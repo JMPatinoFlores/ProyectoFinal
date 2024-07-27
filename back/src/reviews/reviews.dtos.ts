@@ -16,7 +16,7 @@ export class CreateReviewDto {
     //@IsOptional()
     @IsNumber()
     @IsNotEmpty()
-    @Min(0)
+    @Min(1)
     @Max(5)
     rating: number;
 
@@ -24,9 +24,9 @@ export class CreateReviewDto {
     @IsNotEmpty()
     hotelId: string;
 
-    // @IsUUID()
-    // @IsNotEmpty()
-    // clienteId: string;
+    @IsUUID()
+    @IsNotEmpty()
+    clienteId: string;
 
 
 
