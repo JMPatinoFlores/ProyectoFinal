@@ -1,9 +1,9 @@
+import { Booking } from 'src/bookings/booking.entity';
 import { User } from 'src/entities/baseUser.entitity';
-import { Review } from 'src/reviews/reviews.entity';
-import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity({
-  name: 'COSTUMERS',
+  name: 'customers',
 })
 export class Customers extends User {
   @Column({
@@ -12,7 +12,6 @@ export class Customers extends User {
   })
   isAdmin: boolean = false;
 
-  @OneToMany((type) => Review, (reviews) => reviews.customer)
-  @JoinColumn()
-  reviews: Review[];
+  @OneToMany(() => Booking, (booking) => booking.customer)
+  bookings: Booking[];
 }

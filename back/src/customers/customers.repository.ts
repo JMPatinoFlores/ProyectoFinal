@@ -48,6 +48,9 @@ export class CustomersRepository {
 
     const customer = await this.customersRepository.findOne({
       where: { id },
+      relations: {
+        bookings: true,
+      },
     });
     if (!customer) return `No se encontró el cliente con el ID: ${id}`;
     const { password, ...userNoPassword } = customer;
@@ -72,8 +75,8 @@ export class CustomersRepository {
   async updateCustomerInfo(id: string, customer: UpdateCustomerInfoDto) {
     await this.customersRepository.update(id, customer);
     const updatedCustomer = await this.customersRepository.findOneBy({ id });
-    const { password, ...userNoPassword } = updatedCustomer;
-    return updatedCustomer;
+    const { password, ...customerNoPassword } = updatedCustomer;
+    return customerNoPassword;
   }
 
   //! Eliminado lógico de un Cliente

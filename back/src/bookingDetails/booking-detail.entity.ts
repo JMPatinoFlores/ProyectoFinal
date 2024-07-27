@@ -5,23 +5,23 @@ import { Hotel } from "src/hotels/hotels.entity";
 
 @Entity({ name: 'booking-details' })
 export class BookingDetails {
-    @PrimaryGeneratedColumn('uuid')
-    id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    total: number
+  @Column()
+  total: number;
 
-    @Column()
-    discount: number
+  @Column()
+  discount: number;
 
-    @Column()
-    checkInDate: string
+  @Column()
+  checkInDate: string;
 
-    @Column()
-    checkOutDate: string
+  @Column()
+  checkOutDate: string;
 
-    @Column()
-    status: BookingDetailStatus
+  @Column()
+  status: BookingDetailStatus;
 
     @OneToOne(() => Booking)
     @JoinColumn({name: "booking-id"})
@@ -45,4 +45,3 @@ export class BookingDetails {
     })
     hotels: Hotel[];
 }
-
