@@ -22,6 +22,7 @@ import { CustomersRepository } from './customers/customers.repository';
 import { HotelAdminRepository } from './hotel-admins/hotel-admin.repository';
 import { BookingModule } from './bookings/booking.module';
 import { BookingDetailModule } from './bookingDetails/booking-detail.module';
+import { ReviewsModule } from './reviews/reviews.module';
 import { CustomersModule } from './customers/customers.module';
 
 @Module({
@@ -37,8 +38,9 @@ import { CustomersModule } from './customers/customers.module';
     }),
     HotelsModule, 
     RoomsModule, 
-    RoomsTypeModule
-    CustomersModule,
+    RoomsTypeModule,
+    ReviewsModule,
+    CostumersModule,
     HotelAdminsModule,
     AuthModule,
     BookingModule,

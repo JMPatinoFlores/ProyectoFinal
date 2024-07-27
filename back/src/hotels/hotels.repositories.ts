@@ -11,7 +11,7 @@ export class HotelsRepository{
     ){}
 
     async getDbHotels(): Promise<Hotel[]>  {
-        const hotelsList: Hotel[] = await this.hotelDbRepository.find();
+        const hotelsList: Hotel[] = await this.hotelDbRepository.find({relations:{reviews:{customer:true}}});
         if(hotelsList.length !== 0){
             return hotelsList;
         }
@@ -37,4 +37,13 @@ export class HotelsRepository{
         return newHotel.hotelId;     
     }
 
+    async searchHotels(name: string) {
+        const hotels = await this.hotelDbRepository
+            .createQueryBuilder('hotel')
+            .where('LOWER(hotel.name) LIKE LOWER(:name)', { name: `%${name}%` })
+            .getMany();
+          console.log("hola a todos");
+          
+        return hotels;
+    }
 }
