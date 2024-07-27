@@ -56,10 +56,6 @@ export class RoomsRepository{
             throw new NotFoundException("RoomType with ID not found");
         }
 
-        console.log("este es nini", nIni);
-        console.log("este es nend",nEnd);
-        console.log("este es qunty",quantity);
-        
         const roomNumbers = generateUniqueRandomNumbers(nIni, nEnd, quantity);
         const createdRoomIds: string[] = [];
         console.log( roomNumbers);
@@ -80,18 +76,6 @@ export class RoomsRepository{
                 .execute();
         
         });
-
-        
-
-        // for (const roomNumber of roomNumbers) {
-        //     const newRoom = this.roomDbRepository.create({
-        //         roomNumber: roomNumber.toString(),
-        //         roomtype: roomtypeFound
-        //     });
-
-        //     const savedRoom = await this.roomDbRepository.save(newRoom);
-        //     createdRoomIds.push(savedRoom.roomId);
-        // }
 
         return "rooms reload";
     }

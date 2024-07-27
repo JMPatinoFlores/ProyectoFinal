@@ -18,9 +18,9 @@ export class BookingService {
         return await this.bookingRepository.getBookingById(id)
     }
 
-    async createBooking(bookingData: CreateBookingDto) {
-        return await this.bookingRepository.createBooking(bookingData)
-    }
+    // async createBooking(bookingData: CreateBookingDto) {
+    //     return await this.bookingRepository.createBooking(bookingData)
+    // }
 
     async cancelBooking(id: string) {
         return this.bookingRepository.cancelBooking(id)

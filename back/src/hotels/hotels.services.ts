@@ -2,8 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { HotelsRepository } from "./hotels.repositories";
 import { CreateHotelDto } from "./hotels.dtos";
 
-
-
 @Injectable()
 export class HotelsService{
     constructor(
@@ -21,4 +19,9 @@ export class HotelsService{
     async createDbHotel(hotelDto: CreateHotelDto){
         return await this.hotelsDbRepository.createDbHotel(hotelDto);
     }
+
+    async searchHotels(name: string){
+        return await this.hotelsDbRepository.searchHotels(name);
+    }
+
 }

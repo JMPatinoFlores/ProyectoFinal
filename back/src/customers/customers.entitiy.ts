@@ -1,5 +1,6 @@
 import { User } from 'src/entities/baseUser.entitity';
-import { Column, Entity } from 'typeorm';
+import { Review } from 'src/reviews/reviews.entity';
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 
 @Entity({
   name: 'COSTUMERS',
@@ -10,4 +11,8 @@ export class Customers extends User {
     default: false,
   })
   isAdmin: boolean = false;
+
+  @OneToMany((type) => Review, (reviews) => reviews.customer)
+  @JoinColumn()
+  reviews: Review[];
 }
