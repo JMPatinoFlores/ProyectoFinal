@@ -137,3 +137,17 @@ export interface IBookingDetails {
   status: boolean;
   bookingId: string;
 }
+
+export interface IHotelDetail {
+  id: string;
+  name: string;
+  price: number;
+  country: string;
+  city: string;
+  distance: number;
+  image: string;
+  address: string;
+  description: string;
+  services: string[];
+  recommendations: string;
+}
