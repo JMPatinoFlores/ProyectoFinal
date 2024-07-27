@@ -1,57 +1,56 @@
 import { useState, useEffect } from 'react';
-import loader from './googleMapsApiLoader';
+import { useLoadScript, GoogleMap, Marker } from '@react-google-maps/api';
+import { IHotelDetail } from '@/interfaces';
 
-interface GoogleMapsDataProps {
-  address: string;
-  location: google.maps.LatLngLiteral | null;
-}
-
-const GoogleMapsData = () => {
-  const [mapElement, setMapElement] = useState<HTMLElement | null>(null);
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [address, setAddress] = useState<string>('');
-  const [location, setLocation] = useState<google.maps.LatLngLiteral | null>(null);
-
-  useEffect(() => {
-    const element = document.getElementById('map');
-    setMapElement(element);
-  }, []);
-
-  useEffect(() => {
-    if (!mapElement) return;
-
-    loader.importLibrary('places').then(() => {
-      const mapInstance = new google.maps.Map(mapElement ?? document.createElement('div'), {
-        center: { lat: -33.0456, lng: -71.5515 },
-        zoom: 12,
-      });
-      setMap(mapInstance);
-
-      const geocoder = new google.maps.Geocoder();
-
-      geocoder.geocode({ address: 'Avenida Borgono 12925, Renaca, Vina del Mar 2540407 Chile' }, (results, status) => {
-        if (status === 'OK' && results?.[0]) {
-          const location = results[0].geometry.location;
-          const latLngLiteral: google.maps.LatLngLiteral = {
-            lat: location.lat(),
-            lng: location.lng(),
-          };
-          setLocation(latLngLiteral);
-          setAddress(results[0].formatted_address);
-          mapInstance.setCenter(location);
-          const marker = new google.maps.Marker({
-            position: location,
-            map: mapInstance,
-            title: results[0].formatted_address,
-          });
-        } else {
-          console.error('Geocode failed:', status);
-        }
-      });
-    });
-  }, [mapElement]);
-
-  return { address, location };
+const DEFAULT_MAP_CENTER: google.maps.LatLngLiteral = {
+  lat: 53.4058343,
+  lng: -2.9919333,
 };
 
-export default GoogleMapsData;
+const useGoogleMapsData = (hotel: IHotelDetail | null) => {
+  const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>(DEFAULT_MAP_CENTER);
+  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
+    libraries: ['places'],
+  });
+
+  useEffect(() => {
+    if (hotel && isLoaded && !loadError) {
+      const address = `${hotel.address}, ${hotel.city}, ${hotel.country}`;
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ address }, (results: google.maps.GeocoderResult[] | null, status: google.maps.GeocoderStatus) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          if (results) {
+            const location = results[0].geometry.location;
+            const latLngLiteral: google.maps.LatLngLiteral = {
+              lat: location.lat(),
+              lng: location.lng(),
+            };
+            setMapCenter(latLngLiteral);
+          } else {
+            console.error('No results found');
+          }
+        } else {
+          console.error(`Geocode error: ${status}`);
+        }
+      });
+    }
+  }, [hotel, isLoaded, loadError]);
+
+  useEffect(() => {
+    if (mapCenter && isLoaded && !loadError) {
+      const markerOptions: google.maps.MarkerOptions = {
+        position: mapCenter,
+        map: null,
+      };
+      setMarker(new google.maps.Marker(markerOptions));
+    } else {
+      setMarker(null);
+    }
+  }, [mapCenter, isLoaded, loadError]);
+
+  return { isLoaded, mapCenter, marker };
+};
+
+export default useGoogleMapsData;
