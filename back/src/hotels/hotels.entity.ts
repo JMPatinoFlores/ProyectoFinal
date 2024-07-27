@@ -1,4 +1,5 @@
 import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
+import { HotelAdmins } from "src/hotel-admins/hotelAdmins.entitity";
 import { Review } from "src/reviews/reviews.entity";
 import { RoomsType } from "src/roomstype/roomstype.entity";
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -8,7 +9,7 @@ import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGe
 })
 export class Hotel {
     @PrimaryGeneratedColumn('uuid')
-    hotelId: string;
+    id: string;
 
     @Column({type:"varchar", length:50, nullable:false, unique:true})
     name:string;
@@ -54,14 +55,11 @@ export class Hotel {
     @JoinColumn()
     reviews: Review[];
 
-
-    // @ManyToOne(() => HotelAdmin, (hoteladmin) => hoteladmin.hotels)
-    // @JoinColumn('hoteladminId')
-    // hotelAdmin: HotelAdmin;
+    @ManyToOne(() => HotelAdmins, (hoteladmin) => hoteladmin.hotels)
+    @JoinColumn({name: 'hoteladminId'})
+    hotelAdmin: HotelAdmins;
 
     @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
     bookingDetails: BookingDetails[];
-
-
 
 }

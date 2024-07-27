@@ -40,7 +40,7 @@ export class BookingDetails {
         },
         inverseJoinColumn: {
             name: 'hotel_Id',
-            referencedColumnName: 'hotelId',
+            referencedColumnName: 'id',
         }
     })
     hotels: Hotel[];

@@ -6,7 +6,7 @@ export class CreateReviewDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(100)
-    coment: string;
+    comment: string;
 
     @IsString()
     @IsNotEmpty()
