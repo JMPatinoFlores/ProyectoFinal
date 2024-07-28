@@ -13,7 +13,7 @@ import {
 @Entity({ name: 'bookings' })
 export class Booking {
     @PrimaryGeneratedColumn('uuid')
-    bookingId: string
+    id: string
 
     @Column({type: 'varchar', length: 24})
     date: string

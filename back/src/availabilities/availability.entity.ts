@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 't
 @Entity()
 export class RoomAvailability {
     @PrimaryGeneratedColumn('uuid')
-    id: number;
+    id: string;
 
     @Column({type: 'varchar', length: 24, nullable: false})
     startDate: string;

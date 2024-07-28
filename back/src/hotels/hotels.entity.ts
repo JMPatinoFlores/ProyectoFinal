@@ -1,8 +1,7 @@
-import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
-import { HotelAdmins } from "src/hotel-admins/hotelAdmins.entitity";
-import { Review } from "src/reviews/reviews.entity";
-import { Customers } from 'src/customers/customers.entitiy';
+import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
 import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entitity';
+import { Review } from 'src/reviews/reviews.entity';
+import { Customers } from 'src/customers/customers.entitiy';
 import { RoomsType } from 'src/roomstype/roomstype.entity';
 import {
   Column,
@@ -18,8 +17,8 @@ import {
   name: 'hotels',
 })
 export class Hotel {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   name: string;
@@ -57,21 +56,18 @@ export class Hotel {
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
 
+  @ManyToOne(() => HotelAdmins, (hotelAdmin) => hotelAdmin.hotels)
+  @JoinColumn({ name: 'hotel_admin_id' })
+  hotelAdmin: HotelAdmins;
+
   @OneToMany((type) => RoomsType, (roomstype) => roomstype.hotel)
   @JoinColumn()
   roomstype: RoomsType[];
 
-    @OneToMany((type) => Review, (reviews) => reviews.hotel)
-    @JoinColumn()
-    reviews: Review[];
+  @OneToMany((type) => Review, (reviews) => reviews.hotel)
+  @JoinColumn()
+  reviews: Review[];
 
-  @ManyToOne(() => HotelAdmins, (hotelAdmin) => hotelAdmin.hotels)
-  @JoinColumn({ name: 'hotelAdmin_id' })
-  hotelAdmin: HotelAdmins[];
-
-    // @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
-    // bookingDetails: BookingDetails[];
-
-    @ManyToOne(() => BookingDetails, (bookingDetails) => bookingDetails.hotel)
-    bookingDetails: BookingDetails[]
+  @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotel)
+  bookingDetails: BookingDetails[];
 }

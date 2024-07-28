@@ -29,7 +29,7 @@ export class BookingRepository {
 
   async getBookingById(id: string) {
     return await this.bookingDBRepository.findOne({
-      where: { bookingId: id },
+      where: { id: id },
       relations: ['bookingDetails'],
     });
     }
@@ -38,11 +38,11 @@ export class BookingRepository {
         
   }
 
-/*
+
     async createBooking(bookingData: CreateBookingDto) {
         const { date, time, customerId, hotelToBookId, discount, checkInDate, checkOutDate, roomsTypesAndAmounts } = bookingData
 
-        const customer = await this.customersDBRepository.findOne({where: {id: customerId}})
+        const customer = await this.customersDBRepository.findOne({ where: { id: customerId } })
 
         if (!customer) throw new NotFoundException('Customer no encontrado.')
 
@@ -50,7 +50,7 @@ export class BookingRepository {
         let hotelBooked: Hotel
 
         const hotel = await this.hotelDBRepository.findOne({
-            where: { hotelId: hotelToBookId },
+            where: { id: hotelToBookId },
             relations: ['roomstype', 'roomstype.rooms', 'roomstype.rooms.availabilities']
         })
 
@@ -82,12 +82,12 @@ export class BookingRepository {
                                     })
         
                                     const roomToRelate = this.roomDBRepository.create({
-                                        roomId: room.roomId,
+                                        id: room.id,
                                         roomtype: roomTypeOfHotel,
                                     })
 
                                     const roomTypeToRelate = this.roomTypeDBRepository.create({
-                                        roomsTypeId: roomTypeOfHotel.roomsTypeId,
+                                        id: roomTypeOfHotel.id,
                                         hotel: hotel
                                     })
 
@@ -105,27 +105,30 @@ export class BookingRepository {
                 }
             }
         }
+    
 
         let bookingDetails = this.bookingDetailsDBRepository.create({ total, discount, checkInDate, checkOutDate, hotel })
         
-        let booking = this.bookingDBRepository.create({date, time, bookingDetails, customer})
+        let booking = this.bookingDBRepository.create({ date, time, bookingDetails, customer })
         
         const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails)
 
-  //     return await this.bookingDBRepository.save(booking);
-  //   }
+        //     return await this.bookingDBRepository.save(booking);
+        //   }
 
-*/
+
+    }
+
     async cancelBooking(id: string) {
-        const booking = await this.bookingDBRepository.findOne({ where: { bookingId: id }, relations: ['bookingDetails'] })
-        await this.bookingDetailsDBRepository.update({ bookingDetailsId: booking.bookingDetails.bookingDetailsId }, { status: BookingDetailsStatus.CANCELLED })
+        const booking = await this.bookingDBRepository.findOne({ where: { id: id }, relations: ['bookingDetails'] })
+        await this.bookingDetailsDBRepository.update({ id: booking.bookingDetails.id }, { status: BookingDetailsStatus.CANCELLED })
 
         return "Booking cancelado exitosamente."
     }
-
+    
     async postponeBooking(id: string, checkInDate: string) {
         // 2024-07-25T17:04:51.143Z
-        const booking = await this.bookingDBRepository.findOne({ where: { bookingId: id }, relations: ['hotel', 'hotel.roomstype', 'hotel.roomstype.rooms', 'hotel.roomstype.rooms.availabilities']})
+        const booking = await this.bookingDBRepository.findOne({ where: { id: id }, relations: ['hotel', 'hotel.roomstype', 'hotel.roomstype.rooms', 'hotel.roomstype.rooms.availabilities']})
         const newDate = new Date(checkInDate)
         const oldDate = new Date(booking.date)
         const differenceInMilliseconds = newDate.getTime() - oldDate.getTime()
@@ -134,7 +137,7 @@ export class BookingRepository {
         if (differenceInDays > 5) {
             for (const roomType of booking.bookingDetails.hotel.roomstype) {
                 let isBooked = false
-                const newRoomType = await this.roomTypeDBRepository.findOne({where: {roomsTypeId: roomType.roomsTypeId}, relations: ['roomstype.rooms', 'roomstype.rooms.availabilities']})
+                const newRoomType = await this.roomTypeDBRepository.findOne({where: {id: roomType.id}, relations: ['roomstype.rooms', 'roomstype.rooms.availabilities']})
                 for (const room of newRoomType.rooms) {
                     if (isBooked) break
                     for (const availability of room.availabilities) {
@@ -154,13 +157,13 @@ export class BookingRepository {
                         newCheckInDate = new Date(newCheckInDate).toISOString()
                         newCheckOutDate = new Date(newCheckOutDate).toISOString()
 
-                        await this.bookingDetailsDBRepository.update({ bookingDetailsId: booking.bookingDetails.bookingDetailsId }, { checkInDate: newCheckInDate, checkOutDate: newCheckOutDate })
+                        await this.bookingDetailsDBRepository.update({ id: booking.bookingDetails.id }, { checkInDate: newCheckInDate, checkOutDate: newCheckOutDate })
 
                         const availabilityToRelate = this.roomAvailabilityDBRepository.create({ startDate: newCheckInDate, endDate: newCheckOutDate, room: room })
                         
-                        const roomToRelate = this.roomDBRepository.create({ roomId: room.roomId, roomtype: newRoomType })
+                        const roomToRelate = this.roomDBRepository.create({ id: room.id, roomtype: newRoomType })
                         
-                        const roomTypeToRelate = this.roomTypeDBRepository.create({ roomsTypeId: newRoomType.roomsTypeId, hotel: booking.bookingDetails.hotel })
+                        const roomTypeToRelate = this.roomTypeDBRepository.create({ id: newRoomType.id, hotel: booking.bookingDetails.hotel })
 
                         await this.roomAvailabilityDBRepository.save(availabilityToRelate)
                         await this.roomDBRepository.save(roomToRelate)

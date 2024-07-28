@@ -23,6 +23,7 @@ import { BookingModule } from './bookings/booking.module';
 import { BookingDetailModule } from './bookingDetails/booking-detail.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { CustomersModule } from './customers/customers.module';
+import { AvailabilityModule } from './availabilities/availability.module';
 
 @Module({
   imports: [
@@ -39,11 +40,12 @@ import { CustomersModule } from './customers/customers.module';
     RoomsModule, 
     RoomsTypeModule,
     ReviewsModule,
-    CostumersModule,
+    CustomersModule,
     HotelAdminsModule,
     AuthModule,
     BookingModule,
     BookingDetailModule,
+    AvailabilityModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
