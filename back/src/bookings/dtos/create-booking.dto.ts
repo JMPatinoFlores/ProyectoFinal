@@ -1,4 +1,4 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, IsNumber, IsObject, IsString, IsUUID } from "class-validator";
+import { ArrayMinSize, IsArray, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
 
 export class CreateBookingDto {
     @IsNotEmpty()
@@ -17,9 +17,21 @@ export class CreateBookingDto {
     @IsString()
     time: string
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
     discount: number
+
+    @IsArray()
+    @ArrayMinSize(1)
+    @IsNotEmpty()
+    roomsTypesAndAmounts: RoomTypeAndAmount[]
+}
+
+class RoomTypeAndAmount {
+    @IsNotEmpty()
+    @IsString()
+    @MaxLength(50)
+    roomType: string
 
     @IsNotEmpty()
     @IsString()
@@ -28,8 +40,4 @@ export class CreateBookingDto {
     @IsNotEmpty()
     @IsString()
     checkOutDate: string
-
-    @IsObject()
-    @IsNotEmpty()
-    roomsTypesAndAmounts: Record<string, number>
 }

@@ -68,6 +68,6 @@ export class Hotel {
   @JoinColumn()
   reviews: Review[];
 
-  @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotel)
+  @OneToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotel)
   bookingDetails: BookingDetails[];
 }
