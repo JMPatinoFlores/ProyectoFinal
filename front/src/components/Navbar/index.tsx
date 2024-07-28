@@ -33,11 +33,6 @@ function Navbar() {
       </nav>
 
       <div className="relative flex-1 ml-auto sm:flex-initial">
-        <input
-          type="search"
-          placeholder="Buscar..."
-          className="pl-8 py-1 w-[300px] border border-2px border-[#000000] rounded-md"
-        />
         <Link href="#">
           <button className=" bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]">
             Iniciar Sesión
