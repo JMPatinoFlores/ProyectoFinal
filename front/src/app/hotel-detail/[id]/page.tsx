@@ -12,13 +12,11 @@ function HotelDetail() {
   const { isLoaded, mapCenter, marker } = useGoogleMapsData(hotel);
 
   useEffect(() => {
-    if (typeof id === "string") {
-      fetch("/hotels.json")
-        .then((response) => response.json())
-        .then((data) => {
-          const selectedHotel = data.find(
-            (hotel: { id: string }) => hotel.id === id.toUpperCase()
-          );
+    if (typeof id === 'string') {
+      fetch('/hotels.json')
+        .then(response => response.json())
+        .then(data => {
+          const selectedHotel = data.find((hotel: { id: string; }) => hotel.id === id.toUpperCase());
           setHotel(selectedHotel);
         });
     }
