@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { UserProvider } from "@/context/userContext";
+import SessionWrapper from "@/lib/auth/SessionWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,13 +21,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="min-h-screen flex flex-col">
+        {/* <SessionWrapper> */}
+        <div className="min-h-screen flex flex-col justify-between">
           <UserProvider>
             <Navbar />
-            <main>{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
           </UserProvider>
         </div>
+        {/* </SessionWrapper> */}
       </body>
     </html>
   );

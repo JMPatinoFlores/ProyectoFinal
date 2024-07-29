@@ -36,8 +36,8 @@ export class CreateHotelAdminDto {
   password: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  phone: number;
+  @IsString()
+  phone: string;
 
   @IsNotEmpty()
   @IsString()
