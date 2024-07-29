@@ -188,3 +188,10 @@ export interface IHotelLocation {
 export interface IProductsListProps {
   searchQuery: string;
 }
+
+
+export interface ILocationDetail {
+  country: string;
+  city: string;
+  address: string;
+}
