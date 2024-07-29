@@ -1,6 +1,16 @@
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, Query } from "@nestjs/common";
-import { BookingService } from "./booking.service";
-import { CreateBookingDto } from "./dtos/create-booking.dto";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
+import { BookingService } from './booking.service';
+import { CreateBookingDto } from './dtos/create-booking.dto';
 
 @Controller('bookings')
 export class BookingController {
@@ -24,11 +34,11 @@ export class BookingController {
     return await this.bookingService.getBookingById(id);
   }
 
-    // @Post()
-    // @HttpCode(201)
-    // async createBooking(@Body() bookingData: CreateBookingDto) {
-    //     return await this.bookingService.createBooking(bookingData)
-    // }
+  // @Post()
+  // @HttpCode(201)
+  // async createBooking(@Body() bookingData: CreateBookingDto) {
+  //     return await this.bookingService.createBooking(bookingData)
+  // }
 
   @Put('cancel/:id')
   @HttpCode(201)

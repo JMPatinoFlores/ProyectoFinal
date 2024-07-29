@@ -7,6 +7,7 @@ import {
   IsEmail,
   IsNumber,
   IsStrongPassword,
+  maxLength,
 } from 'class-validator';
 
 export class CreateCustomerDto {
@@ -36,8 +37,8 @@ export class CreateCustomerDto {
   password: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  phone: number;
+  @IsString()
+  phone: string;
 
   @IsNotEmpty()
   @IsString()
@@ -69,8 +70,8 @@ export class UpdateCustomerInfoDto extends PickType(CreateCustomerDto, [
   'name',
   'lastName',
   'email',
-  'phone',
   'country',
   'city',
   'address',
+  'phone',
 ]) {}
