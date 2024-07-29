@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useLoadScript, GoogleMap, Marker } from "@react-google-maps/api";
-import { IHotelDetail } from "@/interfaces";
+import { ILocationDetail } from "@/interfaces";
 
 const DEFAULT_MAP_CENTER: google.maps.LatLngLiteral = {
   lat: 53.4058343,
   lng: -2.9919333,
 };
 
-const useGoogleMapsData = (hotel: IHotelDetail | null) => {
+const useGoogleMapsData = (hotel: ILocationDetail | null) => {
   const [mapCenter, setMapCenter] =
     useState<google.maps.LatLngLiteral>(DEFAULT_MAP_CENTER);
   const [marker, setMarker] = useState<google.maps.Marker | null>(null);
