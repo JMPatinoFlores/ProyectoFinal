@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 interface Hotel {
+  id: string; 
   name: string;
   price: number;
   country: string;
@@ -16,7 +17,7 @@ interface ProductCardProps {
 function ProductCard({ hotel }: ProductCardProps) {
   return (
     <div className="w-full max-w-xs">
-      <Link href="#" className="group block">
+       <Link href={`/hotel-detail/${hotel.id}`} className="group block">
         <div className="overflow-hidden rounded-lg transition-shadow shadow-none group-hover:shadow-lg">
           <img
             src={hotel.image}

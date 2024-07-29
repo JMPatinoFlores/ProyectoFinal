@@ -16,7 +16,7 @@ function HotelDetail() {
       fetch('/hotels.json')
         .then(response => response.json())
         .then(data => {
-          const selectedHotel = data.find((hotel: { id: string; }) => hotel.id === id);
+          const selectedHotel = data.find((hotel: { id: string; }) => hotel.id === id.toUpperCase());
           setHotel(selectedHotel);
         });
     }
