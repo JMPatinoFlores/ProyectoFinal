@@ -105,6 +105,33 @@ export interface IHotel {
   hotelAdminId: string;
 }
 
+export interface IHotelContextType {
+  hotels: IHotel[] | null;
+  setHotels: React.Dispatch<React.SetStateAction<IHotel[] | null>>;
+  addHotel: (hotel: IHotelRegister) => Promise<boolean>;
+  fetchHotels: () => Promise<void>;
+  fetchBookingsByHotel: (hotelId: string) => Promise<IBooking[]>;
+  fetchRoomsByHotel: (hotelId: string) => Promise<IRoom[]>;
+  fetchHotelById: (hotelId: string) => Promise<IHotel | null>;
+}
+
+export interface IHotelResponse {
+  hotelId: string;
+  name: string;
+  description: string;
+  email: string;
+  country: string;
+  city: string;
+  address: string;
+  location: number[];
+  totalRooms: number;
+  avaliableRooms: IRoom[];
+  services: string[];
+  image: string[];
+  rating: number;
+  hotelAdminId: string;
+}
+
 export interface IHotelAdmin {
   hotelAdminId: string;
   hotelsNumber: number;
