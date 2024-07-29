@@ -50,6 +50,7 @@ export class CustomersRepository {
       where: { id },
       relations: {
         bookings: true,
+        reviews: true,
       },
     });
     if (!customer) return `No se encontró el cliente con el ID: ${id}`;
@@ -72,7 +73,7 @@ export class CustomersRepository {
 
   //! Modificar un cliente
 
-  async updateCustomerInfo(id: string, customer: UpdateCustomerInfoDto) {
+  async updateCustomerInfo(id: string, customer: any) {
     await this.customersRepository.update(id, customer);
     const updatedCustomer = await this.customersRepository.findOneBy({ id });
     const { password, ...customerNoPassword } = updatedCustomer;
