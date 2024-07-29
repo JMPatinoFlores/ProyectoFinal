@@ -151,3 +151,13 @@ export interface IHotelDetail {
   services: string[];
   recommendations: string;
 }
+
+export interface IHotelLocation {
+  country: string;
+  city: string;
+  address: string;
+}
+
+export interface IProductsListProps {
+  searchQuery: string;
+}
