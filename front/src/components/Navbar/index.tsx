@@ -1,45 +1,109 @@
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
-import SearchBar from "../SearchBar";
+import { useState } from "react";
 
 function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <header className="flex items-center h-16 px-4 bg-[#F1F1F1] bg-opacity-5">
-      <Link
-        href="/"
-        className="flex items-center gap-2 font-semibold md:text-base "
-      >
-        <img src="/logo.png" alt="Logo" className="w-6 h-6 mr-5" />
+    <div className="h-20 header sticky top-0 bg-white shadow-md flex items-center justify-between px-8 py-02">
+      <Link href="/" className="flex w-3/12 items-center">
+        <Image
+          src={"/logo.png"}
+          alt="logo"
+          width={40}
+          height={40}
+          className="hover:scale-105 hover:rotate-12 transition duration-100"
+        />
+        <h2 className=" hover:text-red-500 duration-200 font-semibold text-lg p-2">
+          RutaViajera{" "}
+        </h2>
       </Link>
-
-      <nav className="text-md font-medium">
-        <Link
-          href="/home"
-          className="font-medium mr-6 hover:text-[#f83f3a] hover:border-b-2 hover:border-[#f83f3a] transition duration-300"
-        >
-          Inicio
+      <div className="hidden md:flex text-lg font-medium">
+        <div className="flex items-center">
+          <Link
+            href="/home"
+            className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer active"
+          >
+            Inicio
+          </Link>
+          <Link
+            href="#"
+            className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+          >
+            Servicios
+          </Link>
+          <Link
+            href="#"
+            className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+          >
+            Nosotros
+          </Link>
+          <Link
+            href="#"
+            className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+          >
+            Contacto
+          </Link>
+        </div>
+      </div>
+      <div className="w-3/12 hidden md:flex justify-end items-center font-medium">
+        <Link href="/login">
+          <button className="mr-2 hover:text-red-500 duration-200 text-lg p-2">
+            Ingresar
+          </button>
         </Link>
-        <Link
-          href="#"
-          className="font-medium mr-6 hover:text-[#f83f3a] hover:border-b-2 hover:border-[#f83f3a] transition duration-300"
-        >
-          Mapa
-        </Link>
-        <Link
-          href="#"
-          className="font-medium mr-6 hover:text-[#f83f3a] hover:border-b-2 hover:border-[#f83f3a] transition duration-300"
-        >
-          Mis reservas
-        </Link>
-      </nav>
-
-      <div className="relative flex-1 ml-auto sm:flex-initial">
-        <Link href="#">
-          <button className=" bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]">
-            Iniciar Sesión
+        <Link href="/register">
+          <button className="p-2  text-white rounded-md bg-red-500 hover:bg-red-600">
+            Registrarse
           </button>
         </Link>
       </div>
-    </header>
+      <div className="md:hidden">
+        <button onClick={() => setIsOpen(!isOpen)} className="text-red-500">
+          <Image src={"/menu.png"} alt="menu" width={32} height={32} />
+        </button>
+      </div>
+
+      {isOpen && (
+        <div className="absolute top-20 left-0 w-full bg-white shadow-md md:hidden">
+          <div className="flex flex-col items-center">
+            <Link
+              href="/home"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer active"
+            >
+              Inicio
+            </Link>
+            <Link
+              href="#"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Servicios
+            </Link>
+            <Link
+              href="#"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Nosotros
+            </Link>
+            <Link
+              href="#"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Contacto
+            </Link>
+            <Link href="/login">
+              <button className="mr-2 p-2">Ingresar</button>
+            </Link>
+            <Link href="/register">
+              <button className="p-2">Registrarse</button>
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

@@ -34,7 +34,7 @@ export default function PreviewImage({ file }: PreviewImageProps) {
   }, [file]);
 
   return (
-    <div>
+    <div className="">
       {preview && (
         <img
           style={{ width: "300px" }}

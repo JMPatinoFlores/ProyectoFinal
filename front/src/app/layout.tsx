@@ -21,15 +21,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SessionWrapper>
-          <div className="min-h-screen flex flex-col justify-between">
-            <UserProvider>
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </UserProvider>
-          </div>
-        </SessionWrapper>
+        {/* <SessionWrapper> */}
+        <div className="min-h-screen flex flex-col justify-between">
+          <UserProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </UserProvider>
+        </div>
+        {/* </SessionWrapper> */}
       </body>
     </html>
   );

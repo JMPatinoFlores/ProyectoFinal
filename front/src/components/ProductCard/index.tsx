@@ -32,7 +32,9 @@ function ProductCard({ hotel }: ProductCardProps) {
               <div className="text-primary font-medium">${hotel.price}</div>
             </div>
             <div className="flex items-center text-muted-foreground">
-              <span>{hotel.city}, {hotel.country}</span>
+              <span>
+                {hotel.city}, {hotel.country}
+              </span>
             </div>
             <div className="flex items-center text-muted-foreground">
               <span>{hotel.distance} km de distancia</span>
