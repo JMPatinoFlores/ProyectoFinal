@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import useGoogleMapsData from "../../../lib/googleMaps/googleMapsData";
-import { IHotelDetail } from "@/interfaces";
+import { IHotelDetail,ILocationDetail } from "@/interfaces";
 import { GoogleMap, Marker } from "@react-google-maps/api";
 
 function HotelDetail() {
   const { id } = useParams();
   const [hotel, setHotel] = useState<IHotelDetail | null>(null);
-  const { isLoaded, mapCenter, marker } = useGoogleMapsData(hotel);
+  const [hotelLocation, setHotelLocation] = useState<ILocationDetail | null>(null);
+  const { isLoaded, mapCenter, marker } = useGoogleMapsData(hotelLocation);
 
   useEffect(() => {
     if (typeof id === 'string') {
@@ -17,6 +18,7 @@ function HotelDetail() {
         .then(response => response.json())
         .then(data => {
           const selectedHotel = data.find((hotel: { id: string; }) => hotel.id === id.toUpperCase());
+          setHotelLocation(selectedHotel);
           setHotel(selectedHotel);
         });
     }
