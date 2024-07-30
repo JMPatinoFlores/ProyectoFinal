@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { typeOrmConfig } from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HotelsModule } from './hotels/hotels.modules';
+import { HotelsModule } from './hotels/hotels.module';
 import { RoomsModule } from './rooms/rooms.modules';
 import { RoomsTypeModule } from './roomstype/roomstype.modules';
 import { HotelAdminsModule } from './hotel-admins/hotel-admins.module';
@@ -36,8 +36,8 @@ import { AvailabilityModule } from './availabilities/availability.module';
       useFactory: (configService: ConfigService) =>
         configService.get('typeorm'),
     }),
-    HotelsModule, 
-    RoomsModule, 
+    HotelsModule,
+    RoomsModule,
     RoomsTypeModule,
     ReviewsModule,
     CustomersModule,

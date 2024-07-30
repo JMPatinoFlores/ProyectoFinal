@@ -1,22 +1,58 @@
 "use client";
 
-import { IHotelImage } from "@/interfaces";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import Image from "next/image";
-import React from "react";
-import uploadImage from "../../../public/upload.png";
+import { validationSchema } from "@/helpers/validateData";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useState } from "react";
+import PreviewImage from "../PreviewImage";
+
+interface FormValues {
+  image: File | null;
+}
 
 export default function PostHotelImage() {
-  const initialValues: IHotelImage = {
-    image: [],
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
+  ) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setFieldValue("image", event.target.files[0]);
+      setSelectedFile(event.target.files[0]);
+    }
   };
 
   const handleSubmit = async (
-    values: IHotelImage,
+    values: FormValues,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    console.log("Datos enviados", values);
-    alert("Datos enviados");
+    setUploading(true);
+    const formData = new FormData();
+    if (values.image) {
+      formData.append("file", values.image);
+    }
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""
+    );
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const responseData = await response.json();
+      console.log("Se subió correctamente:", responseData);
+      setUploading(false);
+    } catch (error) {
+      console.error("No se puede subir la:", error);
+      setUploading(false);
+    }
+
     setSubmitting(false);
   };
 
@@ -25,85 +61,44 @@ export default function PostHotelImage() {
       <div className="w-full max-w-md p-8">
         <div className="flex justify-center mb-8">
           <h1 className="text-4xl mb-2 pb-2 text-center font-bold">
-            Sube una o varias imágenes de tu hotel
+            Sube una imagen de tu hotel
           </h1>
         </div>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-          {({ setFieldValue, isSubmitting, values }) => (
+        <Formik
+          initialValues={{ image: null }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ setFieldValue, isSubmitting }) => (
             <Form className="space-y-2">
-              <div className="formDiv mb-4">
+              <div className="formDiv">
                 <label htmlFor="image" className="formLabel">
-                  Seleccionar imagen
+                  Imagen
                 </label>
-                <input
-                  type="file"
-                  name="image"
-                  className="formInput"
-                  multiple
-                  onChange={(event) => {
-                    const files = event.currentTarget.files;
-                    if (files) {
-                      const fileArray = Array.from(files);
-                      setFieldValue("image", fileArray);
-                    }
-                  }}
-                />
+                <Field name="image">
+                  {({ field }: any) => (
+                    <input
+                      type="file"
+                      onChange={(e) => handleImageChange(e, setFieldValue)}
+                      placeholder="Selecciona una imagen"
+                      className="formInput"
+                    />
+                  )}
+                </Field>
                 <ErrorMessage
                   name="image"
                   component="div"
-                  className="text-red-600 text-sm mt-1"
+                  className="text-red-600 text-sm"
                 />
               </div>
-              {values.image && values.image.length > 0 && (
-                <div className="mt-4">
-                  <h3 className="text-lg font-semibold mb-2">
-                    Imágenes seleccionadas:
-                  </h3>
-                  <ul className="list-disc list-inside space-y-2">
-                    {values.image.map((file, index) => (
-                      <li
-                        key={index}
-                        className="flex justify-between items-center"
-                      >
-                        <span>{file.name}</span>
-                        <button
-                          type="button"
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => {
-                            const newFiles = values.image.filter(
-                              (_, i) => i !== index
-                            );
-                            setFieldValue("image", newFiles);
-                          }}
-                        >
-                          Borrar
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              <div className="mt-6">
-                <button
-                  type="submit"
-                  className="btn-secondary"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    "Cargando imágenes..."
-                  ) : (
-                    <div className="flex items-center">
-                      <h1>Cargar</h1>
-                      <Image
-                        src={uploadImage}
-                        alt="Cargar"
-                        width={24}
-                        height={24}
-                      />
-                    </div>
-                  )}
-                </button>
-              </div>
+              <button
+                type="submit"
+                className="btn-secondary"
+                disabled={isSubmitting || uploading}
+              >
+                {uploading ? "Subiendo..." : "Subir imagen"}
+              </button>
+              {selectedFile && <PreviewImage file={selectedFile} />}
             </Form>
           )}
         </Formik>

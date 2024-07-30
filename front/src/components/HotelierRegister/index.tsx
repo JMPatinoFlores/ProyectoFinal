@@ -3,13 +3,13 @@
 import { validateRegisterForm } from "@/helpers/validateData";
 import { IRegisterValues } from "@/interfaces";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import registerImage from "../../../public/planea.jpg";
+import registerHotelierImage from "../../../public/registrohotelero.jpg";
 import Link from "next/link";
 import { useContext } from "react";
 import { UserContext } from "@/context/userContext";
 import { useRouter } from "next/navigation";
 
-export default function RegisterForm() {
+export default function HotelierRegisterForm() {
   const { signUp } = useContext(UserContext);
   const router = useRouter();
 
@@ -246,13 +246,13 @@ export default function RegisterForm() {
     <div className="flex min-h-screen">
       <div
         className="hidden md:flex md:w-1/2 bg-cover bg-center"
-        style={{ backgroundImage: `url(${registerImage.src})` }}
+        style={{ backgroundImage: `url(${registerHotelierImage.src})` }}
       >
-        <div className="flex items-center justify-center w-full h-full bg-black bg-opacity-40">
-          <div className="text-white text-center">
-            <h1 className="text-5xl font-bold mb-4">Explora el mundo</h1>
+        <div className="flex w-full h-full bg-black bg-opacity-40">
+          <div className="text-white text-center flex flex-col mx-auto mt-72">
+            <h1 className="text-5xl font-bold mb-4">Bienvenido</h1>
             <p className="text-lg">
-              Destinos Impresionantes, Experiencias Inigualables.
+              Un mundo donde la elegancia se encuentra con la comodidad.
             </p>
           </div>
         </div>
@@ -261,7 +261,7 @@ export default function RegisterForm() {
         <div className="w-full max-w-md p-8">
           <div className="flex justify-center mb-8">
             <h1 className="text-4xl mb-2 pb-2 text-center font-bold">
-              Registro
+              ¡Registrate y publica tu hotel!
             </h1>
           </div>
           <Formik
@@ -355,39 +355,37 @@ export default function RegisterForm() {
                     className="text-red-600 text-sm"
                   />
                 </div>
-                <div className="flex justify-between">
-                  <div className="flex-1 mr-2">
-                    <label htmlFor="city" className="formLabel">
-                      Ciudad
-                    </label>
-                    <Field
-                      type="text"
-                      name="city"
-                      placeholder="Ciudad"
-                      className="formInput"
-                    />
-                    <ErrorMessage
-                      name="city"
-                      component="div"
-                      className="text-red-600 text-sm"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label htmlFor="address" className="formLabel">
-                      Dirección
-                    </label>
-                    <Field
-                      type="text"
-                      name="address"
-                      placeholder="Dirección"
-                      className="formInput"
-                    />
-                    <ErrorMessage
-                      name="address"
-                      component="div"
-                      className="text-red-600 text-sm"
-                    />
-                  </div>
+                <div>
+                  <label htmlFor="city" className="formLabel">
+                    Ciudad
+                  </label>
+                  <Field
+                    type="text"
+                    name="city"
+                    placeholder="Ciudad"
+                    className="formInput"
+                  />
+                  <ErrorMessage
+                    name="city"
+                    component="div"
+                    className="text-red-600 text-sm"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="address" className="formLabel">
+                    Dirección
+                  </label>
+                  <Field
+                    type="text"
+                    name="address"
+                    placeholder="Dirección"
+                    className="formInput"
+                  />
+                  <ErrorMessage
+                    name="address"
+                    component="div"
+                    className="text-red-600 text-sm"
+                  />
                 </div>
                 <div>
                   <label htmlFor="email" className="formLabel">
@@ -447,19 +445,11 @@ export default function RegisterForm() {
                   </button>
                   <div className="flex items-center justify-start mb-2 mt-1">
                     <h3 className="mr-2 text-sm">¿Ya tienes una cuenta?</h3>
-                    <Link href={"/login"} className="text-sm text-[#f8263a]">
-                      Inicia sesión
-                    </Link>
-                  </div>
-                  <div className="flex justify-start text-center">
-                    <h3 className="mr-2 text-sm">
-                      ¿Quieres publicar tu hotel?
-                    </h3>
                     <Link
-                      href={"/register/hotelier"}
-                      className="text-sm text-[#f8263a]"
+                      href={"/login"}
+                      className="text-sm text-[#f8263a] hover:text-[#f8263a]"
                     >
-                      Regístrate como hotelero
+                      Inicia sesión
                     </Link>
                   </div>
                 </div>
