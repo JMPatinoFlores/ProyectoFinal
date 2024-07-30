@@ -7,7 +7,7 @@ export class CreateBookingDto {
 
     @IsNotEmpty()
     @IsUUID()
-    hotelToBookId: string
+    hotelId: string
 
     @IsNotEmpty()
     @IsString()
@@ -24,7 +24,7 @@ export class CreateBookingDto {
     @IsArray()
     @ArrayMinSize(1)
     @IsNotEmpty()
-    roomsTypesAndAmounts: RoomTypeAndAmount[]
+    roomTypesAndDates: RoomTypeAndAmount[]
 }
 
 class RoomTypeAndAmount {

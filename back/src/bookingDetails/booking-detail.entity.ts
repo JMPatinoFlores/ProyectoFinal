@@ -8,10 +8,10 @@ export class BookingDetails {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-    @Column({type: 'int', nullable: false})
+    @Column({type: 'float', nullable: false})
     total: number
 
-    @Column({type: 'int', nullable: true})
+    @Column({type: 'float', nullable: true})
     discount: number
 
     @Column({type: 'boolean', default: false})

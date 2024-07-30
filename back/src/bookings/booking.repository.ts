@@ -40,28 +40,25 @@ export class BookingRepository {
 
 
     async createBooking(bookingData: CreateBookingDto) {
-        const { date, time, customerId, hotelToBookId, discount, roomsTypesAndAmounts } = bookingData
+        const { date, time, customerId, hotelId, discount, roomTypesAndDates } = bookingData
 
         const customer = await this.customersDBRepository.findOne({ where: { id: customerId } })
 
         if (!customer) throw new NotFoundException('Customer no encontrado.')
 
         let total: number = 0
-        const availabilitiesCreated = []
-        let roomToSave: Room
-        let roomTypeToSave: RoomsType
-        let roomsBooked: Room[] = []
-        let roomTypesBooked: RoomsType[] = []
+        const availabilitiesSaved = []
+        const roomsBooked = []
 
         const hotel = await this.hotelDBRepository.findOne({
-            where: { id: hotelToBookId },
+            where: { id: hotelId },
             relations: ['roomstype', 'roomstype.rooms', 'roomstype.rooms.availabilities']
         })
 
         if (!hotel) throw new NotFoundException('Hotel no encontrado.')
         
 
-        for (const roomTypeAndAmount of roomsTypesAndAmounts) {
+        for (const roomTypeAndAmount of roomTypesAndDates) {
             const { roomType, checkInDate, checkOutDate } = roomTypeAndAmount;
             const customerCheckInDate = new Date(checkInDate).getTime();
             const customerCheckOutDate = new Date(checkOutDate).getTime();
@@ -89,20 +86,22 @@ export class BookingRepository {
                         const newAvailability = this.roomAvailabilityDBRepository.create({
                             startDate: checkInDate,
                             endDate: checkOutDate,
+                            room: room
                         });
 
-                        availabilitiesCreated.push(newAvailability);
-                        roomToSave = room
-                        roomTypeToSave = roomTypeOfHotel
+                        const savedAvailability = await this.roomAvailabilityDBRepository.save(newAvailability)
+                        availabilitiesSaved.push(savedAvailability)
+                        const newRoom = await this.roomDBRepository.findOne({ where: { id: room.id }, relations: { roomtype: true } })
+                        roomsBooked.push({
+                            id: room.id,
+                            roomNumber: room.roomNumber,
+                            roomtype: {id: newRoom.roomtype.id, name: newRoom.roomtype.name}
+                        })
+                        total += newRoom.roomtype.price
                         isBooked = true;
-                        console.log("Booked");
-                        
                         break;
                     }
-                    // console.log("checkInDate: ", customerCheckInDate);
-                    // console.log("checkOutDate: ", customerCheckOutDate);
-                    // console.log("availabilityStartDate: ", availabilityStartDate);
-                    // console.log("availabilityEndDate: ", availabilityEndDate);
+                    
                 }
                 if (isBooked) break
             }
@@ -112,33 +111,38 @@ export class BookingRepository {
             }
         }
 
-        // if (availabilitiesCreated.length > 0) {
-
-        //     const bookingDetails = this.bookingDetailsDBRepository.create({
-        //         total: 0, // Assuming total calculation logic will be added here
-        //         discount,
-        //         hotel,
-        //     });
-        //     const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails);
+        if (availabilitiesSaved.length > 0) {
+            const newTotal = total * (100 - discount) / 100
+            const bookingDetails = this.bookingDetailsDBRepository.create({ total: newTotal, discount, hotel })
+            const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails)
+            const booking = this.bookingDBRepository.create({ date, time, bookingDetails, customer })
+            const newBooking = await this.bookingDBRepository.save(booking)
             
-        //     const roomTypeSaved = await this.roomTypeDBRepository.save({ id: roomTypeToSave.id, hotel: hotel })
-
-        //     const roomSaved = await this.roomDBRepository.save({ id: roomToSave.id, roomtype: roomTypeSaved })
+            const roomsAndAvailabilitiesToReturn = []
+            for (const room of roomsBooked) {
+                const availabilitiesToReturn = []
+                for (const availability of availabilitiesSaved) {
+                    if (room.id === availability.room.id) {
+                        availabilitiesToReturn.push({
+                            startDate: availability.startDate,
+                            endDate: availability.endDate
+                        })
+                    }
+                }
+                roomsAndAvailabilitiesToReturn.push({
+                    ...room,
+                    availabilities: availabilitiesToReturn
+                })
+            }
+            const hotelToReturn = { id: hotel.id, name: hotel.name }
+            const customerToReturn = {id: customer.id, email: customer.email}
+            const bookingDetailsToReturn = { ...newBookingDetails, hotel: hotelToReturn, rooms: roomsAndAvailabilitiesToReturn }
+            const bookingToReturn = { ...newBooking, bookingDetails: bookingDetailsToReturn, customer: customerToReturn }
             
-        //     for (const availability of availabilitiesCreated) {
-        //         await this.roomAvailabilityDBRepository.save({...availability, room: roomSaved})
-        //     }
-            
-        //     const booking = this.bookingDBRepository.create({
-        //         date,
-        //         time,
-        //         bookingDetails: newBookingDetails,
-        //         customer,
-        //     });
-        // return await this.bookingDBRepository.save(booking);
-        // } else {
-        //     throw new BadRequestException('Booking could not be completed.');
-        // }
+            return bookingToReturn
+        } else {
+            throw new BadRequestException('Booking could not be completed.');
+        }
 
     }
 
