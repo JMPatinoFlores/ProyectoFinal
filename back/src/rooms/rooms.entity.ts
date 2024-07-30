@@ -1,6 +1,7 @@
+import { RoomAvailability } from "src/availabilities/availability.entity";
 import { Hotel } from "src/hotels/hotels.entity";
 import { RoomsType } from "src/roomstype/roomstype.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity({
@@ -22,4 +23,7 @@ export class Room {
     @ManyToOne(() => RoomsType, (roomtype) => roomtype.rooms)
     @JoinColumn({name: "roomsTypeId"})
     roomtype: RoomsType;
+
+    @OneToMany(() => RoomAvailability, (roomAvailability) => roomAvailability.room)
+    availabilities: RoomAvailability[]
 }
