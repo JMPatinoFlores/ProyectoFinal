@@ -9,10 +9,14 @@ import { useContext } from "react";
 import { UserContext } from "@/context/userContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { signIn, useSession } from "next-auth/react";
 
 export default function LoginForm() {
-  const { signIn, isLogged } = useContext(UserContext);
+  const { login, isLogged } = useContext(UserContext);
   const router = useRouter();
+
+  const { data: session } = useSession();
+  console.log(session);
 
   const initialValues: ILogin = {
     email: "",
@@ -23,7 +27,7 @@ export default function LoginForm() {
     values: ILogin,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    const success = await signIn(values);
+    const success = await login(values);
     if (success) {
       alert("Iniciaste sesión correctamente");
       router.push("/home");
@@ -58,7 +62,7 @@ export default function LoginForm() {
             </h1>
           </div>
           <div className="flex justify-center items-center border border-[#f8263a] rounded-md w-full p-2 mb-5">
-            <button className="flex">
+            <button onClick={() => signIn()} className="flex">
               <Image
                 src={"/google.png"}
                 alt="google"
