@@ -20,16 +20,7 @@ export class AvailabilityRepository {
     }
 
     async getAvailabilitiesByRoomTypeId(roomTypeId: string) {
-        const roomType = await this.roomTypeDBRepository.findOne({ where: { id: roomTypeId }, relations: { rooms: { availabilities: true } } })
-        
-        if (!roomType) throw new BadRequestException('No existe un roomtype con ese id.')
-        let nonAvailabilityPeriods = []
-
-        for (const room of roomType.rooms) {
-            for (const availability of room.availabilities) {
-                nonAvailabilityPeriods.push(availability)
-            }
-        }
+        const nonAvailabilityPeriods = await this.roomAvailabilityDBRepository.find({where: {room: { roomtype: {id: roomTypeId}}}})
 
         if (nonAvailabilityPeriods.length === 0) throw new NotFoundException('El roomtype no contiene availabilities.') 
         return nonAvailabilityPeriods

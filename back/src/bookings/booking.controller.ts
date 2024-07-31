@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dtos/create-booking.dto';
+import { PostponeBookingDto } from './dtos/postpone-booking.dto';
 
 @Controller('bookings')
 export class BookingController {
@@ -34,6 +35,18 @@ export class BookingController {
     return await this.bookingService.getBookingById(id);
   }
 
+  @Get('customer/:id')
+  @HttpCode(200)
+  async getBookingsByCustomerId(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.bookingService.getBookingsByCustomerId(id)
+  }
+
+  @Get('hotelAdminId/:id')
+  @HttpCode(200)
+  async getBookingsByHotelAdminId(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.bookingService.getBookingsByHotelAdminId(id)
+  }
+
   @Post()
   @HttpCode(201)
   async createBooking(@Body() bookingData: CreateBookingDto) {
@@ -46,12 +59,11 @@ export class BookingController {
     return this.bookingService.cancelBooking(id);
   }
 
-  // @Put('postpone/:id')
-  // @HttpCode(201)
-  // async postponeBooking(
-  //   @Param('id', ParseUUIDPipe) id: string,
-  //   @Query('date') date: string,
-  // ) {
-  //   return this.bookingService.postponeBooking(id, date);
-  // }
+  @Put('postpone')
+  @HttpCode(201)
+  async postponeBooking(
+    @Body() bookingData: PostponeBookingDto
+  ) {
+    return this.bookingService.postponeBooking(bookingData);
+  }
 }

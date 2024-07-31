@@ -66,11 +66,45 @@ export class BookingRepository {
     }
 
     async getBookingsByCustomerId(id: string) {
-
+        const bookings = await this.bookingDBRepository.find({
+            where: { customer: { id: id } }, relations: { bookingDetails: { availabilities: { room: { roomtype: true } }, hotel: true }, customer: true }, select: {
+                customer: {
+                    id: true,
+                    name: true,
+                    lastName: true,
+                    email: true,
+                    password: false,
+                    phone: true,
+                    country: true,
+                    city: true,
+                    address: true,
+                    birthDate: true
+                }
+            },
+        })
+        if (bookings.length === 0) throw new BadRequestException('No se encontró ningún booking.')
+        return bookings
     }
 
-    async getBookingByHotelAdminId(id: string) {
-        
+    async getBookingsByHotelAdminId(id: string) {
+        const bookings = await this.bookingDBRepository.find({
+            where: { bookingDetails: { hotel: { hotelAdmin: { id: id } } } }, relations: { bookingDetails: { availabilities: { room: { roomtype: true } }, hotel: true }, customer: true }, select: {
+                customer: {
+                    id: true,
+                    name: true,
+                    lastName: true,
+                    email: true,
+                    password: false,
+                    phone: true,
+                    country: true,
+                    city: true,
+                    address: true,
+                    birthDate: true
+                }
+            }
+        })
+        if (bookings.length === 0) throw new BadRequestException('No se encontró ningún booking.')
+        return bookings
     }
 
     async createBooking(bookingData: CreateBookingDto) {
@@ -166,54 +200,87 @@ export class BookingRepository {
         return "Booking cancelado exitosamente."
     }
 
-    // async postponeBooking(bookingData: PostponeBookingDto) {
-    //     // 2024-07-25T17:04:51.143Z
+    async postponeBooking(bookingData: PostponeBookingDto) {
+        // 2024-07-25T17:04:51.143Z
+        const { bookingId, newAvailabilities } = bookingData
+        const booking = await this.bookingDBRepository.findOne({ where: { id: bookingId }, relations: {bookingDetails: {hotel: {roomstype: {rooms: {availabilities: true}}}}}  })
+        const availabilitiesSaved: RoomAvailability[] = []
+        let total: number = 0
+        
+        for (const newAvailability of newAvailabilities) {
+            const newAvailabilityWithId = await this.roomAvailabilityDBRepository.findOne({ where: { id: newAvailability.id }, relations: { room: { roomtype: true } } })
+            const customerCheckInDate = new Date(newAvailability.startDate).getTime()
+            const customerCheckOutDate = new Date(newAvailability.endDate).getTime()
+            let isBooked = false
+            for (const roomType of booking.bookingDetails.hotel.roomstype) {
+                if (isBooked) break
+                if (roomType.id !== newAvailabilityWithId.room.roomtype.id) continue
+                for (const room of roomType.rooms) {
+                    let isAvailable = true
+                    for (const oldAvailability of room.availabilities) {
+                        if (isBooked) break
+                        const oldAvailabilityStartDate = new Date(oldAvailability.startDate).getTime()
+                        const oldAvailabilityEndDate = new Date(oldAvailability.endDate).getTime()
 
-    //     const booking = await this.bookingDBRepository.findOne({ where: { id: id }, relations: ['hotel', 'hotel.roomstype', 'hotel.roomstype.rooms', 'hotel.roomstype.rooms.availabilities']})
-    //     const newDate = new Date(checkInDate)
-    //     const oldDate = new Date(booking.date)
-    //     const differenceInMilliseconds = newDate.getTime() - oldDate.getTime()
-    //     const millisecondsInADay = 24 * 60 * 60 * 1000
-    //     const differenceInDays = differenceInMilliseconds / millisecondsInADay
-    //     if (differenceInDays > 5) {
-    //         for (const roomType of booking.bookingDetails.hotel.roomstype) {
-    //             let isBooked = false
-    //             const roomType = await this.roomTypeDBRepository.findOne({where: {id: roomType.id}, relations: ['roomstype.rooms', 'roomstype.rooms.availabilities']})
-    //             for (const room of roomType.rooms) {
-    //                 if (isBooked) break
-    //                 for (const availability of room.availabilities) {
-    //                     if (isBooked) break
-    //                     let newCheckInDate: number | string = new Date(checkInDate).getTime()
-    //                     const oldCheckInDate = new Date(booking.bookingDetails.checkInDate).getTime()
-    //                     const timeToPostpone = newCheckInDate - oldCheckInDate
-    //                     const oldCheckOutDate = new Date(booking.bookingDetails.checkOutDate)
-    //                     let newCheckOutDate: number | string = oldCheckOutDate.setTime(oldCheckOutDate.getTime() + timeToPostpone)
-    //                     const availabilityStartDate = new Date(availability.startDate).getTime()
-    //                     const availabilityEndDate = new Date(availability.endDate).getTime()
+                        if (!(customerCheckOutDate <= oldAvailabilityStartDate || customerCheckInDate >= oldAvailabilityEndDate)) {
+                            isAvailable = false
+                            break
+                        }
 
-    //                     if ((newCheckInDate < availabilityStartDate && newCheckOutDate < availabilityEndDate) || (newCheckInDate > availabilityStartDate && newCheckOutDate < availabilityEndDate) || (newCheckInDate > availabilityStartDate && newCheckOutDate > availabilityEndDate)) {
-    //                         throw new BadRequestException('Fechas para el booking no disponibles.')
-    //                     }
+                        if (isAvailable) {
+                            const { availabilities, ...newRoom } = room;
+                            const newRoomType = await this.roomTypeDBRepository.findOneBy({ id: roomType.id })
+                            
+                            newRoom.roomtype = newRoomType
+                            const availabilityToBook = this.roomAvailabilityDBRepository.create({
+                                id: newAvailability.id,
+                                startDate: newAvailability.startDate,
+                                endDate: newAvailability.endDate,
+                                room: newRoom,
+                            });
 
-    //                     newCheckInDate = new Date(newCheckInDate).toISOString()
-    //                     newCheckOutDate = new Date(newCheckOutDate).toISOString()
+                            const savedAvailability = await this.roomAvailabilityDBRepository.save(availabilityToBook)
 
-    //                     await this.bookingDetailsDBRepository.update({ id: booking.bookingDetails.id }, { checkInDate: newCheckInDate, checkOutDate: newCheckOutDate })
+                            availabilitiesSaved.push(savedAvailability)
 
-    //                     const availabilityToRelate = this.roomAvailabilityDBRepository.create({ startDate: newCheckInDate, endDate: newCheckOutDate, room: room })
+                            total += roomType.price
+                            isBooked = true;
+                            break;
+                        }
+                    }
+                    if (isBooked) break
+                }
+                if (!isBooked) {
+                    throw new BadRequestException('No available rooms for the specified dates.');
+                }
+            }
+        }
 
-    //                     const roomToSave = this.roomDBRepository.create({ id: room.id, roomtype: roomType })
+        if (availabilitiesSaved.length > 0) {
+            const newBooking = await this.bookingDBRepository.findOne({
+                where: { id: booking.id },
+                relations: { bookingDetails: { availabilities: { room: { roomtype: true } }, hotel: true }, customer: true }, select: {
+                    customer: {
+                        id: true,
+                        name: true,
+                        lastName: true,
+                        email: true,
+                        password: false,
+                        phone: true,
+                        country: true,
+                        city: true,
+                        address: true,
+                        birthDate: true
+                    }
+                }
+            })
 
-    //                     const roomTypeToRelate = this.roomTypeDBRepository.create({ id: roomType.id, hotel: booking.bookingDetails.hotel })
-
-    //                     await this.roomAvailabilityDBRepository.save(availabilityToRelate)
-    //                     await this.roomDBRepository.save(roomToSave)
-    //                     await this.roomTypeDBRepository.save(roomTypeToRelate)
-
-    //                     isBooked = true
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+            return {
+                message: 'Booking con availabilities actualizadas.',
+                newBooking
+            }
+        } else {
+            throw new BadRequestException('Booking could not be completed.');
+        }
+    }
 }
