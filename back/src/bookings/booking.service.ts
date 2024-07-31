@@ -32,10 +32,14 @@ export class BookingService {
   }
 
   async cancelBooking(id: string) {
-    return this.bookingRepository.cancelBooking(id);
+    return await this.bookingRepository.cancelBooking(id);
   }
 
   async postponeBooking(bookingData: PostponeBookingDto) {
-      return this.bookingRepository.postponeBooking(bookingData)
+    return await this.bookingRepository.postponeBooking(bookingData)
+  }
+
+  async deleteBooking(id: string) {
+    return await this.bookingRepository.deleteBooking(id)
   }
 }

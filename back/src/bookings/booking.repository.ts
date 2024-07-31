@@ -108,15 +108,14 @@ export class BookingRepository {
     }
 
     async createBooking(bookingData: CreateBookingDto) {
-        const { date, time, customerId, hotelId, discount, roomTypesIdsAndDates } = bookingData
-
+        const { customerId, hotelId, discount, roomTypesIdsAndDates } = bookingData
+        const now = new Date().toISOString()
         const { password, ...customer } = await this.customersDBRepository.findOne({ where: { id: customerId } })
 
         if (!customer) throw new NotFoundException('Customer no encontrado.')
 
         let total: number = 0
         const availabilitiesSaved = []
-        const roomsBooked = []
 
         const hotelToBook = await this.hotelDBRepository.findOne({
             where: { id: hotelId },
@@ -183,7 +182,7 @@ export class BookingRepository {
             const { roomstype, ...newHotel } = hotelToBook
             const bookingDetails = this.bookingDetailsDBRepository.create({ total: newTotal, discount, hotel: newHotel, availabilities: availabilitiesSaved })
             const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails)
-            const booking = this.bookingDBRepository.create({ date, time, bookingDetails: newBookingDetails, customer })
+            const booking = this.bookingDBRepository.create({ date: now, bookingDetails: newBookingDetails, customer })
             const newBooking = await this.bookingDBRepository.save(booking)
 
             return newBooking
@@ -203,10 +202,10 @@ export class BookingRepository {
     async postponeBooking(bookingData: PostponeBookingDto) {
         // 2024-07-25T17:04:51.143Z
         const { bookingId, newAvailabilities } = bookingData
-        const booking = await this.bookingDBRepository.findOne({ where: { id: bookingId }, relations: {bookingDetails: {hotel: {roomstype: {rooms: {availabilities: true}}}}}  })
+        const booking = await this.bookingDBRepository.findOne({ where: { id: bookingId }, relations: { bookingDetails: { hotel: { roomstype: { rooms: { availabilities: true } } } } } })
         const availabilitiesSaved: RoomAvailability[] = []
         let total: number = 0
-        
+
         for (const newAvailability of newAvailabilities) {
             const newAvailabilityWithId = await this.roomAvailabilityDBRepository.findOne({ where: { id: newAvailability.id }, relations: { room: { roomtype: true } } })
             const customerCheckInDate = new Date(newAvailability.startDate).getTime()
@@ -230,7 +229,7 @@ export class BookingRepository {
                         if (isAvailable) {
                             const { availabilities, ...newRoom } = room;
                             const newRoomType = await this.roomTypeDBRepository.findOneBy({ id: roomType.id })
-                            
+
                             newRoom.roomtype = newRoomType
                             const availabilityToBook = this.roomAvailabilityDBRepository.create({
                                 id: newAvailability.id,
@@ -282,5 +281,10 @@ export class BookingRepository {
         } else {
             throw new BadRequestException('Booking could not be completed.');
         }
+    }
+
+    async deleteBooking(id: string) {
+        await this.bookingDBRepository.delete({ id })
+        return "Booking eliminado."
     }
 }

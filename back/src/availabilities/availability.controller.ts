@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
 import { AvailabilityService } from "./availability.service";
-import { CreateAvailabilityDto } from "./availability.dtos";
+import { CreateAvailabilityDto, UpdateAvailabilityDto } from "./availability.dtos";
 
 @Controller('availabilities')
 export class AvailabilityController {
-    constructor(private readonly availabilityService: AvailabilityService) {}
+    constructor(private readonly availabilityService: AvailabilityService) { }
 
     @Get()
     @HttpCode(200)
@@ -21,8 +21,14 @@ export class AvailabilityController {
     @Post()
     @HttpCode(201)
     async createRoomAvailability(@Body() createAvailabilityData: CreateAvailabilityDto) {
-        const {roomId, startDate, endDate} = createAvailabilityData
+        const { roomId, startDate, endDate } = createAvailabilityData
         return await this.availabilityService.createRoomAvailability(roomId, startDate, endDate)
+    }
+
+    @Put(':id')
+    @HttpCode(200)
+    async updateAvailability(@Param('id', ParseUUIDPipe) id: string, @Body() updateAvailabilityData: UpdateAvailabilityDto) {
+        return await this.availabilityService.updateAvailability(id, updateAvailabilityData)
     }
 
     @Delete('/:id')

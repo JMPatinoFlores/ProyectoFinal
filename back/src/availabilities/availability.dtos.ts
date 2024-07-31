@@ -1,17 +1,29 @@
-import { IsNotEmpty, IsString, IsUUID, Matches } from "class-validator"
+import { IsISO8601, IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator"
 
 export class CreateAvailabilityDto {
     @IsNotEmpty()
     @IsUUID()
     roomId: string
-    
+
     @IsNotEmpty()
     @IsString()
-    @Matches(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
+    @IsISO8601()
     startDate: string
-    
+
     @IsNotEmpty()
     @IsString()
-    @Matches(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
+    @IsISO8601()
+    endDate: string
+}
+
+export class UpdateAvailabilityDto {
+    @IsOptional()
+    @IsString()
+    @IsISO8601()
+    startDate: string
+
+    @IsOptional()
+    @IsString()
+    @IsISO8601()
     endDate: string
 }

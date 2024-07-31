@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -56,7 +57,7 @@ export class BookingController {
   @Put('cancel/:id')
   @HttpCode(201)
   async cancelBooking(@Param('id', ParseUUIDPipe) id: string) {
-    return this.bookingService.cancelBooking(id);
+    return await this.bookingService.cancelBooking(id);
   }
 
   @Put('postpone')
@@ -64,6 +65,12 @@ export class BookingController {
   async postponeBooking(
     @Body() bookingData: PostponeBookingDto
   ) {
-    return this.bookingService.postponeBooking(bookingData);
+    return await this.bookingService.postponeBooking(bookingData);
+  }
+
+  @Delete(':id')
+  @HttpCode(200)
+  async deleteBooking(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.bookingService.deleteBooking(id)
   }
 }

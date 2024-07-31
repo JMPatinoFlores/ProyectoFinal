@@ -9,25 +9,25 @@ export class BookingDetails {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-    @Column({type: 'float', nullable: false})
-    total: number
+  @Column({ type: 'float', nullable: false })
+  total: number
 
-    @Column({type: 'float', nullable: true})
-    discount: number
+  @Column({ type: 'float', nullable: true })
+  discount: number
 
-    @Column({type: 'boolean', default: false})
-    isDeleted: boolean
+  @Column({ type: 'boolean', default: false })
+  isDeleted: boolean
 
-    @OneToOne(() => Booking)
-    booking: Booking
+  @OneToOne(() => Booking)
+  booking: Booking
 
-    @ManyToOne(() => Hotel, (hotel) => hotel.bookingDetails)
-    @JoinColumn({name: 'hotel-id'})
-    hotel: Hotel
+  @ManyToOne(() => Hotel, (hotel) => hotel.bookingDetails)
+  @JoinColumn({ name: 'hotel-id' })
+  hotel: Hotel
 
-    @Column({default: BookingDetailsStatus.ACTIVE, nullable: false})
+  @Column({ default: BookingDetailsStatus.ACTIVE, nullable: false })
   status: BookingDetailsStatus
-  
+
   @OneToMany(() => RoomAvailability, (availability) => availability.bookingDetails)
   availabilities: RoomAvailability[]
 }
