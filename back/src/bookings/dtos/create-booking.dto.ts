@@ -24,14 +24,13 @@ export class CreateBookingDto {
     @IsArray()
     @ArrayMinSize(1)
     @IsNotEmpty()
-    roomTypesAndDates: RoomTypeAndAmount[]
+    roomTypesIdsAndDates: RoomTypeIdAndAmount[]
 }
 
-class RoomTypeAndAmount {
+class RoomTypeIdAndAmount {
     @IsNotEmpty()
-    @IsString()
-    @MaxLength(50)
-    roomType: string
+    @IsUUID()
+    roomTypeId: string
 
     @IsNotEmpty()
     @IsString()
