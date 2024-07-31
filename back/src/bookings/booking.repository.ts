@@ -129,6 +129,7 @@ export class BookingRepository {
             const { roomTypeId, checkInDate, checkOutDate } = roomTypeIdAndDate;
             const customerCheckInDate = new Date(checkInDate).getTime();
             const customerCheckOutDate = new Date(checkOutDate).getTime();
+            if (customerCheckOutDate < customerCheckInDate) throw new BadRequestException('Los checkInDates deben ser anteriores en el tiempo a sus respectivos checkOutDates.')
             let isBooked = false
 
             for (const roomTypeOfHotel of hotelToBook.roomstype) {
@@ -210,6 +211,7 @@ export class BookingRepository {
             const newAvailabilityWithId = await this.roomAvailabilityDBRepository.findOne({ where: { id: newAvailability.id }, relations: { room: { roomtype: true } } })
             const customerCheckInDate = new Date(newAvailability.startDate).getTime()
             const customerCheckOutDate = new Date(newAvailability.endDate).getTime()
+            if (customerCheckOutDate < customerCheckInDate) throw new BadRequestException('Los checkInDates deben ser anteriores en el tiempo a sus respectivos checkOutDates.')
             let isBooked = false
             for (const roomType of booking.bookingDetails.hotel.roomstype) {
                 if (isBooked) break
