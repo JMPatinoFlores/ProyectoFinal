@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
 import { AvailabilityService } from "./availability.service";
 import { CreateAvailabilityDto } from "./availability.dtos";
 
@@ -6,7 +6,13 @@ import { CreateAvailabilityDto } from "./availability.dtos";
 export class AvailabilityController {
     constructor(private readonly availabilityService: AvailabilityService) {}
 
-    @Get(':id')
+    @Get()
+    @HttpCode(200)
+    async getAllAvailabilities() {
+        return await this.availabilityService.getAllAvailabilities()
+    }
+
+    @Get('/roomtype/:id')
     @HttpCode(200)
     async getAvailabilitiesByRoomTypeId(@Param('id', ParseUUIDPipe) roomTypeId: string) {
         return await this.availabilityService.getAvailabilitiesByRoomTypeId(roomTypeId)
@@ -17,5 +23,11 @@ export class AvailabilityController {
     async createRoomAvailability(@Body() createAvailabilityData: CreateAvailabilityDto) {
         const {roomId, startDate, endDate} = createAvailabilityData
         return await this.availabilityService.createRoomAvailability(roomId, startDate, endDate)
+    }
+
+    @Delete('/:id')
+    @HttpCode(200)
+    async deleteRoomAvailability(@Param('id', ParseUUIDPipe) id: string) {
+        return await this.availabilityService.deleteRoomAvailability(id)
     }
 }

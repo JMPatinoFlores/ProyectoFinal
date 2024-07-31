@@ -1,3 +1,4 @@
+import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
 import { Room } from 'src/rooms/rooms.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 
@@ -18,4 +19,8 @@ export class RoomAvailability {
 
     @Column({ default: false, nullable: false })
     isAvailable: boolean;
+
+    @ManyToOne(() => BookingDetails, (bookingDetails) => bookingDetails.availabilities)
+    @JoinColumn({name: 'booking-details'})
+    bookingDetails: BookingDetails
 }

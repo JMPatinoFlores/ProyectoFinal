@@ -4,7 +4,7 @@ import { CreateBookingDto } from './dtos/create-booking.dto';
 
 @Injectable()
 export class BookingService {
-  constructor(private readonly bookingRepository: BookingRepository) {}
+  constructor(private readonly bookingRepository: BookingRepository) { }
 
   async getBookings(page: number, limit: number) {
     const bookings = await this.bookingRepository.getBookings();
@@ -19,14 +19,14 @@ export class BookingService {
   }
 
   async createBooking(bookingData: CreateBookingDto) {
-      return await this.bookingRepository.createBooking(bookingData)
+    return await this.bookingRepository.createBooking(bookingData)
   }
 
   async cancelBooking(id: string) {
     return this.bookingRepository.cancelBooking(id);
   }
 
-    // async postponeBooking(id: string, checkInDate: string) {
-    //     return this.bookingRepository.postponeBooking(id, checkInDate)
-    // }
+  // async postponeBooking(id: string, checkInDate: string) {
+  //     return this.bookingRepository.postponeBooking(id, checkInDate)
+  // }
 }
