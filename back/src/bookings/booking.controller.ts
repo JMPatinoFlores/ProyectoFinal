@@ -37,7 +37,7 @@ export class BookingController {
   @Post()
   @HttpCode(201)
   async createBooking(@Body() bookingData: CreateBookingDto) {
-      return await this.bookingService.createBooking(bookingData)
+    return await this.bookingService.createBooking(bookingData);
   }
 
   @Put('cancel/:id')

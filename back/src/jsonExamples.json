@@ -9,3 +9,15 @@
 	"address": "test Address 1234",
 	"birthDate": "01/01/2000"
 }
+
+{
+	"customerId": "45554c92-b41e-4506-a329-022ed5fc13d1",
+	"hotelId": "7358fd7a-184d-4df5-a441-6d5735cb029f",
+	"date": "2024-10-10",
+	"time": "22:00",
+	"roomTypesAndDates": [{
+		"roomType": "a6ee3fe1-a864-47c6-ab89-8b27a09681c4",
+		"checkInDate": "2024-10-10T14:00",
+		"checkOutDate": "2024-11-10T14:00"
+	}]
+}
