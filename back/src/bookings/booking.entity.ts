@@ -18,11 +18,8 @@ export class Booking {
   @Column({ type: 'varchar', length: 24 })
   date: string;
 
-  @Column({ type: 'varchar', length: 24 })
-  time: string;
-
   @Column({ type: 'boolean', default: false })
-  isDeleted: boolean;
+  isDeleted: boolean
 
   @OneToOne(() => BookingDetails)
   @JoinColumn({ name: 'booking-details-id' })
