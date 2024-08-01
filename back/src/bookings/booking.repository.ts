@@ -145,6 +145,7 @@ export class BookingRepository {
                         const availabilityEndDate = new Date(availability.endDate).getTime();
 
                         if (!(customerCheckOutDate <= availabilityStartDate || customerCheckInDate >= availabilityEndDate)) {
+                            if (availability.isAvailable) continue
                             isAvailable = false;
                             break;
                         }
@@ -179,9 +180,8 @@ export class BookingRepository {
         }
 
         if (availabilitiesSaved.length > 0) {
-            const newTotal = total * (100 - discount) / 100
             const { roomstype, ...newHotel } = hotelToBook
-            const bookingDetails = this.bookingDetailsDBRepository.create({ total: newTotal, discount, hotel: newHotel, availabilities: availabilitiesSaved })
+            const bookingDetails = this.bookingDetailsDBRepository.create({ total, discount, hotel: newHotel, availabilities: availabilitiesSaved })
             const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails)
             const booking = this.bookingDBRepository.create({ date: now, bookingDetails: newBookingDetails, customer })
             const newBooking = await this.bookingDBRepository.save(booking)
@@ -194,7 +194,11 @@ export class BookingRepository {
     }
 
     async cancelBooking(id: string) {
-        const booking = await this.bookingDBRepository.findOne({ where: { id: id }, relations: ['bookingDetails'] })
+        const booking = await this.bookingDBRepository.findOne({ where: { id: id }, relations: { bookingDetails: { availabilities: true } } })
+        if (!booking) throw new NotFoundException('Booking no encontrado.')
+        for (const availability of booking.bookingDetails.availabilities) {
+            await this.roomAvailabilityDBRepository.update({ id: availability.id }, { isAvailable: true })
+        }
         await this.bookingDetailsDBRepository.update({ id: booking.bookingDetails.id }, { status: BookingDetailsStatus.CANCELLED })
 
         return "Booking cancelado exitosamente."
@@ -218,46 +222,51 @@ export class BookingRepository {
                 if (roomType.id !== newAvailabilityWithId.room.roomtype.id) continue
                 for (const room of roomType.rooms) {
                     let isAvailable = true
+                    
                     for (const oldAvailability of room.availabilities) {
                         if (isBooked) break
                         const oldAvailabilityStartDate = new Date(oldAvailability.startDate).getTime()
                         const oldAvailabilityEndDate = new Date(oldAvailability.endDate).getTime()
 
                         if (!(customerCheckOutDate <= oldAvailabilityStartDate || customerCheckInDate >= oldAvailabilityEndDate)) {
+                            if (oldAvailability.isAvailable) continue
                             isAvailable = false
                             break
                         }
 
-                        if (isAvailable) {
-                            const { availabilities, ...newRoom } = room;
-                            const newRoomType = await this.roomTypeDBRepository.findOneBy({ id: roomType.id })
-
-                            newRoom.roomtype = newRoomType
-                            const availabilityToBook = this.roomAvailabilityDBRepository.create({
-                                id: newAvailability.id,
-                                startDate: newAvailability.startDate,
-                                endDate: newAvailability.endDate,
-                                room: newRoom,
-                            });
-
-                            const savedAvailability = await this.roomAvailabilityDBRepository.save(availabilityToBook)
-
-                            availabilitiesSaved.push(savedAvailability)
-
-                            total += roomType.price
-                            isBooked = true;
-                            break;
-                        }
                     }
-                    if (isBooked) break
+                    if (isAvailable) {
+                        const { availabilities, ...newRoom } = room;
+                        const newRoomType = await this.roomTypeDBRepository.findOneBy({ id: roomType.id })
+
+                        newRoom.roomtype = newRoomType
+                        const availabilityToBook = this.roomAvailabilityDBRepository.create({
+                            id: newAvailability.id,
+                            startDate: newAvailability.startDate,
+                            endDate: newAvailability.endDate,
+                            room: newRoom,
+                            isAvailable: false
+                        });
+
+                        const savedAvailability = await this.roomAvailabilityDBRepository.save(availabilityToBook)
+
+                        availabilitiesSaved.push(savedAvailability)
+
+                        total += roomType.price
+                        isBooked = true;
+                        break;
+                    }
                 }
-                if (!isBooked) {
-                    throw new BadRequestException('No available rooms for the specified dates.');
-                }
+                if (isBooked) break
+            }
+            if (!isBooked) {
+                throw new BadRequestException('No available rooms for the specified dates.');
             }
         }
 
         if (availabilitiesSaved.length > 0) {
+            console.log('hola');
+            
             const newBooking = await this.bookingDBRepository.findOne({
                 where: { id: booking.id },
                 relations: { bookingDetails: { availabilities: { room: { roomtype: true } }, hotel: true }, customer: true }, select: {
@@ -286,7 +295,12 @@ export class BookingRepository {
     }
 
     async deleteBooking(id: string) {
+        const booking = await this.bookingDBRepository.findOne({ where: { id }, relations: { bookingDetails: { availabilities: true } } })
+        for (const availability of booking.bookingDetails.availabilities) {
+            await this.roomAvailabilityDBRepository.delete({ id: availability.id })
+        }
+        await this.bookingDetailsDBRepository.delete({ id: booking.bookingDetails.id })
         await this.bookingDBRepository.delete({ id })
-        return "Booking eliminado."
+        return "El booking, su bookingDetails y sus availabilities han sido eliminados."
     }
 }
