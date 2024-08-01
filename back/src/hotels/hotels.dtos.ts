@@ -19,12 +19,12 @@ export class CreateHotelDto{
     email: string;
 
     @IsString()
-    @MaxLength(20)
+    @MaxLength(50)
     @IsNotEmpty()
     country: string;
 
     @IsString()
-    @MaxLength(20)
+    @MaxLength(50)
     @IsNotEmpty()
     city: string;
 
@@ -56,6 +56,11 @@ export class CreateHotelDto{
     @IsArray()
     @IsString({each: true})
     images: string[];
+
+    @IsString()
+    @MaxLength(300)
+    @IsNotEmpty()
+    recommendations: string;
 
     @IsUUID()
     @IsNotEmpty()

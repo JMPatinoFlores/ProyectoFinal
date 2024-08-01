@@ -1,8 +1,6 @@
 import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
-import { HotelAdmins } from "src/hotel-admins/hotelAdmins.entitity";
+import { HotelAdmins } from "src/hotel-admins/hotelAdmins.entity";
 import { Review } from "src/reviews/reviews.entity";
-import { Customers } from 'src/customers/customers.entitiy';
-import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entitity';
 import { RoomsType } from 'src/roomstype/roomstype.entity';
 import {
   Column,
@@ -30,10 +28,10 @@ export class Hotel {
   @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: false })
+  @Column({ type: 'varchar', length: 50, nullable: false })
   country: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: false })
+  @Column({ type: 'varchar', length: 50, nullable: false })
   city: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
@@ -57,18 +55,21 @@ export class Hotel {
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
 
+  @Column({type: 'varchar', length:300})
+  recommendations: string;
+
   @OneToMany((type) => RoomsType, (roomstype) => roomstype.hotel)
   @JoinColumn()
   roomstype: RoomsType[];
 
-    @OneToMany((type) => Review, (reviews) => reviews.hotel)
-    @JoinColumn()
-    reviews: Review[];
+  @OneToMany((type) => Review, (reviews) => reviews.hotel)
+  @JoinColumn()
+  reviews: Review[];
 
   @ManyToOne(() => HotelAdmins, (hotelAdmin) => hotelAdmin.hotels)
-  @JoinColumn({ name: 'hotelAdmin_id' })
-  hotelAdmin: HotelAdmins[];
+  @JoinColumn({ name: 'hotel_admin_id' })
+  hotelAdmin: HotelAdmins;
 
-    @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
-    bookingDetails: BookingDetails[];
+  @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
+  bookingDetails: BookingDetails[];
 }

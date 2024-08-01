@@ -20,8 +20,33 @@ export class HotelsService{
         return await this.hotelsDbRepository.createDbHotel(hotelDto);
     }
 
-    async searchHotels(name: string){
-        return await this.hotelsDbRepository.searchHotels(name);
+    async searchHotels(query: string){
+        return await this.hotelsDbRepository.searchHotels(query);
     }
+
+    // async searchHotels(
+    //     name?: string,
+    //     country?: string,
+    //     city?: string,
+    //     service?: string,
+    //     room?: string
+    // ) {
+    //     // Construye un objeto de filtro basado en los parámetros proporcionados
+    //     const filter: any = {};
+    //     if (name) filter.name = name;
+    //     if (country) filter.country = country;
+    //     if (city) filter.city = city;
+    //     if (service) filter.service = service;
+    //     if (room) filter.room = room;
+    
+    //     // Llama al método en el repositorio con el objeto de filtro
+    //     return await this.hotelsDbRepository.searchHotels(filter);
+    // }
+    
+    // async searchHotels(filter: any) {
+    //     return await this.hotelsDbRepository.searchHotels(filter);
+    //   }
+    
+    
 
 }

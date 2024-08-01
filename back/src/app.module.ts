@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -8,12 +8,12 @@ import { HotelsModule } from './hotels/hotels.modules';
 import { RoomsModule } from './rooms/rooms.modules';
 import { RoomsTypeModule } from './roomstype/roomstype.modules';
 import { HotelAdminsModule } from './hotel-admins/hotel-admins.module';
-import { HotelAdmins } from './hotel-admins/hotelAdmins.entitity';
+import { HotelAdmins } from './hotel-admins/hotelAdmins.entity';
 import { HotelAdminsController } from './hotel-admins/hotel-admins.controller';
 import { HotelAdminsService } from './hotel-admins/hotel-admins.service';
 import { CustomersController } from './customers/customers.controller';
 import { CustomersService } from './customers/customers.service';
-import { Customers } from './customers/customers.entitiy';
+import { Customers } from './customers/customers.entity';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
@@ -23,6 +23,7 @@ import { BookingModule } from './bookings/booking.module';
 import { BookingDetailModule } from './bookingDetails/booking-detail.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { CustomersModule } from './customers/customers.module';
+import { NaturalLanguageProcessor } from './helper/natural-language-processor';
 
 @Module({
   imports: [
@@ -39,7 +40,7 @@ import { CustomersModule } from './customers/customers.module';
     RoomsModule, 
     RoomsTypeModule,
     ReviewsModule,
-    CostumersModule,
+    CustomersModule,
     HotelAdminsModule,
     AuthModule,
     BookingModule,
@@ -59,6 +60,15 @@ import { CustomersModule } from './customers/customers.module';
     AuthService,
     CustomersRepository,
     HotelAdminRepository,
+    NaturalLanguageProcessor
   ],
 })
+// export class AppModule implements OnModuleInit {
+//   constructor(
+//     private readonly nlpProcessor: NaturalLanguageProcessor
+//   ){}
+//   async onModuleInit() {
+//     await this.nlpProcessor.initialize();
+//   }
+// }
 export class AppModule {}

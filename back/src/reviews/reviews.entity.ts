@@ -1,6 +1,8 @@
-import { Customers } from "src/customers/customers.entitiy";
+
+import { Customers } from "src/customers/customers.entity";
 import { Hotel } from "src/hotels/hotels.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+
 
 @Entity({
     name:'reviews'
