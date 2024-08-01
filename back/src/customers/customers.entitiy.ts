@@ -13,6 +13,12 @@ export class Customers extends User {
   })
   isAdmin: boolean = false;
 
+  @Column({ nullable: true })
+  passwordResetToken: string;
+
+  @Column({ nullable: true })
+  passwordResetExpires: Date;
+
   @OneToMany(() => Booking, (booking) => booking.customer)
   bookings: Booking[];
 

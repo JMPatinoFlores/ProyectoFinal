@@ -4,11 +4,12 @@ import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
 import { CustomersRepository } from './customers.repository';
 import { Customers } from './customers.entitiy';
+import { MailService } from 'src/email-notify/mail.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Customers])],
   controllers: [CustomersController],
-  providers: [CustomersService, CustomersRepository],
+  providers: [CustomersService, CustomersRepository, MailService],
   exports: [CustomersRepository],
 })
 export class CustomersModule {}

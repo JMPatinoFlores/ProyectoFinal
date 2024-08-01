@@ -18,6 +18,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  //! Creación de Cliente
+
   async signUpCustomer(customer: CreateCustomerDto) {
     const { email, password } = customer;
     const foundCustomer =
@@ -35,6 +37,8 @@ export class AuthService {
     });
   }
 
+  //! Creación de Hotelero
+
   async signUpHotelAdmin(hotelAdmin: CreateHotelAdminDto) {
     const { email, password } = hotelAdmin;
     const foundHotelAdmin =
@@ -51,6 +55,8 @@ export class AuthService {
       password: hashedPassword,
     });
   }
+
+  //! Logueo de Cliente y Hotelero
 
   async signIn(email: string, password: string) {
     const customer = await this.customersRepository.getCustomerByEmail(email);

@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CustomersRepository } from './customers.repository';
-import { UpdateCustomerInfoDto } from './customers.dto';
+import {
+  PasswordRecoveryDto,
+  ResetPasswordDto,
+  UpdateCustomerInfoDto,
+  UpdatePasswordDto,
+} from './customers.dto';
 
 @Injectable()
 export class CustomersService {
@@ -16,6 +21,18 @@ export class CustomersService {
 
   updateCustomerInfo(id: string, customer: UpdateCustomerInfoDto) {
     return this.costumersRepository.updateCustomerInfo(id, customer);
+  }
+
+  changePassword(id: string, updatePassword: UpdatePasswordDto) {
+    return this.costumersRepository.changePassword(id, updatePassword);
+  }
+
+  passwordRecovery(passwordRecovery: PasswordRecoveryDto) {
+    return this.costumersRepository.passwordRecovery(passwordRecovery);
+  }
+
+  resetPassword(resetPassword: ResetPasswordDto) {
+    return this.costumersRepository.resetPassword(resetPassword);
   }
 
   logicalDeleteCustomer(id: string) {

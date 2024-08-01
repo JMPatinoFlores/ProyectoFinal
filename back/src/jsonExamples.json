@@ -21,3 +21,15 @@
 		"checkOutDate": "2024-11-10T14:00"
 	}]
 }
+
+{
+	"name": "Admin",
+	"lastName": "test",
+	"email": "admin@mail.com",
+	"password": "Test*1234",
+	"phone": "1472589632",
+	"country": "admin Country",
+	"city": "admin City",
+	"address": "admin Address 1234",
+	"birthDate": "01/01/2000"
+}

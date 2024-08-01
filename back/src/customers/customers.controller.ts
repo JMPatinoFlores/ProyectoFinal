@@ -4,11 +4,17 @@ import {
   Delete,
   Get,
   Param,
+  Post,
   Put,
   Query,
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
-import { UpdateCustomerInfoDto } from './customers.dto';
+import {
+  PasswordRecoveryDto,
+  ResetPasswordDto,
+  UpdateCustomerInfoDto,
+  UpdatePasswordDto,
+} from './customers.dto';
 
 @Controller('customers')
 export class CustomersController {
@@ -31,6 +37,14 @@ export class CustomersController {
     return this.customersService.getCustomerById(id);
   }
 
+  @Put('changePassword')
+  changePassword(
+    @Param('id') id: string,
+    @Body() updatePassword: UpdatePasswordDto,
+  ) {
+    return this.customersService.changePassword(id, updatePassword);
+  }
+
   //* Actualizar/modificar la información de un usuario
 
   @Put(':id')
@@ -39,6 +53,20 @@ export class CustomersController {
     @Body() customer: UpdateCustomerInfoDto,
   ) {
     return this.customersService.updateCustomerInfo(id, customer);
+  }
+
+  //* Petición para recuperar la contraseña
+
+  @Post('password-recovery')
+  passwordRecovery(@Body() passwordRecovery: PasswordRecoveryDto) {
+    return this.customersService.passwordRecovery(passwordRecovery);
+  }
+
+  //* Reseteo de la contraseña
+
+  @Post('reset-password')
+  resetPassword(@Body() resetPassword: ResetPasswordDto) {
+    return this.customersService.resetPassword(resetPassword);
   }
 
   //* Borrado lógico de un cliente
