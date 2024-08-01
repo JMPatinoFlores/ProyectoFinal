@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { RoomAvailability } from "./availability.entity";
 import { Room } from "src/rooms/rooms.entity";
 import { RoomsType } from "src/roomstype/roomstype.entity";
+import { UpdateAvailabilityDto } from "./availability.dtos";
 
 @Injectable()
 export class AvailabilityRepository {
@@ -20,9 +21,9 @@ export class AvailabilityRepository {
     }
 
     async getAvailabilitiesByRoomTypeId(roomTypeId: string) {
-        const nonAvailabilityPeriods = await this.roomAvailabilityDBRepository.find({where: {room: { roomtype: {id: roomTypeId}}}})
+        const nonAvailabilityPeriods = await this.roomAvailabilityDBRepository.find({ where: { room: { roomtype: { id: roomTypeId } } } })
 
-        if (nonAvailabilityPeriods.length === 0) throw new NotFoundException('El roomtype no contiene availabilities.') 
+        if (nonAvailabilityPeriods.length === 0) throw new NotFoundException('El roomtype no contiene availabilities.')
         return nonAvailabilityPeriods
     }
 
@@ -31,11 +32,17 @@ export class AvailabilityRepository {
         if (!room) {
             throw new BadRequestException('No existe un room con ese id.')
         }
-        return await this.roomAvailabilityDBRepository.save({room: room, startDate: startDate, endDate: endDate})
+        return await this.roomAvailabilityDBRepository.save({ room: room, startDate: startDate, endDate: endDate })
+    }
+
+    async updateRoomAvailability(id: string, updateAvailabilityData: UpdateAvailabilityDto) {
+        if (Object.keys(updateAvailabilityData).length === 0) throw new BadRequestException('Se necesita al menos la propiedad startDate o la propiedad endDate.')
+        await this.roomAvailabilityDBRepository.update({ id }, updateAvailabilityData)
+        return "Availability actualizada."
     }
 
     async deleteRoomAvailability(id: string) {
-        await this.roomAvailabilityDBRepository.delete({ id: id })
+        await this.roomAvailabilityDBRepository.delete({ id })
         return "Availability eliminada."
     }
 }
