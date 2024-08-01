@@ -9,7 +9,7 @@ export const UserContext = createContext<IUserContextType>({
   setUser: () => {},
   isLogged: false,
   setIsLogged: () => {},
-  signIn: async () => false,
+  login: async () => false,
   signUp: async () => false,
   logOut: () => {},
 });
@@ -22,7 +22,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const data = await postRegister(user);
       if (data.id) {
-        await signIn({ email: user.email, password: user.password });
+        await login({ email: user.email, password: user.password });
         return true;
       }
       return false;
@@ -31,7 +31,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       return false;
     }
   };
-  const signIn = async (credentials: ILogin) => {
+  const login = async (credentials: ILogin) => {
     try {
       const data = await postLogin(credentials);
       if (data.user && data.token) {
@@ -83,7 +83,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         setUser,
         isLogged,
         setIsLogged,
-        signIn,
+        login,
         signUp,
         logOut,
       }}
