@@ -35,10 +35,10 @@ export abstract class User {
   password: string;
 
   @Column({
-    type: 'bigint',
+    type: 'varchar',
     nullable: false,
   })
-  phone: number;
+  phone: string;
 
   @Column({
     type: 'varchar',

@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { typeOrmConfig } from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HotelsModule } from './hotels/hotels.modules';
+import { HotelsModule } from './hotels/hotels.module';
 import { RoomsModule } from './rooms/rooms.modules';
 import { RoomsTypeModule } from './roomstype/roomstype.modules';
 import { HotelAdminsModule } from './hotel-admins/hotel-admins.module';
@@ -24,6 +24,7 @@ import { BookingDetailModule } from './bookingDetails/booking-detail.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { CustomersModule } from './customers/customers.module';
 import { NaturalLanguageProcessor } from './helper/natural-language-processor';
+import { AvailabilityModule } from './availabilities/availability.module';
 
 @Module({
   imports: [
@@ -36,8 +37,8 @@ import { NaturalLanguageProcessor } from './helper/natural-language-processor';
       useFactory: (configService: ConfigService) =>
         configService.get('typeorm'),
     }),
-    HotelsModule, 
-    RoomsModule, 
+    HotelsModule,
+    RoomsModule,
     RoomsTypeModule,
     ReviewsModule,
     CustomersModule,
@@ -45,6 +46,7 @@ import { NaturalLanguageProcessor } from './helper/natural-language-processor';
     AuthModule,
     BookingModule,
     BookingDetailModule,
+    AvailabilityModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,

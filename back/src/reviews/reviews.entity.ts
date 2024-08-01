@@ -5,30 +5,29 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "t
 
 
 @Entity({
-    name:'reviews'
+  name: 'reviews',
 })
 export class Review {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({type:"varchar", length:100, nullable:false})
-    comment: string;
+  @Column({ type: 'varchar', length: 100, nullable: false })
+  comment: string;
 
-    @Column({type:"varchar", length:20, nullable:false})
-    date: string;
+  @Column({ type: 'varchar', length: 20, nullable: false })
+  date: string;
 
-    @Column({type:"float", default:0})
-    rating: number;
+  @Column({ type: 'float', default: 0 })
+  rating: number;
 
-    @Column({type:"boolean", default:false})
-    isDeleted: boolean;
+  @Column({ type: 'boolean', default: false })
+  isDeleted: boolean;
 
-    @ManyToOne(() => Hotel, (hotel) => hotel.reviews)
-    @JoinColumn({name:'hotelId'})
-    hotel: Hotel;
+  @ManyToOne(() => Hotel, (hotel) => hotel.reviews)
+  @JoinColumn({ name: 'hotelId' })
+  hotel: Hotel;
 
-    @ManyToOne(() => Customers, (customer) => customer.reviews)
-    @JoinColumn({name:'customerId'})
-    customer: Customers;
-    
+  @ManyToOne(() => Customers, (customer) => customer.reviews)
+  @JoinColumn({ name: 'customerId' })
+  customer: Customers;
 }

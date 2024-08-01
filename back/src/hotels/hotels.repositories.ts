@@ -4,14 +4,14 @@ import { Hotel } from "./hotels.entity";
 import { Repository } from "typeorm";
 import { CreateHotelDto } from "./hotels.dtos";
 import { HotelAdmins } from "src/hotel-admins/hotelAdmins.entity";
-import { NaturalLanguageProcessor } from "src/helper/natural-language-processor";
+//import { NaturalLanguageProcessor } from "src/helper/natural-language-processor";
 //import { removeAccents } from "src/utils/removeAcceents";
 
 
 @Injectable()
 export class HotelsRepository{
     constructor(
-        private readonly naturalLanguageProcessor: NaturalLanguageProcessor,
+        //private readonly naturalLanguageProcessor: NaturalLanguageProcessor,
         @InjectRepository(Hotel) private readonly hotelDbRepository: Repository<Hotel>,
         @InjectRepository(HotelAdmins) private readonly hotelAdminRepository: Repository<HotelAdmins>
         
@@ -52,7 +52,7 @@ export class HotelsRepository{
         if (!query) {
           return [];
         }
-      
+        console.log("buscando hotel...")
         const searchTerm = `%${query.toLowerCase()}%`;
       
         // Consulta SQL con la función unaccent

@@ -1,18 +1,16 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query } from "@nestjs/common";
-import { HotelsService } from "./hotels.services";
 import { CreateHotelDto } from "./hotels.dtos";
 import { Hotel } from "./hotels.entity";
+import { HotelsService } from "./hotels.service";
 
 @Controller('hotels')
-export class HotelsController{
-    constructor(
-        private readonly hotelDbService: HotelsService
-    ){}
+export class HotelsController {
+  constructor(private readonly hotelDbService: HotelsService) {}
 
-    @Get()
-    getDbHotels(){
-        return this.hotelDbService.getDbHotels();
-    }
+  @Get()
+  getDbHotels() {
+    return this.hotelDbService.getDbHotels();
+  }
 
     @Post()
     createDbHotel(@Body() hotelDto: CreateHotelDto){
@@ -39,9 +37,8 @@ export class HotelsController{
         return await this.hotelDbService.searchHotels(query);
       }
 
-    @Get(':id')
-    getDbHotelById(@Param('id', ParseUUIDPipe) id:string){
-        return this.hotelDbService.getDbHotelById(id);
-    }
-
+  @Get(':id')
+  getDbHotelById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.hotelDbService.getDbHotelById(id);
+  }
 }

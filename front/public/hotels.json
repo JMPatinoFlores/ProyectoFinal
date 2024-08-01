@@ -8,9 +8,9 @@
     "distance": 5100,
     "image": "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg",
     "address":"Rua Doutor Teixeiro, 15, 15701",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "description": "Disfruta de la magia de Santiago de Compostela en el Hotel Aurora, donde la historia y la modernidad se unen en un ambiente acogedor. Nuestro hotel es el lugar perfecto para explorar la ciudad y descubrir sus secretos.",
+    "services" :["Restaurante", "Bar", "Gimnasio", "Spa", "Wi-Fi gratuito"],
+    "recommendations": "No te pierdas la oportunidad de visitar la Catedral de Santiago y disfrutar de la vibrante vida nocturna de la ciudad. ¡El Hotel Aurora es tu hogar en Santiago de Compostela!"
   },
   {
     "id": "2A",    
@@ -21,9 +21,9 @@
     "distance": 2150,
     "image": "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg",
     "address":"Av.Pablo Carriquiry 298",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "description": "Descubre la belleza de Lima en el Hotel Bella Vista, donde la arquitectura colonial se une con la modernidad. Nuestro hotel es el lugar perfecto para explorar la ciudad y disfrutar de su gastronomía.",
+    "services" :["Restaurante", "Bar", "Piscina", "Wi-Fi gratuito", "Servicio de habitaciones"],
+    "recommendations": "No te pierdas la oportunidad de visitar el Centro Histórico de Lima y disfrutar de la deliciosa comida peruana. ¡El Hotel Bella Vista es tu hogar en Lima!"
   },
   {
     "id": "3A",    
@@ -34,9 +34,9 @@
     "distance": 2948,
     "image": "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg",
     "address":"Blvd. Kukulcan 9, Punta Cancun",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "description": "Disfruta del sol y la playa en el Hotel Sun Paradise, donde la relajación y la diversión se unen en un ambiente tropical. Nuestro hotel es el lugar perfecto para escapar de la rutina y disfrutar de la belleza de Cancún.",
+    "services" :["Restaurante", "Bar", "Piscina", "Spa", "Wi-Fi gratuito", "Servicio de habitaciones"],
+    "recommendations": "No te pierdas la oportunidad de visitar la playa de Playa Delfines y disfrutar de la vibrante vida nocturna de Cancún. ¡El Hotel Sun Paradise es tu hogar en Cancún!"
   },
   {
     "id": "4A",    
@@ -47,24 +47,24 @@
     "distance": 1475,
     "image": "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg",
     "address":"Avenida República de El Salvador N34-377 e Irlanda",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "description": "Descubre la belleza de Quito en el Hotel Mountain Retreat, donde la naturaleza y la historia se unen en un ambiente acogedor. Nuestro hotel es el lugar perfecto para explorar la ciudad y disfrutar de su patrimonio cultural.",
+    "services" :["Restaurante", "Bar", "Gimnasio", "Wi-Fi gratuito", "Servicio de habitaciones"],
+    "recommendations": "No te pierdas la oportunidad de visitar el Centro Histórico de Quito y disfrutar de la deliciosa comida ecuatoriana. ¡El Hotel Mountain Retreat es tu hogar en Quito!"
   },
   {
     "id": "5A",
     "name": "Hotel Las Oportunidades",
     "price": 120,
     "country": "España",
-    "city": "Santiago de Compostela",
+    "city": "Guijón",
     "distance": 5100,
     "image": "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg",
-    "address":"Rua Doutor Teixeiro, 15, 15701",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address":"Plaza Mayor, 11, Gijon, Asturias, 33201",
+    "description": "Disfruta de la hospitalidad asturiana en el Hotel Las Oportunidades, donde la tradición y la modernidad se unen en un ambiente acogedor. Nuestro hotel es el lugar perfecto para explorar la ciudad y disfrutar de su gastronomía.",
+    "services" :["Restaurante", "Bar", "Wi-Fi gratuito", "Servicio de habitaciones"],
+    "recommendations": "No te pierdas la oportunidad de visitar el Puerto Deportivo de Gijón y disfrutar de la deliciosa comida asturiana. ¡El Hotel Las Oportunidades es tu hogar en Gijón!"
   },
-  {
+   {
     "id": "6A",    
     "name": "Hotel Sirena Varada",
     "price": 150,
@@ -72,10 +72,10 @@
     "city": "Lima",
     "distance": 2150,
     "image": "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg",
-    "address":"Av.Pablo Carriquiry 298",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address":"Avenida 28 de Julio 151, Lima, Perú",
+    "description": "Disfruta de la hospitalidad peruana en el Hotel Sirena Varada, ubicado en el corazón de Lima. Nuestro hotel ofrece una experiencia única, con habitaciones cómodas y servicios de alta calidad. ¡Ven y descubre la riqueza cultural de nuestra ciudad!",
+    "services" :["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
+    "recommendations": "No te pierdas la oportunidad de visitar el Museo Nacional de Antropología y conocer la rica historia de Perú. ¡Y después, relájate en nuestro bar con una deliciosa pisco sour!"
   },
   {
     "id": "7A",    
@@ -85,10 +85,10 @@
     "city": "Cancún",
     "distance": 2948,
     "image": "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg",
-    "address":"Blvd. Kukulcan 9, Punta Cancun",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address":" Avenida Sayil SM4A, Lote 7, 77500",
+    "description": "Ubicado en la paradisíaca ciudad de Cancún, el Hotel El Espíritu del Vino te ofrece una experiencia de lujo y relajación. Nuestras habitaciones están diseñadas para que te sientas como en casa, y nuestros servicios te harán sentir como un rey.",
+    "services" :["Restaurante", "Bar", "Piscina", "Servicio de habitaciones", "Spa"],
+    "recommendations": "No te pierdas la oportunidad de visitar el famoso Mercado de San Miguelito y probar los deliciosos platillos mexicanos. ¡Y después, relájate en nuestra piscina con una refrescante cerveza!"
   },
   {
     "id": "8A",    
@@ -98,10 +98,10 @@
     "city": "Quito",
     "distance": 1475,
     "image": "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg",
-    "address":"Avenida República de El Salvador N34-377 e Irlanda",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address":"Calle Yasuni 304 y Ave. El Inca, 170124",
+    "description": "El Hotel Camarón es el lugar perfecto para descubrir la rica historia y cultura de Quito. Nuestras habitaciones están diseñadas para que te sientas cómodo y relajado, y nuestros servicios te harán sentir como en casa.",
+    "services" :["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
+    "recommendations": "No te pierdas la oportunidad de visitar el famoso Parque La Carolina y disfrutar del clima agradable de Quito. ¡Y después, relájate en nuestro bar con un delicioso café!"
   },
   {
     "id": "9A",
@@ -111,10 +111,10 @@
     "city": "Santiago de Compostela",
     "distance": 5100,
     "image": "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg",
-    "address":"Rua Doutor Teixeiro, 15, 15701",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address":"Avenida Burgo de las Naciones s/n, 15705",
+    "description": "El Hotel Vientos es el lugar perfecto para descubrir la rica historia y cultura de Santiago de Compostela. Nuestras habitaciones están diseñadas para que te sientas cómodo y relajado, y nuestros servicios te harán sentir como en casa.",
+    "services" :["Restaurante", "Bar", "Piscina", "Servicio de habitaciones", "Spa"],
+    "recommendations": "No te pierdas la oportunidad de visitar el famoso Mercado de Abastos y probar los deliciosos platillos gallegos. ¡Y después, relájate en nuestra piscina con una refrescante cerveza!"
   },
   {
     "id": "10A",    
@@ -124,10 +124,10 @@
     "city": "Lima",
     "distance": 2150,
     "image": "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg",
-    "address":"Av.Pablo Carriquiry 298",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address":"Los Eucaliptos 550, San Isidro",
+    "description": "El Hotel Kumbala es el lugar perfecto para descubrir la rica historia y cultura de Lima. Nuestras habitaciones están diseñadas para que te sientas cómodo y relajado, y nuestros servicios te harán sentir como en casa.",
+    "services" :["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
+    "recommendations": "No te pierdas la oportunidad de visitar el famoso Parque Kennedy y disfrutar del clima agradable de Lima. ¡Y después, relájate en nuestro bar con un delicioso pisco sour!"
   },
   {
     "id": "11A",    
@@ -137,10 +137,10 @@
     "city": "Cancún",
     "distance": 2948,
     "image": "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg",
-    "address":"Blvd. Kukulcan 9, Punta Cancun",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address":"Boulevard Kukulkan Km 16.5, 77500",
+    "description": "Disfruta de la hospitalidad del Hotel Piedras en el corazón de Cancún, México. Nuestro hotel ofrece una experiencia única y acogedora, con habitaciones cómodas y servicios de alta calidad. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en esta hermosa ciudad!",
+    "services" :["Restaurante", "Bar", "Gimnasio", "Spa", "Wi-Fi gratuito"],
+    "recommendations": "No te pierdas la oportunidad de explorar la vibrante ciudad de Cancún, con sus playas de ensueño y su rica historia. ¡Ven y descubre por qué el Hotel Piedras es el lugar perfecto para tu próxima aventura en México!"
   },
   {
     "id": "12A",    
@@ -150,10 +150,10 @@
     "city": "Quito",
     "distance": 1475,
     "image": "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg",
-    "address":"Avenida República de El Salvador N34-377 e Irlanda",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address":"Calle Benalcazar N9-42 y Oriente",
+    "description": "Ubicado en el corazón de Quito, el Hotel Plaza real ofrece una experiencia única y auténtica. Nuestras habitaciones están diseñadas para proporcionar comodidad y tranquilidad, y nuestros servicios están pensados para hacer que tu estancia sea inolvidable. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en Ecuador!",
+    "services" :["Restaurante", "Bar", "Salón de eventos", "Servicio de habitaciones", "Wi-Fi gratuito"],
+    "recommendations": "Quito es una ciudad llena de historia y cultura, y el Hotel Plaza real es el lugar perfecto para explorarla. ¡Ven y descubre por qué nuestra ciudad es considerada una de las más bellas de América Latina!"
   },
   {
     "id": "13A",
@@ -163,10 +163,10 @@
     "city": "Santiago de Compostela",
     "distance": 5100,
     "image": "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg",
-    "address":"Rua Doutor Teixeiro, 15, 15701",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address":"Alfredo Brañas, 5, 15701",
+    "description": "El Hotel Plaza Mayor es un oasis de tranquilidad en el corazón de Santiago de Compostela. Nuestras habitaciones están diseñadas para proporcionar comodidad y relajación, y nuestros servicios están pensados para hacer que tu estancia sea inolvidable. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en España!",
+    "services" :["Restaurante", "Bar", "Gimnasio", "Spa", "Wi-Fi gratuito", "Servicio de habitaciones"],
+    "recommendations": "Santiago de Compostela es una ciudad llena de historia y espiritualidad, y el Hotel Plaza Mayor es el lugar perfecto para explorarla. ¡Ven y descubre por qué nuestra ciudad es considerada una de las más bellas de Europa!"
   },
   {
     "id": "14A",    
@@ -176,10 +176,10 @@
     "city": "Lima",
     "distance": 2150,
     "image": "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg",
-    "address":"Av.Pablo Carriquiry 298",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address":"Pasaje Schell 121 3º Piso Miraflores",
+    "description": "El Hotel Detroit 454 es un lugar acogedor y moderno en el corazón de Lima. Nuestras habitaciones están diseñadas para proporcionar comodidad y tranquilidad, y nuestros servicios están pensados para hacer que tu estancia sea inolvidable. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en Perú!",
+    "services" :["Restaurante", "Bar", "Gimnasio", "Wi-Fi gratuito", "Servicio de habitaciones"],
+    "recommendations": "Lima es una ciudad vibrante y llena de vida, y el Hotel Detroit 454 es el lugar perfecto para explorarla. ¡Ven y descubre por qué nuestra ciudad es considerada una de las más bellas de América Latina!"
   },
   {
     "id": "15A",    
@@ -189,23 +189,23 @@
     "city": "Cancún",
     "distance": 2948,
     "image": "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg",
-    "address":"Blvd. Kukulcan 9, Punta Cancun",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address":"Av. Sunyaxchen Lote 39 y 40, 77500",
+    "description": "El Hotel Con Plaza es un lugar de ensueño en el corazón de Cancún. Nuestras habitaciones están diseñadas para proporcionar comodidad y relajación, y nuestros servicios están pensados para hacer que tu estancia sea inolvidable. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en México!",
+    "services" :["Restaurante", "Bar", "Gimnasio", "Spa", "Wi-Fi gratuito", "Servicio de habitaciones"],
+    "recommendations": "Cancún es una ciudad llena de playas de ensueño y aventuras, y el Hotel Con Plaza es el lugar perfecto para explorarla. ¡Ven y descubre por qué nuestra ciudad es considerada una de las más bellas de América Latina!"
   },
   {
-    "id": "16A",    
+    "id": "16A",
     "name": "Hotel Mountain Goats",
     "price": 180,
     "country": "Ecuador",
     "city": "Quito",
     "distance": 1475,
     "image": "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg",
-    "address":"Avenida República de El Salvador N34-377 e Irlanda",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address": "Cordero E4375 & Av. Amazonas",
+    "description": "Disfruta de la hospitalidad del Hotel Mountain Goats en Quito, Ecuador. Nuestro hotel ofrece una experiencia única en el corazón de la ciudad, con vistas impresionantes de la cordillera de los Andes.",
+    "services": ["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
+    "recommendations": "Quito es una ciudad llena de historia y cultura. Visita el casco antiguo, Patrimonio de la Humanidad, y disfruta de la gastronomía local en nuestros restaurantes."
   },
   {
     "id": "17A",
@@ -215,48 +215,49 @@
     "city": "Santiago de Compostela",
     "distance": 5100,
     "image": "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg",
-    "address":"Rua Doutor Teixeiro, 15, 15701",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address": "Hórreo, 1, 15701",
+    "description": "El Hotel Aurora Boreal es un oasis de tranquilidad en el corazón de Santiago de Compostela. Nuestro hotel ofrece una experiencia relajante y acogedora en una ciudad llena de historia y espiritualidad.",
+    "services": ["Restaurante", "Bar", "Piscina", "Servicio de habitaciones", "Wi-Fi gratuito"],
+    "recommendations": "Santiago de Compostela es un destino espiritual y cultural. Visita la Catedral de Santiago y disfruta de la gastronomía gallega en nuestros restaurantes."
   },
   {
-    "id": "18A",    
+    "id": "18A",
     "name": "Hotel Buena Vista",
     "price": 150,
     "country": "Perú",
     "city": "Lima",
     "distance": 2150,
     "image": "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg",
-    "address":"Av.Pablo Carriquiry 298",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address": "Jiron Machu Picchu 128, Lima 32",
+    "description": "El Hotel Buena Vista es un hotel moderno y acogedor en el corazón de Lima. Nuestro hotel ofrece una experiencia única en una ciudad llena de historia y cultura.",
+    "services": ["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
+    "recommendations": "Lima es una ciudad llena de vida y energía. Visita el centro histórico y disfruta de la gastronomía peruana en nuestros restaurantes."
   },
   {
-    "id": "19A",    
+    "id": "19A",
     "name": "Hotel Sunset",
     "price": 200,
     "country": "México",
     "city": "Cancún",
     "distance": 2948,
     "image": "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg",
-    "address":"Blvd. Kukulcan 9, Punta Cancun",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
+    "address": "Av Tulum Esquina Brisa SM 4 Colonia Centro",
+    "description": "El Hotel Sunset es un hotel de lujo en el corazón de Cancún. Nuestro hotel ofrece una experiencia relajante y acogedora en una ciudad llena de playas y aventuras.",
+    "services": ["Restaurante", "Bar", "Piscina", "Servicio de habitaciones", "Wi-Fi gratuito"],
+    "recommendations": "Cancún es un destino de ensueño. Visita las playas de la Riviera Maya y disfruta de la gastronomía mexicana en nuestros restaurantes."
   },
   {
-    "id": "20A",    
+    "id": "20A",
     "name": "Hotel El Centro Del Mundo",
     "price": 180,
     "country": "Ecuador",
     "city": "Quito",
     "distance": 1475,
     "image": "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg",
-    "address":"Avenida República de El Salvador N34-377 e Irlanda",
-    "description": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur vestibulum primis vulputate, class parturient curae torquent lobortis sollicitudin augue nunc bibendum.",
-    "services" :["Restaurante, bar, bar en la habitación"],
-    "recommendations": "Lorem ipsum dolor sit amet consectetur elit inceptos, volutpat sem lobortis sed platea interdum suspendisse, varius eget eu fringilla auctor urna bibendum. Mus diam enim ullamcorper litora ultrices neque senectus risus blandit habitasse, ac luctus natoque himenaeos massa scelerisque libero nascetur."
-  }       
+    "address": "Leonidas Plaza 19-50 y 18 de Septiembre",
+    "description": "El Hotel El Centro Del Mundo es un hotel moderno y acogedor en el corazón de Quito. Nuestro hotel ofrece una experiencia única en una ciudad llena de historia y cultura.",
+    "services": ["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
+    "recommendations": "Quito es una ciudad llena de historia y cultura. Visita el casco antiguo, Patrimonio de la Humanidad, y disfruta de la gastronomía local en nuestros restaurantes."
+  }
 ]
+

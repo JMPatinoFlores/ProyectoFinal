@@ -1,6 +1,6 @@
-import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
-import { HotelAdmins } from "src/hotel-admins/hotelAdmins.entity";
-import { Review } from "src/reviews/reviews.entity";
+import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
+import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
+import { Review } from 'src/reviews/reviews.entity';
 import { RoomsType } from 'src/roomstype/roomstype.entity';
 import {
   Column,
@@ -16,8 +16,8 @@ import {
   name: 'hotels',
 })
 export class Hotel {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   name: string;
@@ -70,6 +70,6 @@ export class Hotel {
   @JoinColumn({ name: 'hotel_admin_id' })
   hotelAdmin: HotelAdmins;
 
-  @ManyToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotels)
+  @OneToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotel)
   bookingDetails: BookingDetails[];
 }

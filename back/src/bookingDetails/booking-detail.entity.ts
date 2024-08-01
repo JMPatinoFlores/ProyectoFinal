@@ -1,47 +1,33 @@
 import { Booking } from "src/bookings/booking.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { BookingDetailStatus } from "./enum/booking-detail-status.enum";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BookingDetailsStatus } from "./enum/booking-detail-status.enum";
 import { Hotel } from "src/hotels/hotels.entity";
+import { RoomAvailability } from "src/availabilities/availability.entity";
 
 @Entity({ name: 'booking-details' })
 export class BookingDetails {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  total: number;
+  @Column({ type: 'float', nullable: false })
+  total: number
 
-  @Column()
-  discount: number;
+  @Column({ type: 'float', nullable: true })
+  discount: number
 
-  @Column()
-  checkInDate: string;
+  @Column({ type: 'boolean', default: false })
+  isDeleted: boolean
 
-  @Column()
-  checkOutDate: string;
+  @OneToOne(() => Booking)
+  booking: Booking
 
-  @Column()
-  status: BookingDetailStatus;
+  @ManyToOne(() => Hotel, (hotel) => hotel.bookingDetails)
+  @JoinColumn({ name: 'hotel-id' })
+  hotel: Hotel
 
-    @OneToOne(() => Booking)
-    @JoinColumn({name: "booking-id"})
-    booking: Booking
+  @Column({ default: BookingDetailsStatus.ACTIVE, nullable: false })
+  status: BookingDetailsStatus
 
-    //Arreglar con relaciones de typeorm
-    // @Column()
-    // rooms: string
-
-    @ManyToMany((type) => Hotel)
-    @JoinTable({
-        name: 'bookingdetails_hotels',
-        joinColumn: {
-            name: 'bookingdetails_id',
-            referencedColumnName: 'id' //bookingDetailsId
-        },
-        inverseJoinColumn: {
-            name: 'hotel_Id',
-            referencedColumnName: 'id',
-        }
-    })
-    hotels: Hotel[];
+  @OneToMany(() => RoomAvailability, (availability) => availability.bookingDetails)
+  availabilities: RoomAvailability[]
 }

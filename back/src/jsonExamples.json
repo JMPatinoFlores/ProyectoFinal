@@ -1,0 +1,11 @@
+{
+	"name": "Test1",
+	"lastName": "Test",
+	"email": "test1@mail.com",
+	"password": "Test*1234",
+	"phone": 1472589632,
+	"country": "test Country",
+	"city": "test City",
+	"address": "test Address 1234",
+	"birthDate": "01/01/2000"
+}
