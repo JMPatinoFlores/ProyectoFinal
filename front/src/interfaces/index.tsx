@@ -34,7 +34,7 @@ export interface IUserContextType {
   setUser: React.Dispatch<React.SetStateAction<Partial<IUser> | null>>;
   isLogged: boolean;
   setIsLogged: (isLogged: boolean) => void;
-  signIn: (credentials: ILogin) => Promise<boolean>;
+  login: (credentials: ILogin) => Promise<boolean>;
   signUp: (user: Omit<IUser, "id">) => Promise<boolean>;
   logOut: () => void;
 }
@@ -165,6 +165,11 @@ export interface IBookingDetails {
   bookingId: string;
 }
 
+export interface IBookingForm {
+  checkInDate: string;
+  checkOutDate: string;
+}
+
 export interface IHotelDetail {
   id: string;
   name: string;
@@ -189,15 +194,12 @@ export interface IProductsListProps {
   searchQuery: string;
 }
 
-
-export interface ISearchBarProps {
-  searchQuery: string;
-  onSearch: (query: string) => void;
-}
-
 export interface ILocationDetail {
   country: string;
   city: string;
   address: string;
 }
-
+export interface ISearchBarProps {
+  searchQuery: string;
+  onSearch: (query: string) => void;
+}

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { validatePostHotel } from "@/helpers/validateData";
 import { IHotelRegister, ILocationDetail } from "@/interfaces";
@@ -10,11 +10,9 @@ import { useState } from "react";
 import useGoogleMapsData from "@/lib/googleMaps/googleMapsData";
 import { GoogleMap, Marker } from "@react-google-maps/api";
 
-
 interface HotelRegisterProps {}
 
 const HotelRegister: React.FC<HotelRegisterProps> = () => {
- 
   const initialValues: IHotelRegister = {
     name: "",
     description: "",
@@ -26,7 +24,7 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     services: "",
   };
 
-const countryOptions = [
+  const countryOptions = [
     "Afganistán",
     "Albania",
     "Alemania",
@@ -222,10 +220,11 @@ const countryOptions = [
     "Zimbabue",
   ];
 
-  const [hotelLocation, setHotelLocation] = useState<ILocationDetail | null>(null);
+  const [hotelLocation, setHotelLocation] = useState<ILocationDetail | null>(
+    null
+  );
   const { isLoaded, mapCenter, marker } = useGoogleMapsData(hotelLocation);
   const handleSubmit = async (
-    
     values: IHotelRegister,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
@@ -299,15 +298,16 @@ const countryOptions = [
                     className="text-red-500"
                   />
                 </div>
-                <div className="formDiv flex-1 mr-2">
-                  <label htmlFor="country" className="formLabel">
-                    País
-                  </label>
-                  <Field
+                 <div className="formDiv flex-1 mr-2">
+                   <label htmlFor="country" className="formLabel">
+                     País
+                   </label>
+                   <Field
                     as="select"
                     type = "text"
                     name="country"
                     className="formInput"
+                    placeholder="País"
                   >
                     <option value="">Selecciona un país</option>
                     {countryOptions.map((country, index) => (
@@ -352,7 +352,7 @@ const countryOptions = [
                       const country = values.country;
                       const city = values.city;
                       setHotelLocation({ country, city, address });
-                      setFieldValue('address', address)
+                      setFieldValue("address", address);
                     }}
                   />
                   <ErrorMessage
@@ -361,6 +361,7 @@ const countryOptions = [
                     className="text-red-500"
                   />
                 </div>
+
                 {hotelLocation && (
                   <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden">
                     <GoogleMap
