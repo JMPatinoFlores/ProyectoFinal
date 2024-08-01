@@ -190,8 +190,14 @@ export interface IProductsListProps {
 }
 
 
+export interface ISearchBarProps {
+  searchQuery: string;
+  onSearch: (query: string) => void;
+}
+
 export interface ILocationDetail {
   country: string;
   city: string;
   address: string;
 }
+
