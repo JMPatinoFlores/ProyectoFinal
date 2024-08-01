@@ -50,39 +50,46 @@ function ProductsList({ searchQuery }: IProductsListProps) {
   );
 
   return (
-    <div className="grid grid-cols-1 gap-6 p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 md:p-6">
-    <h1 className="text-3xl font-bold text-center text-gray-800 mt-2 mb-6 col-span-full">
-      Lista de Hoteles
-    </h1>
-    {paginatedHotels.length > 0 ? (
-      paginatedHotels.map((hotel, index) => (
-        <ProductCard key={index} hotel={hotel} />
-      ))
-    ) : (
-      <p>No hay resultados que coincidan con su búsqueda.</p>
-    )}
-    {filteredHotels.length > 8 && (
-      <div className="flex justify-center mt-4">
-        <button
-          className="bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]"
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-        >
-          Anterior
-        </button>
-        <button
-          className="bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]"
-          onClick={handleNextPage}
-          disabled={currentPage >= Math.ceil(filteredHotels.length / itemsPerPage)}
-        >
-          Siguiente
-        </button>
-        <span className="ml-4">
-          Página {currentPage} de {Math.ceil(filteredHotels.length / itemsPerPage)}
-        </span>
+    <div className="p-4">
+      <h1 className="text-3xl font-bold text-center text-gray-800 mt-2 mb-6">
+        Lista de Hoteles
+      </h1>
+      <div className="flex justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-full">
+          {paginatedHotels.length > 0 ? (
+            paginatedHotels.map((hotel, index) => (
+              <ProductCard key={index} hotel={hotel} />
+            ))
+          ) : (
+            <p>No hay resultados que coincidan con su búsqueda.</p>
+          )}
+        </div>
       </div>
-    )}
-  </div>
+      {filteredHotels.length > 8 && (
+        <div className="flex justify-center mt-4">
+          <button
+            className="bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]"
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+          <button
+            className="bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]"
+            onClick={handleNextPage}
+            disabled={
+              currentPage >= Math.ceil(filteredHotels.length / itemsPerPage)
+            }
+          >
+            Siguiente
+          </button>
+          <span className="ml-4">
+            Página {currentPage} de{" "}
+            {Math.ceil(filteredHotels.length / itemsPerPage)}
+          </span>
+        </div>
+      )}
+    </div>
   );
 }
 
