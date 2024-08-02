@@ -8,14 +8,19 @@ import Link from "next/link";
 import { useContext } from "react";
 import { UserContext } from "@/context/userContext";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function RegisterForm() {
-  const { signUp } = useContext(UserContext);
+  const { customerRegister } = useContext(UserContext);
   const router = useRouter();
+
+  const { data: session } = useSession();
+  console.log(session);
 
   const initialValues: IRegisterValues = {
     name: "",
-    lastname: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -226,18 +231,21 @@ export default function RegisterForm() {
     values: IRegisterValues,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    const success = await signUp(values);
+    try {
+      const success = await customerRegister(values);
 
-    if (success) {
-      alert("Usuario registrado correctamente");
-      router.push("/login");
+      if (success) {
+        alert("Usuario registrado correctamente");
+        await router.push("/login");
+      } else {
+        alert("Primer error");
+        console.log(success);
+      }
+    } catch (error) {
+      alert("Segundo error");
+    } finally {
+      setSubmitting(false);
     }
-
-    if (!success) {
-      alert("Error al registrar usuario");
-    }
-
-    setSubmitting(false);
   };
 
   const today = new Date().toISOString().split("T")[0];
@@ -264,6 +272,18 @@ export default function RegisterForm() {
               Registro
             </h1>
           </div>
+          <div className="flex justify-center items-center border border-[#f8263a] rounded-md w-full p-2 mb-5">
+            <button onClick={() => signIn()} className="flex">
+              <Image
+                src={"/google.png"}
+                alt="google"
+                width={24}
+                height={24}
+                className="mr-2"
+              />
+              <h2>Registrarse con Google</h2>
+            </button>
+          </div>
           <Formik
             initialValues={initialValues}
             validate={validateRegisterForm}
@@ -289,17 +309,17 @@ export default function RegisterForm() {
                     />
                   </div>
                   <div className="formDiv flex-1">
-                    <label htmlFor="lastname" className="formLabel">
+                    <label htmlFor="lastName" className="formLabel">
                       Apellido
                     </label>
                     <Field
                       type="text"
-                      name="lastname"
+                      name="lastName"
                       placeholder="Apellido"
                       className="formInput"
                     />
                     <ErrorMessage
-                      name="lastname"
+                      name="lastName"
                       component="div"
                       className="text-red-600 text-sm"
                     />

@@ -4,13 +4,13 @@ import { Booking } from "./booking.entity";
 import { Repository } from "typeorm";
 import { CreateBookingDto } from "./dtos/create-booking.dto";
 import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
-import { Customers } from "src/customers/customers.entitiy";
 import { RoomsType } from "src/roomstype/roomstype.entity";
 import { RoomAvailability } from "src/availabilities/availability.entity";
 import { Hotel } from "src/hotels/hotels.entity";
 import { Room } from "src/rooms/rooms.entity";
 import { BookingDetailsStatus } from "src/bookingDetails/enum/booking-detail-status.enum";
 import { PostponeBookingDto } from "./dtos/postpone-booking.dto";
+import { Customers } from "src/customers/customers.entity";
 
 @Injectable()
 export class BookingRepository {

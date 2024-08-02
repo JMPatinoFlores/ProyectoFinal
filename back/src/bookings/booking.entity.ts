@@ -1,6 +1,6 @@
 // import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
 import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
-import { Customers } from 'src/customers/customers.entitiy';
+import { Customers } from 'src/customers/customers.entity';
 import {
   Column,
   Entity,

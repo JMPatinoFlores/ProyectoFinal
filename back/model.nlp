@@ -1,0 +1,704 @@
+{
+  "settings": {
+    "languages": [
+      "es"
+    ],
+    "forceNER": true,
+    "tag": "nlp",
+    "threshold": 0.5,
+    "autoLoad": true,
+    "autoSave": true,
+    "modelFileName": "model.nlp",
+    "executeActionsBeforeAnswers": false,
+    "calculateSentiment": true
+  },
+  "nluManager": {
+    "settings": {
+      "tag": "nlu-manager"
+    },
+    "locales": [
+      "es"
+    ],
+    "languageNames": {},
+    "domainManagers": {
+      "es": {
+        "settings": {
+          "locale": "es",
+          "trainByDomain": false,
+          "tag": "domain-manager-es",
+          "nluByDomain": {
+            "default": {
+              "className": "NeuralNlu",
+              "settings": {}
+            }
+          },
+          "useStemDict": true
+        },
+        "stemDict": {
+          "%name%,hotel": {
+            "intent": "hotel",
+            "domain": "default"
+          },
+          "%name%,hotel,llam,quer,reserv,un": {
+            "intent": "hotel",
+            "domain": "default"
+          },
+          "%name%,el,hotel,interes,me": {
+            "intent": "hotel",
+            "domain": "default"
+          },
+          "%city%,en,hotel,quer,un": {
+            "intent": "hotel",
+            "domain": "default"
+          },
+          "%city%,dam,en,hotel,un": {
+            "intent": "hotel",
+            "domain": "default"
+          },
+          "%city%,en,hotel,necesit,un": {
+            "intent": "hotel",
+            "domain": "default"
+          },
+          "%city%,en,hotel,un": {
+            "intent": "hotel",
+            "domain": "default"
+          },
+          "%country%,en,hotel,un": {
+            "intent": "hotel",
+            "domain": "default"
+          },
+          "%country%,en,hotel": {
+            "intent": "hotel",
+            "domain": "default"
+          },
+          "%city%,%country%": {
+            "intent": "location",
+            "domain": "default"
+          },
+          "%country%": {
+            "intent": "location",
+            "domain": "default"
+          },
+          "%service%,con,hotel,un": {
+            "intent": "service",
+            "domain": "default"
+          },
+          "%service%,ofrec": {
+            "intent": "service",
+            "domain": "default"
+          },
+          "%service%": {
+            "intent": "service",
+            "domain": "default"
+          },
+          "%room%,habitacion": {
+            "intent": "room",
+            "domain": "default"
+          },
+          "%room%,de,habitacion,tip": {
+            "intent": "room",
+            "domain": "default"
+          }
+        },
+        "intentDict": {
+          "hotel": "default",
+          "location": "default",
+          "service": "default",
+          "room": "default"
+        },
+        "sentences": [
+          {
+            "domain": "default",
+            "utterance": "hotel %name%",
+            "intent": "hotel"
+          },
+          {
+            "domain": "default",
+            "utterance": "quiero reservar un hotel llamado %name%",
+            "intent": "hotel"
+          },
+          {
+            "domain": "default",
+            "utterance": "me interesa el hotel %name%",
+            "intent": "hotel"
+          },
+          {
+            "domain": "default",
+            "utterance": "quiero un hotel en %city%",
+            "intent": "hotel"
+          },
+          {
+            "domain": "default",
+            "utterance": "dame un hotel en %city%",
+            "intent": "hotel"
+          },
+          {
+            "domain": "default",
+            "utterance": "necesito un hotel en %city%",
+            "intent": "hotel"
+          },
+          {
+            "domain": "default",
+            "utterance": "un hotel en %city%",
+            "intent": "hotel"
+          },
+          {
+            "domain": "default",
+            "utterance": "un hotel en %country%",
+            "intent": "hotel"
+          },
+          {
+            "domain": "default",
+            "utterance": "hotel en %country%",
+            "intent": "hotel"
+          },
+          {
+            "domain": "default",
+            "utterance": "%country% %city%",
+            "intent": "location"
+          },
+          {
+            "domain": "default",
+            "utterance": "%country%",
+            "intent": "location"
+          },
+          {
+            "domain": "default",
+            "utterance": "un hotel con %service%",
+            "intent": "service"
+          },
+          {
+            "domain": "default",
+            "utterance": "ofrece %service%",
+            "intent": "service"
+          },
+          {
+            "domain": "default",
+            "utterance": "%service%",
+            "intent": "service"
+          },
+          {
+            "domain": "default",
+            "utterance": "habitaciones %room%",
+            "intent": "room"
+          },
+          {
+            "domain": "default",
+            "utterance": "tipos de habitaciones %room%",
+            "intent": "room"
+          }
+        ],
+        "domains": {
+          "master_domain": {
+            "settings": {
+              "locale": "es",
+              "tag": "nlu-es",
+              "keepStopwords": true,
+              "nonefeatureValue": 1,
+              "nonedeltaMultiplier": 1.2,
+              "spellCheck": false,
+              "spellCheckDistance": 1,
+              "filterZeros": true,
+              "log": true
+            },
+            "features": {
+              "hotel": 1,
+              "%name%": 1,
+              "quer": 1,
+              "reserv": 1,
+              "un": 1,
+              "llam": 1,
+              "me": 1,
+              "interes": 1,
+              "el": 1,
+              "en": 1,
+              "%city%": 1,
+              "dam": 1,
+              "necesit": 1,
+              "%country%": 1,
+              "con": 1,
+              "%service%": 1,
+              "ofrec": 1,
+              "habitacion": 1,
+              "%room%": 1,
+              "tip": 1,
+              "de": 1
+            },
+            "intents": {
+              "hotel": 1,
+              "location": 1,
+              "service": 1,
+              "room": 1
+            },
+            "intentFeatures": {
+              "hotel": {
+                "hotel": 1,
+                "%name%": 1,
+                "quer": 1,
+                "reserv": 1,
+                "un": 1,
+                "llam": 1,
+                "me": 1,
+                "interes": 1,
+                "el": 1,
+                "en": 1,
+                "%city%": 1,
+                "dam": 1,
+                "necesit": 1,
+                "%country%": 1
+              },
+              "location": {
+                "%country%": 1,
+                "%city%": 1
+              },
+              "service": {
+                "un": 1,
+                "hotel": 1,
+                "con": 1,
+                "%service%": 1,
+                "ofrec": 1
+              },
+              "room": {
+                "habitacion": 1,
+                "%room%": 1,
+                "tip": 1,
+                "de": 1
+              }
+            },
+            "featuresToIntent": {
+              "hotel": [
+                "hotel",
+                "service"
+              ],
+              "%name%": [
+                "hotel"
+              ],
+              "quer": [
+                "hotel"
+              ],
+              "reserv": [
+                "hotel"
+              ],
+              "un": [
+                "hotel",
+                "service"
+              ],
+              "llam": [
+                "hotel"
+              ],
+              "me": [
+                "hotel"
+              ],
+              "interes": [
+                "hotel"
+              ],
+              "el": [
+                "hotel"
+              ],
+              "en": [
+                "hotel"
+              ],
+              "%city%": [
+                "hotel",
+                "location"
+              ],
+              "dam": [
+                "hotel"
+              ],
+              "necesit": [
+                "hotel"
+              ],
+              "%country%": [
+                "hotel",
+                "location"
+              ],
+              "con": [
+                "service"
+              ],
+              "%service%": [
+                "service"
+              ],
+              "ofrec": [
+                "service"
+              ],
+              "habitacion": [
+                "room"
+              ],
+              "%room%": [
+                "room"
+              ],
+              "tip": [
+                "room"
+              ],
+              "de": [
+                "room"
+              ]
+            },
+            "neuralNetwork": {
+              "settings": {
+                "locale": "es",
+                "tag": "nlu-es",
+                "keepStopwords": true,
+                "nonefeatureValue": 1,
+                "nonedeltaMultiplier": 1.2,
+                "spellCheck": false,
+                "spellCheckDistance": 1,
+                "filterZeros": true,
+                "log": true
+              },
+              "features": [
+                "hotel",
+                "%name%",
+                "quer",
+                "reserv",
+                "un",
+                "llam",
+                "me",
+                "interes",
+                "el",
+                "en",
+                "%city%",
+                "dam",
+                "necesit",
+                "%country%",
+                "con",
+                "%service%",
+                "ofrec",
+                "habitacion",
+                "%room%",
+                "tip",
+                "de"
+              ],
+              "intents": [
+                "hotel",
+                "location",
+                "service",
+                "room"
+              ],
+              "perceptrons": [
+                [
+                  7.849404811859131,
+                  5.560099124908447,
+                  0.029370389878749847,
+                  0.07014384865760803,
+                  -0.1119350716471672,
+                  0.07014384865760803,
+                  0.016268696635961533,
+                  0.016268696635961533,
+                  0.016268696635961533,
+                  6.4576520919799805,
+                  -0.7716339230537415,
+                  0.05640510469675064,
+                  0.06591487675905228,
+                  -0.8057912588119507,
+                  -4.167223930358887,
+                  -4.388523578643799,
+                  -0.09521234035491943,
+                  -0.5636956691741943,
+                  -0.5636956691741943,
+                  -0.17597928643226624,
+                  -0.17597928643226624,
+                  0.8306639265038152
+                ],
+                [
+                  -6.984978199005127,
+                  -0.23964114487171173,
+                  -0.1344888061285019,
+                  -0.03712637722492218,
+                  -1.955586552619934,
+                  -0.03712637722492218,
+                  -0.056070346385240555,
+                  -0.056070346385240555,
+                  -0.056070346385240555,
+                  -6.6092939376831055,
+                  0.8794223666191101,
+                  -0.08311775326728821,
+                  -0.06673618406057358,
+                  10.796630859375,
+                  -0.07273857295513153,
+                  -2.8686907291412354,
+                  -0.6888595819473267,
+                  -1.4504783153533936,
+                  -1.4504783153533936,
+                  -0.2661229074001312,
+                  -0.2661229074001312,
+                  2.9195760088676006
+                ],
+                [
+                  -1.3336364030838013,
+                  -1.6076894998550415,
+                  -0.7121143341064453,
+                  -0.39427465200424194,
+                  -0.09783024340867996,
+                  -0.39427465200424194,
+                  -0.2871268689632416,
+                  -0.2871268689632416,
+                  -0.2871268689632416,
+                  -1.4718598127365112,
+                  -1.2635321617126465,
+                  -0.2927679121494293,
+                  -0.21427573263645172,
+                  -2.4862687587738037,
+                  1.768717646598816,
+                  11.471986770629883,
+                  0.46906259655952454,
+                  -1.254922866821289,
+                  -1.254922866821289,
+                  -0.3118554949760437,
+                  -0.3118554949760437,
+                  2.519844195090251
+                ],
+                [
+                  -0.8749729990959167,
+                  -0.5489939451217651,
+                  -0.14730972051620483,
+                  -0.07971061021089554,
+                  -0.3339422643184662,
+                  -0.07971061021089554,
+                  -0.1120925098657608,
+                  -0.1120925098657608,
+                  -0.1120925098657608,
+                  -0.27423858642578125,
+                  -0.4870637357234955,
+                  -0.04573053494095802,
+                  -0.021143555641174316,
+                  -1.420583724975586,
+                  -0.027240578085184097,
+                  -1.4199528694152832,
+                  -0.408511221408844,
+                  6.417716979980469,
+                  6.417716979980469,
+                  0.019197525456547737,
+                  0.019197525456547737,
+                  1.4246017333813186
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "intentDomains": {},
+    "extraSentences": [
+      [
+        "es",
+        "hotel %name%"
+      ],
+      [
+        "es",
+        "quiero reservar un hotel llamado %name%"
+      ],
+      [
+        "es",
+        "me interesa el hotel %name%"
+      ],
+      [
+        "es",
+        "quiero un hotel en %city%"
+      ],
+      [
+        "es",
+        "dame un hotel en %city%"
+      ],
+      [
+        "es",
+        "necesito un hotel en %city%"
+      ],
+      [
+        "es",
+        "un hotel en %city%"
+      ],
+      [
+        "es",
+        "un hotel en %country%"
+      ],
+      [
+        "es",
+        "hotel en %country%"
+      ],
+      [
+        "es",
+        "%country% %city%"
+      ],
+      [
+        "es",
+        "%country%"
+      ],
+      [
+        "es",
+        "un hotel con %service%"
+      ],
+      [
+        "es",
+        "ofrece %service%"
+      ],
+      [
+        "es",
+        "%service%"
+      ],
+      [
+        "es",
+        "habitaciones %room%"
+      ],
+      [
+        "es",
+        "tipos de habitaciones %room%"
+      ]
+    ]
+  },
+  "ner": {
+    "settings": {
+      "tag": "ner",
+      "entityPreffix": "%",
+      "entitySuffix": "%"
+    },
+    "rules": {
+      "hotel": {
+        "hotel": {
+          "name": "hotel",
+          "type": "enum",
+          "rules": [
+            {
+              "option": [
+                "hotel %name%"
+              ],
+              "texts": [
+                "hotel %name%"
+              ]
+            }
+          ]
+        }
+      },
+      "location": {
+        "pais": {
+          "name": "pais",
+          "type": "enum",
+          "rules": [
+            {
+              "option": [
+                "en %country%",
+                "%country%"
+              ],
+              "texts": [
+                "en %country%",
+                "%country%"
+              ]
+            }
+          ]
+        },
+        "ciudad": {
+          "name": "ciudad",
+          "type": "enum",
+          "rules": [
+            {
+              "option": [
+                "en %city%",
+                "%city%"
+              ],
+              "texts": [
+                "en %city%",
+                "%city%"
+              ]
+            }
+          ]
+        }
+      },
+      "service": {
+        "service": {
+          "name": "service",
+          "type": "enum",
+          "rules": [
+            {
+              "option": [
+                "hotel con %service%"
+              ],
+              "texts": [
+                "hotel con %service%"
+              ]
+            }
+          ]
+        }
+      },
+      "room": {
+        "room": {
+          "name": "room",
+          "type": "enum",
+          "rules": [
+            {
+              "option": [
+                "habitaciones %room%"
+              ],
+              "texts": [
+                "habitaciones %room%"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "nlgManager": {
+    "settings": {
+      "tag": "nlg-manager"
+    },
+    "responses": {}
+  },
+  "actionManager": {
+    "settings": {
+      "tag": "action-manager"
+    },
+    "actions": {}
+  },
+  "slotManager": {
+    "hotel": {
+      "name": {
+        "intent": "hotel",
+        "entity": "name",
+        "mandatory": false,
+        "locales": {}
+      },
+      "city": {
+        "intent": "hotel",
+        "entity": "city",
+        "mandatory": false,
+        "locales": {}
+      },
+      "country": {
+        "intent": "hotel",
+        "entity": "country",
+        "mandatory": false,
+        "locales": {}
+      }
+    },
+    "location": {
+      "country": {
+        "intent": "location",
+        "entity": "country",
+        "mandatory": false,
+        "locales": {}
+      },
+      "city": {
+        "intent": "location",
+        "entity": "city",
+        "mandatory": false,
+        "locales": {}
+      }
+    },
+    "service": {
+      "service": {
+        "intent": "service",
+        "entity": "service",
+        "mandatory": false,
+        "locales": {}
+      }
+    },
+    "room": {
+      "room": {
+        "intent": "room",
+        "entity": "room",
+        "mandatory": false,
+        "locales": {}
+      }
+    }
+  }
+}

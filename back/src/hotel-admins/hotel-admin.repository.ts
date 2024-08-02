@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { HotelAdmins } from './hotelAdmins.entitity';
+import { HotelAdmins } from './hotelAdmins.entity';
 import { Repository } from 'typeorm';
 import {
   CreateHotelAdminDto,

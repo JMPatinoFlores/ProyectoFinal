@@ -42,6 +42,9 @@ function UserDashboard () {
                   CheckIn
                 </th>
                 <th scope="col" className="px-6 py-3">
+                  Posponer Reserva
+                </th>
+                <th scope="col" className="px-6 py-3">
                   Cancelar Reserva
                 </th>
               </tr>
@@ -59,7 +62,14 @@ function UserDashboard () {
                 <td className="px-6 py-4">26/12/2024</td>
                 <td className="px-6 py-4">
                   <Link href="#">
-                    <button className="p-1 bg-[#ba181b] rounded text-white hover:bg-[#ef233c]">
+                    <button className="p-1 bg-blue-500 rounded text-white hover:bg-blue-600">
+                      Posponer
+                    </button>
+                  </Link>
+                </td>
+                <td className="px-6 py-4">
+                  <Link href="#">
+                    <button className="p-1 bg-red-500 rounded text-white hover:bg-red-600">
                       Cancelar
                     </button>
                   </Link>
@@ -67,6 +77,14 @@ function UserDashboard () {
               </tr>
             </tbody>
           </table>
+        </div>
+        <div className="flex justify-around">
+          <button className="mt-5 px-2 py-1 text-white rounded bg-gray-500 hover:bg-gray-600">
+            Editar Información
+          </button>
+          <button className="mt-5 px-2 py-1 text-white rounded bg-red-500 hover:bg-red-600">
+            Eliminar cuenta
+          </button>
         </div>
       </div>
     );
