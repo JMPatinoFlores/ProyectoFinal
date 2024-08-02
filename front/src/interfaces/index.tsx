@@ -223,3 +223,8 @@ export interface ILocationDetail {
   city: string;
   address: string;
 }
+
+export interface ISearchBarProps {
+  searchQuery: string;
+  onSearch: (query: string) => void;
+}
