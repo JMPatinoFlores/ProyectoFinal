@@ -20,6 +20,8 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     const addHotel = async (hotel: Omit<IHotelRegister, "hotelId">) => {
         try {
             const data = await postHotel(hotel);
+            console.log("data", data);
+            
             if(data.hotelId) {
                 await fetchHotels();
                 return true;

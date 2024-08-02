@@ -107,7 +107,7 @@ export interface IHotelRegister {
   country: string;
   city: string;
   address: string;
-  location: string;
+  location: number[];
   services: string;
 }
 
