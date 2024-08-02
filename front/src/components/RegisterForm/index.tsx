@@ -273,7 +273,10 @@ export default function RegisterForm() {
             </h1>
           </div>
           <div className="flex justify-center items-center border border-[#f8263a] rounded-md w-full p-2 mb-5">
-            <button onClick={() => signIn()} className="flex">
+            <button
+              onClick={() => signIn("google", { callbackUrl: "/checkUser" })}
+              className="flex"
+            >
               <Image
                 src={"/google.png"}
                 alt="google"
