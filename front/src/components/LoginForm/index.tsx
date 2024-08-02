@@ -12,7 +12,7 @@ import Image from "next/image";
 import { signIn, useSession } from "next-auth/react";
 
 export default function LoginForm() {
-  const { login, isLogged } = useContext(UserContext);
+  const { login } = useContext(UserContext);
   const router = useRouter();
 
   const { data: session } = useSession();
@@ -28,14 +28,13 @@ export default function LoginForm() {
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
     const success = await login(values);
+
     if (success) {
       alert("Iniciaste sesión correctamente");
       router.push("/home");
     } else {
       alert("Error al iniciar sesión");
     }
-    console.log("Datos enviados", values);
-    alert("Inicio de sesión exitoso");
     setSubmitting(false);
   };
 
