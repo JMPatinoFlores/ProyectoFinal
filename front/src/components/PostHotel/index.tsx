@@ -6,13 +6,15 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 import continueImage from "../../../public/continue.png";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useGoogleMapsData from "@/lib/googleMaps/googleMapsData";
 import { GoogleMap, Marker } from "@react-google-maps/api";
+import { HotelContext } from "@/context/hotelContext";
 
 interface HotelRegisterProps {}
 
 const HotelRegister: React.FC<HotelRegisterProps> = () => {
+  const { addHotel } = useContext(HotelContext);
   const initialValues: IHotelRegister = {
     name: "",
     description: "",
@@ -20,7 +22,7 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     country: "",
     city: "",
     address: "",
-    location: "",
+    location: [],
     services: "",
   };
 
@@ -224,13 +226,20 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     null
   );
   const { isLoaded, mapCenter, marker } = useGoogleMapsData(hotelLocation);
+
   const handleSubmit = async (
     values: IHotelRegister,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
+    const success = await addHotel(values)
+    if(success) {
+      alert("Hotel Registrado Exitosamente")
+    } else {
+      alert("Error al registrar hotel")
+    }
     // Simulación de envío de datos
-    console.log("Datos enviados", values);
-    alert("Datos enviados");
+    // console.log("Datos enviados", values);
+    // alert("Datos enviados");
     setSubmitting(false);
   };
 
@@ -414,7 +423,7 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
                   />
                 </div>
                 <div>
-                  <Link href={"/post-hotel-image"} passHref>
+                  <Link href={"#"}>
                     <button
                       type="submit"
                       className="btn-secondary"
