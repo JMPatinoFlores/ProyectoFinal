@@ -1,14 +1,13 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
+import { UserContext } from "@/context/userContext";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: session } = useSession();
-  console.log(session);
+  const { isLogged, logOut } = useContext(UserContext);
 
   return (
     <div className="h-16 header sticky top-0 bg-white shadow-md flex items-center justify-between px-8 py-02 z-50">
@@ -53,16 +52,17 @@ function Navbar() {
           </Link>
         </div>
       </div>
-      {session?.user ? (
+      {isLogged ? (
         <div className="w-3/12 hidden md:flex justify-end items-center">
-          <Link href="/dashboard" className=" w-2/3">
-            <p className="flex justify-end hover:text-red-500 duration-200 text-sm p-2">
-              {session.user.name}
-            </p>
+          <Link
+            href="/dashboard"
+            className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+          >
+            Panel de control
           </Link>
           <Link href="/">
             <button
-              onClick={() => signOut()}
+              onClick={logOut}
               className="p-2 flex justify-center items-center text-white rounded-md bg-red-500 hover:bg-red-600 font-medium"
             >
               <Image
@@ -125,11 +125,11 @@ function Navbar() {
             >
               Contacto
             </Link>
-            {session?.user ? (
+            {isLogged ? (
               <div className="flex justify-center">
                 <Link href="/">
                   <button
-                    onClick={() => signOut()}
+                    onClick={logOut}
                     className="p-2 flex justify-center items-center font-medium text-red-700"
                   >
                     Cerrar sesión

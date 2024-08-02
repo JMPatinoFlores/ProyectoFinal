@@ -20,6 +20,8 @@ export const UserContext = createContext<IUserContextType>({
   setUser: () => {},
   isLogged: false,
   setIsLogged: () => {},
+  isAdmin: false,
+  setIsAdmin: () => {},
   login: async () => false,
   customerRegister: async () => false,
   hotelierRegister: async () => false,
@@ -29,6 +31,7 @@ export const UserContext = createContext<IUserContextType>({
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<Partial<IUserResponse> | null>(null);
   const [isLogged, setIsLogged] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const customerRegister = async (user: Omit<IUser, "id">) => {
     try {
@@ -63,6 +66,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         const user: IUserResponse = {
           id: decodedToken.id,
           email: decodedToken.email,
+          isAdmin: decodedToken.isAdmin,
         };
 
         if (data.user) {
@@ -74,6 +78,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         setIsLogged(true);
+        setIsAdmin(decodedToken.isAdmin);
         localStorage.setItem("token", data.token);
         return true;
       }
@@ -101,6 +106,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       const token = localStorage.getItem("token");
       if (token) {
         setIsLogged(true);
+        const decodedToken = jwtDecode<IDecodeToken>(token);
+        setIsAdmin(decodedToken.isAdmin);
       } else {
         setIsLogged(false);
       }
@@ -121,6 +128,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         setUser,
         isLogged,
         setIsLogged,
+        isAdmin,
+        setIsAdmin,
         login,
         hotelierRegister,
         customerRegister,
