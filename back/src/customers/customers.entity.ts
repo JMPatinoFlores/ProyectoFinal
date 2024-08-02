@@ -1,5 +1,5 @@
 import { Booking } from 'src/bookings/booking.entity';
-import { User } from 'src/entities/baseUser.entitity';
+import { User } from 'src/entities/baseUser.entity';
 import { Review } from 'src/reviews/reviews.entity';
 import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 

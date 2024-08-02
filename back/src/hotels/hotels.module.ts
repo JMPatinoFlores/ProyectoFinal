@@ -4,7 +4,7 @@ import { HotelsController } from './hotels.controllers';
 import { Hotel } from './hotels.entity';
 import { HotelsRepository } from './hotels.repository';
 import { HotelsService } from './hotels.service';
-import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entitity';
+import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Hotel, HotelAdmins])],

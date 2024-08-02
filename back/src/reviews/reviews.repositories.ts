@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Review } from './reviews.entity';
 import { CreateReviewDto } from './reviews.dtos';
 import { Hotel } from 'src/hotels/hotels.entity';
-import { Customers } from 'src/customers/customers.entitiy';
+import { Customers } from 'src/customers/customers.entity';
 
 @Injectable()
 export class ReviewsRepository {

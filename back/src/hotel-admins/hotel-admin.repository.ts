@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { HotelAdmins } from './hotelAdmins.entitity';
+import { HotelAdmins } from './hotelAdmins.entity';
 import { Repository } from 'typeorm';
 import {
   CreateHotelAdminDto,
@@ -41,7 +41,10 @@ export class HotelAdminRepository {
   //! Encontrar un Admin de Hotel por el email
 
   async getHotelAdminByEmail(email: string) {
-    return await this.hotelAdminsRepository.findOneBy({ email });
+    return await this.hotelAdminsRepository.findOne({
+      where: { email },
+      relations: ['hotels'],
+    });
   }
 
   //! Obtener un admin de Hotel por su ID
@@ -94,5 +97,21 @@ export class HotelAdminRepository {
       email: fakeEmail,
     });
     return { message: 'Borrado lógico de Admin de hotel exitoso' };
+  }
+
+  async saveAdminChanges(hotelAdmin: HotelAdmins): Promise<HotelAdmins> {
+    return await this.hotelAdminsRepository.save(hotelAdmin);
+  }
+
+  async findOne(options: any): Promise<HotelAdmins | undefined> {
+    return await this.hotelAdminsRepository.findOne(options);
+  }
+
+  async findOneBy(options: any): Promise<HotelAdmins | undefined> {
+    return await this.hotelAdminsRepository.findOneBy(options);
+  }
+
+  async update(id: string, updateData: Partial<HotelAdmins>): Promise<void> {
+    await this.hotelAdminsRepository.update(id, updateData);
   }
 }

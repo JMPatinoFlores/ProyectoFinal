@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
 import { CustomersRepository } from './customers.repository';
-import { Customers } from './customers.entitiy';
+import { Customers } from './customers.entity';
 import { MailService } from 'src/email-notify/mail.service';
 
 @Module({

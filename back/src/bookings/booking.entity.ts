@@ -1,6 +1,7 @@
 // import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
 import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
-import { Customers } from 'src/customers/customers.entitiy';
+import { Customers } from 'src/customers/customers.entity';
+
 import {
   Column,
   Entity,
@@ -19,7 +20,7 @@ export class Booking {
   date: string;
 
   @Column({ type: 'boolean', default: false })
-  isDeleted: boolean
+  isDeleted: boolean;
 
   @OneToOne(() => BookingDetails)
   @JoinColumn({ name: 'booking-details-id' })

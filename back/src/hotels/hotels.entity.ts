@@ -1,7 +1,7 @@
 import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
-import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entitity';
+import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 import { Review } from 'src/reviews/reviews.entity';
-import { Customers } from 'src/customers/customers.entitiy';
+import { Customers } from 'src/customers/customers.entity';
 import { RoomsType } from 'src/roomstype/roomstype.entity';
 import {
   Column,
