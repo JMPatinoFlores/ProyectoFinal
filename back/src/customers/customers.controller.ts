@@ -58,6 +58,7 @@ export class CustomersController {
   @ApiBearerAuth()
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Obtener un cliente por su ID' })
   getCustomerById(@Param('id') id: string) {
     return this.customersService.getCustomerById(id);
   }
@@ -68,6 +69,7 @@ export class CustomersController {
   @ApiBearerAuth()
   @Roles(Role.User)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Modificar/Actualizar un cliente' })
   updateCustomerInfo(
     @Param('id') id: string,
     @Body() customer: UpdateCustomerInfoDto,
@@ -77,10 +79,11 @@ export class CustomersController {
 
   //* Borrado lógico de un cliente
 
+  @Delete(':id')
   @ApiBearerAuth()
   @Roles(Role.User)
   @UseGuards(AuthGuard, RolesGuard)
-  @Delete(':id')
+  @ApiOperation({ summary: 'Eliminado lógico de un cliente' })
   logicalDeleteCustomer(@Param('id') id: string) {
     return this.customersService.logicalDeleteCustomer(id);
   }

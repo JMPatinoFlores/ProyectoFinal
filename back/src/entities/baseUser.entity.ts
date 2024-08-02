@@ -1,4 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  TableInheritance,
+} from 'typeorm';
 
 @Entity()
 export abstract class User {

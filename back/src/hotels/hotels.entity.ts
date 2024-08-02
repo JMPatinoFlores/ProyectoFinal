@@ -1,13 +1,11 @@
 import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
 import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 import { Review } from 'src/reviews/reviews.entity';
-import { Customers } from 'src/customers/customers.entity';
 import { RoomsType } from 'src/roomstype/roomstype.entity';
 import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -56,7 +54,7 @@ export class Hotel {
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
 
-  @Column({type: 'varchar', length:300})
+  @Column({ type: 'varchar', length: 300 })
   recommendations: string;
 
   @OneToMany((type) => RoomsType, (roomstype) => roomstype.hotel)

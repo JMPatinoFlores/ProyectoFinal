@@ -1,4 +1,13 @@
-import { Body, Controller, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   CreateCustomerDto,
@@ -11,10 +20,21 @@ import {
   UpdatePasswordDto,
 } from './passwords.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 @ApiTags('Autenticación y recuperación de contraseñas')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req) {}
+
+  @Get('callback/google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req) {
+    return req.user;
+  }
 
   @Post('cxSignUp')
   cxSignUp(@Body() customer: CreateCustomerDto) {
