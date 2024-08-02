@@ -1,7 +1,9 @@
+import { JwtPayload } from "jwt-decode";
+
 export interface IUser {
   id: number;
   name: string;
-  lastname: string;
+  lastName: string;
   email: string;
   password: string;
   phone: string;
@@ -16,9 +18,27 @@ export interface ILogin {
   password: string;
 }
 
+export interface ILoginUser {
+  email: string;
+  password: string;
+}
+
 export interface IRegisterValues {
   name: string;
-  lastname: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phone: string;
+  country: string;
+  city: string;
+  address: string;
+  birthDate: string;
+}
+
+export interface IHotelierRegisterValues {
+  name: string;
+  lastName: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -35,16 +55,20 @@ export interface IUserContextType {
   isLogged: boolean;
   setIsLogged: (isLogged: boolean) => void;
   login: (credentials: ILogin) => Promise<boolean>;
-  signUp: (user: Omit<IUser, "id">) => Promise<boolean>;
+  customerRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
+  hotelierRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   logOut: () => void;
+}
+
+export interface IDecodeToken extends JwtPayload {
+  id: number;
+  name: string;
+  email: string;
 }
 
 export interface IUserResponse {
   id: number;
   email: string;
-  name: string;
-  lastname: string;
-  token: string;
 }
 
 export interface IRoom {
@@ -198,4 +222,9 @@ export interface ILocationDetail {
   country: string;
   city: string;
   address: string;
+}
+
+export interface ISearchBarProps {
+  searchQuery: string;
+  onSearch: (query: string) => void;
 }

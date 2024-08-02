@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -23,6 +23,7 @@ import { BookingModule } from './bookings/booking.module';
 import { BookingDetailModule } from './bookingDetails/booking-detail.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { CustomersModule } from './customers/customers.module';
+import { NaturalLanguageProcessor } from './helper/natural-language-processor';
 import { AvailabilityModule } from './availabilities/availability.module';
 import { EmailNotifiModule } from './email-notify/email.module';
 import { MailService } from './email-notify/mail.service';
@@ -64,7 +65,16 @@ import { MailService } from './email-notify/mail.service';
     AuthService,
     CustomersRepository,
     HotelAdminRepository,
+    NaturalLanguageProcessor,
     MailService,
   ],
 })
+// export class AppModule implements OnModuleInit {
+//   constructor(
+//     private readonly nlpProcessor: NaturalLanguageProcessor
+//   ){}
+//   async onModuleInit() {
+//     await this.nlpProcessor.initialize();
+//   }
+// }
 export class AppModule {}

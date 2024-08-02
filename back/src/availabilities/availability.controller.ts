@@ -46,7 +46,7 @@ export class AvailabilityController {
     @ApiBearerAuth()
     @Roles(Role.Admin)
     @UseGuards(AuthGuard, RolesGuard)
-    @Delete('/:id')
+    @Delete(':id')
     @HttpCode(200)
     async deleteRoomAvailability(@Param('id', ParseUUIDPipe) id: string) {
         return await this.availabilityService.deleteRoomAvailability(id)

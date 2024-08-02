@@ -42,4 +42,8 @@ export class BookingService {
   async deleteBooking(id: string) {
     return await this.bookingRepository.deleteBooking(id)
   }
+
+  async softDeleteBooking(id: string) {
+    return await this.bookingRepository.softDeleteBooking(id)
+  }
 }

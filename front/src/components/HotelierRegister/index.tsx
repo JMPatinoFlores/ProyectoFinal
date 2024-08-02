@@ -1,21 +1,27 @@
 "use client";
 
 import { validateRegisterForm } from "@/helpers/validateData";
-import { IRegisterValues } from "@/interfaces";
+import { IHotelierRegisterValues, IRegisterValues } from "@/interfaces";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import registerHotelierImage from "../../../public/registrohotelero.jpg";
 import Link from "next/link";
 import { useContext } from "react";
 import { UserContext } from "@/context/userContext";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { signIn, useSession } from "next-auth/react";
+import GoogleRegisterButton from "../GoogleRegisterButton";
 
 export default function HotelierRegisterForm() {
-  const { signUp } = useContext(UserContext);
+  const { hotelierRegister } = useContext(UserContext);
   const router = useRouter();
 
-  const initialValues: IRegisterValues = {
+  const { data: session } = useSession();
+  console.log(session);
+
+  const initialValues: IHotelierRegisterValues = {
     name: "",
-    lastname: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -223,20 +229,18 @@ export default function HotelierRegisterForm() {
   ];
 
   const handleSubmit = async (
-    values: IRegisterValues,
+    values: IHotelierRegisterValues,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    const success = await signUp(values);
+    const success = await hotelierRegister(values);
+    console.log(success);
 
     if (success) {
       alert("Usuario registrado correctamente");
       router.push("/login");
-    }
-
-    if (!success) {
+    } else {
       alert("Error al registrar usuario");
     }
-
     setSubmitting(false);
   };
 
@@ -264,6 +268,7 @@ export default function HotelierRegisterForm() {
               ¡Registrate y publica tu hotel!
             </h1>
           </div>
+          <GoogleRegisterButton />
           <Formik
             initialValues={initialValues}
             validate={validateRegisterForm}
@@ -289,17 +294,17 @@ export default function HotelierRegisterForm() {
                     />
                   </div>
                   <div className="formDiv flex-1">
-                    <label htmlFor="lastname" className="formLabel">
+                    <label htmlFor="lastName" className="formLabel">
                       Apellido
                     </label>
                     <Field
                       type="text"
-                      name="lastname"
+                      name="lastName"
                       placeholder="Apellido"
                       className="formInput"
                     />
                     <ErrorMessage
-                      name="lastname"
+                      name="lastName"
                       component="div"
                       className="text-red-600 text-sm"
                     />

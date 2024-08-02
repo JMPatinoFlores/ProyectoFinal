@@ -7,8 +7,8 @@ export const validateRegisterForm = (values: IRegisterValues) => {
     errors.name = "Nombre requerido";
   }
 
-  if (!values.lastname) {
-    errors.lastname = "Nombre requerido";
+  if (!values.lastName) {
+    errors.lastName = "Nombre requerido";
   }
 
   if (!values.email) {

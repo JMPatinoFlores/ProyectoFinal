@@ -29,10 +29,10 @@ export class Hotel {
   @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: false })
+  @Column({ type: 'varchar', length: 50, nullable: false })
   country: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: false })
+  @Column({ type: 'varchar', length: 50, nullable: false })
   city: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
@@ -56,9 +56,8 @@ export class Hotel {
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
 
-  @ManyToOne(() => HotelAdmins, (hotelAdmin) => hotelAdmin.hotels)
-  @JoinColumn({ name: 'hotel_admin_id' })
-  hotelAdmin: HotelAdmins;
+  @Column({type: 'varchar', length:300})
+  recommendations: string;
 
   @OneToMany((type) => RoomsType, (roomstype) => roomstype.hotel)
   @JoinColumn()
@@ -67,6 +66,10 @@ export class Hotel {
   @OneToMany((type) => Review, (reviews) => reviews.hotel)
   @JoinColumn()
   reviews: Review[];
+
+  @ManyToOne(() => HotelAdmins, (hotelAdmin) => hotelAdmin.hotels)
+  @JoinColumn({ name: 'hotel_admin_id' })
+  hotelAdmin: HotelAdmins;
 
   @OneToMany(() => BookingDetails, (bookingDetails) => bookingDetails.hotel)
   bookingDetails: BookingDetails[];

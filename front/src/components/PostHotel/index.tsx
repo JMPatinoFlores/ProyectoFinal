@@ -299,15 +299,23 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
                   />
                 </div>
                 <div className="formDiv flex-1 mr-2">
-                  <label htmlFor="country" className="formLabel">
-                    País
-                  </label>
-                  <Field
-                    type="text"
+                   <label htmlFor="country" className="formLabel">
+                     País
+                   </label>
+                   <Field
+                    as="select"
+                    type = "text"
                     name="country"
                     className="formInput"
                     placeholder="País"
-                  />
+                  >
+                    <option value="">Selecciona un país</option>
+                    {countryOptions.map((country, index) => (
+                      <option key={index} value={country}>
+                        {country}
+                      </option>
+                    ))}
+                  </Field>
                   <ErrorMessage
                     name="country"
                     component="div"

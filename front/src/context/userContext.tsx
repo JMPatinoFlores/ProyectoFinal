@@ -1,7 +1,18 @@
 "use client";
 
-import { ILogin, IUser, IUserContextType, IUserResponse } from "@/interfaces";
-import { postLogin, postRegister } from "@/lib/server/fetchUsers";
+import {
+  IDecodeToken,
+  ILoginUser,
+  IUser,
+  IUserContextType,
+  IUserResponse,
+} from "@/interfaces";
+import {
+  postAdminRegister,
+  postCustomerRegister,
+  postLogin,
+} from "@/lib/server/fetchUsers";
+import { jwtDecode } from "jwt-decode";
 import { createContext, useEffect, useState } from "react";
 
 export const UserContext = createContext<IUserContextType>({
@@ -10,7 +21,8 @@ export const UserContext = createContext<IUserContextType>({
   isLogged: false,
   setIsLogged: () => {},
   login: async () => false,
-  signUp: async () => false,
+  customerRegister: async () => false,
+  hotelierRegister: async () => false,
   logOut: () => {},
 });
 
@@ -18,61 +30,87 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<Partial<IUserResponse> | null>(null);
   const [isLogged, setIsLogged] = useState(false);
 
-  const signUp = async (user: Omit<IUser, "id">) => {
+  const customerRegister = async (user: Omit<IUser, "id">) => {
     try {
-      const data = await postRegister(user);
-      if (data.id) {
-        await login({ email: user.email, password: user.password });
-        return true;
-      }
-      return false;
+      const data = await postCustomerRegister(user);
+      console.log(data); // cambiar al await login
+      return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return false;
     }
   };
-  const login = async (credentials: ILogin) => {
+
+  const hotelierRegister = async (user: Omit<IUser, "id">) => {
+    try {
+      const data = await postAdminRegister(user);
+      console.log(data);
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  const login = async (credentials: ILoginUser) => {
     try {
       const data = await postLogin(credentials);
-      if (data.user && data.token) {
-        setUser(data.user);
-        setIsLogged(true);
-        typeof window !== "undefined" &&
+      console.log(data);
+      if (data.token) {
+        const decodedToken = jwtDecode<IDecodeToken>(data.token);
+        console.log("Token decodificado", decodedToken);
+
+        const user: IUserResponse = {
+          id: decodedToken.id,
+          email: decodedToken.email,
+        };
+
+        if (data.user) {
+          setUser(data.user);
           localStorage.setItem("user", JSON.stringify(data.user));
-        typeof window !== "undefined" &&
-          localStorage.setItem("token", JSON.stringify(data.token));
+        } else {
+          setUser(user);
+          localStorage.setItem("user", JSON.stringify(user));
+        }
+
+        setIsLogged(true);
+        localStorage.setItem("token", data.token);
         return true;
       }
       return false;
     } catch (error) {
-      console.log(error);
+      console.error("Error en el inicio de sesión:", error);
       return false;
     }
   };
+
   const logOut = () => {
     const confirm = window.confirm("¿Seguro que quieres cerrar sesión?");
     if (confirm) {
       setUser(null);
       setIsLogged(false);
-      typeof window !== "undefined" && localStorage.removeItem("user");
-      typeof window !== "undefined" && localStorage.removeItem("token");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+      }
     }
   };
+
   useEffect(() => {
-    const token =
-      typeof window !== "undefined" && localStorage.getItem("token");
-    if (token) {
-      setIsLogged(true);
-    } else {
-      setIsLogged(false);
-    }
-  }, []);
-  useEffect(() => {
-    const user = typeof window !== "undefined" && localStorage.getItem("user");
-    if (user) {
-      setUser(JSON.parse(user));
-    } else {
-      setUser(null);
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        setIsLogged(true);
+      } else {
+        setIsLogged(false);
+      }
+
+      const user = localStorage.getItem("user");
+      if (user) {
+        setUser(JSON.parse(user));
+      } else {
+        setUser(null);
+      }
     }
   }, []);
 
@@ -84,7 +122,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         isLogged,
         setIsLogged,
         login,
-        signUp,
+        hotelierRegister,
+        customerRegister,
         logOut,
       }}
     >

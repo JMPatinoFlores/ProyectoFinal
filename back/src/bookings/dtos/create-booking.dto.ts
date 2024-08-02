@@ -31,15 +31,6 @@ export class CreateBookingDto {
     hotelId: string
 
     @ApiProperty({
-        name: 'discount',
-        description: 'Porcentaje de descuento de la reserva, tipo number.',
-        example: 15
-    })
-    @IsOptional()
-    @IsNumber()
-    discount: number
-
-    @ApiProperty({
         name: 'roomTypesIdsAndDates',
         description: 'Array de objetos, cada uno de los objetos contiene un roomTypeId (UUID del tipo de habitación), un checkInDate y un checkOutDate (versión ISO8601 de las fechas en formato string).',
         example: '"roomTypesIdsAndDates": [{"roomTypeId": "4bd0ce59-0a68-4a36-93be-c9549afa35ca", "checkInDate": "2026-07-25T17:04:51.143Z", "checkOutDate": "2026-07-28T17:04:51.143Z"}]'
