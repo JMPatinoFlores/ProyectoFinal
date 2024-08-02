@@ -1,5 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ArrayMinSize, IsArray, IsISO8601, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
+import {
+  ArrayMinSize,
+  IsArray, IsISO8601,
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateBookingDto {
     @ApiProperty({

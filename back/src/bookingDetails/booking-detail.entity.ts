@@ -1,7 +1,17 @@
-import { Booking } from "src/bookings/booking.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { BookingDetailsStatus } from "./enum/booking-detail-status.enum";
-import { Hotel } from "src/hotels/hotels.entity";
+import { Booking } from 'src/bookings/booking.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { BookingDetailsStatus } from './enum/booking-detail-status.enum';
+import { Hotel } from 'src/hotels/hotels.entity';
 import { RoomAvailability } from "src/availabilities/availability.entity";
 
 @Entity({ name: 'booking-details' })

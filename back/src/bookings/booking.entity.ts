@@ -1,6 +1,7 @@
 // import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
 import { BookingDetails } from 'src/bookingDetails/booking-detail.entity';
 import { Customers } from 'src/customers/customers.entity';
+
 import {
   Column,
   Entity,
@@ -13,13 +14,13 @@ import {
 @Entity({ name: 'bookings' })
 export class Booking {
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  id: string;
 
   @Column({ type: 'varchar', length: 24 })
-  date: string
+  date: string;
 
   @Column({ type: 'boolean', default: false })
-  isDeleted: boolean
+  isDeleted: boolean;
 
   @OneToOne(() => BookingDetails)
   @JoinColumn({ name: 'booking-details-id' })

@@ -8,6 +8,7 @@ import { HotelAdminRepository } from 'src/hotel-admins/hotel-admin.repository';
 import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 import { CustomersModule } from 'src/customers/customers.module';
 import { HotelAdminsModule } from 'src/hotel-admins/hotel-admins.module';
+import { MailService } from 'src/email-notify/mail.service';
 
 @Module({
   imports: [
@@ -16,6 +17,11 @@ import { HotelAdminsModule } from 'src/hotel-admins/hotel-admins.module';
     HotelAdminsModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, CustomersRepository, HotelAdminRepository],
+  providers: [
+    AuthService,
+    CustomersRepository,
+    HotelAdminRepository,
+    MailService,
+  ],
 })
 export class AuthModule {}
