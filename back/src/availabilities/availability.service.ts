@@ -23,6 +23,6 @@ export class AvailabilityService {
     }
 
     async deleteRoomAvailability(id: string) {
-        return await this.deleteRoomAvailability(id)
+        return await this.availabilityRepository.deleteRoomAvailability(id)
     }
 }

@@ -12,9 +12,6 @@ export class BookingDetails {
   @Column({ type: 'float', nullable: false })
   total: number
 
-  @Column({ type: 'float', nullable: true })
-  discount: number
-
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean
 

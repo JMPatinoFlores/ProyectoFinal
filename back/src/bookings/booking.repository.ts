@@ -41,12 +41,18 @@ export class BookingRepository {
                 }
             }
         });
-        if (bookings.length === 0) throw new NotFoundException('No se encontró ningún booking.')
-        return bookings
+        
+        const bookingsToReturn: Booking[] = []
+        for (const booking of bookings) {
+            if (!booking.isDeleted) bookingsToReturn.push(booking)
+        }
+
+        if (bookingsToReturn.length === 0) throw new BadRequestException('No se encontró ningún booking.')
+        return bookingsToReturn
     }
 
     async getBookingById(id: string) {
-        return await this.bookingDBRepository.findOne({
+        const booking = await this.bookingDBRepository.findOne({
             where: { id: id },
             relations: { bookingDetails: { availabilities: { room: { roomtype: true } }, hotel: true }, customer: true }, select: {
                 customer: {
@@ -63,6 +69,10 @@ export class BookingRepository {
                 }
             },
         });
+        if (!booking) throw new NotFoundException('No se encontró un booking con ese id.')
+
+        return booking
+        
     }
 
     async getBookingsByCustomerId(id: string) {
@@ -82,8 +92,13 @@ export class BookingRepository {
                 }
             },
         })
-        if (bookings.length === 0) throw new BadRequestException('No se encontró ningún booking.')
-        return bookings
+        const bookingsToReturn: Booking[] = []
+        for (const booking of bookings) {
+            if (!booking.isDeleted) bookingsToReturn.push(booking)
+        }
+
+        if (bookingsToReturn.length === 0) throw new BadRequestException('No se encontró ningún booking.')
+        return bookingsToReturn
     }
 
     async getBookingsByHotelAdminId(id: string) {
@@ -103,12 +118,17 @@ export class BookingRepository {
                 }
             }
         })
-        if (bookings.length === 0) throw new BadRequestException('No se encontró ningún booking.')
-        return bookings
+        const bookingsToReturn: Booking[] = []
+        for (const booking of bookings) {
+            if (!booking.isDeleted) bookingsToReturn.push(booking)
+        }
+
+        if (bookingsToReturn.length === 0) throw new BadRequestException('No se encontró ningún booking.')
+        return bookingsToReturn
     }
 
     async createBooking(bookingData: CreateBookingDto) {
-        const { customerId, hotelId, discount, roomTypesIdsAndDates } = bookingData
+        const { customerId, hotelId, roomTypesIdsAndDates } = bookingData
         const now = new Date().toISOString()
         const { password, ...customer } = await this.customersDBRepository.findOne({ where: { id: customerId } })
 
@@ -145,7 +165,7 @@ export class BookingRepository {
                         const availabilityEndDate = new Date(availability.endDate).getTime();
 
                         if (!(customerCheckOutDate <= availabilityStartDate || customerCheckInDate >= availabilityEndDate)) {
-                            if (availability.isAvailable) continue
+                            if (availability.isAvailable || availability.isDeleted) continue
                             isAvailable = false;
                             break;
                         }
@@ -181,11 +201,10 @@ export class BookingRepository {
 
         if (availabilitiesSaved.length > 0) {
             const { roomstype, ...newHotel } = hotelToBook
-            const bookingDetails = this.bookingDetailsDBRepository.create({ total, discount, hotel: newHotel, availabilities: availabilitiesSaved })
+            const bookingDetails = this.bookingDetailsDBRepository.create({ total, hotel: newHotel, availabilities: availabilitiesSaved })
             const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails)
             const booking = this.bookingDBRepository.create({ date: now, bookingDetails: newBookingDetails, customer })
             const newBooking = await this.bookingDBRepository.save(booking)
-
             return newBooking
         } else {
             throw new BadRequestException('Booking could not be completed.');
@@ -208,11 +227,13 @@ export class BookingRepository {
         // 2024-07-25T17:04:51.143Z
         const { bookingId, newAvailabilities } = bookingData
         const booking = await this.bookingDBRepository.findOne({ where: { id: bookingId }, relations: { bookingDetails: { hotel: { roomstype: { rooms: { availabilities: true } } } } } })
+        if (!booking) throw new NotFoundException('No se encontró un booking con ese id.')
         const availabilitiesSaved: RoomAvailability[] = []
         let total: number = 0
 
         for (const newAvailability of newAvailabilities) {
             const newAvailabilityWithId = await this.roomAvailabilityDBRepository.findOne({ where: { id: newAvailability.id }, relations: { room: { roomtype: true } } })
+            if (!newAvailabilityWithId) throw new NotFoundException(`No se encontró un availability con id ${newAvailabilityWithId.id}`)
             const customerCheckInDate = new Date(newAvailability.startDate).getTime()
             const customerCheckOutDate = new Date(newAvailability.endDate).getTime()
             if (customerCheckOutDate < customerCheckInDate) throw new BadRequestException('Los checkInDates deben ser anteriores en el tiempo a sus respectivos checkOutDates.')
@@ -222,14 +243,14 @@ export class BookingRepository {
                 if (roomType.id !== newAvailabilityWithId.room.roomtype.id) continue
                 for (const room of roomType.rooms) {
                     let isAvailable = true
-                    
+
                     for (const oldAvailability of room.availabilities) {
                         if (isBooked) break
                         const oldAvailabilityStartDate = new Date(oldAvailability.startDate).getTime()
                         const oldAvailabilityEndDate = new Date(oldAvailability.endDate).getTime()
 
                         if (!(customerCheckOutDate <= oldAvailabilityStartDate || customerCheckInDate >= oldAvailabilityEndDate)) {
-                            if (oldAvailability.isAvailable) continue
+                            if (oldAvailability.isAvailable ||oldAvailability.isDeleted) continue
                             isAvailable = false
                             break
                         }
@@ -266,7 +287,7 @@ export class BookingRepository {
 
         if (availabilitiesSaved.length > 0) {
             console.log('hola');
-            
+
             const newBooking = await this.bookingDBRepository.findOne({
                 where: { id: booking.id },
                 relations: { bookingDetails: { availabilities: { room: { roomtype: true } }, hotel: true }, customer: true }, select: {
@@ -299,8 +320,23 @@ export class BookingRepository {
         for (const availability of booking.bookingDetails.availabilities) {
             await this.roomAvailabilityDBRepository.delete({ id: availability.id })
         }
-        await this.bookingDetailsDBRepository.delete({ id: booking.bookingDetails.id })
         await this.bookingDBRepository.delete({ id })
+        await this.bookingDetailsDBRepository.delete({ id: booking.bookingDetails.id })
         return "El booking, su bookingDetails y sus availabilities han sido eliminados."
+    }
+
+    async softDeleteBooking(id: string) {
+        const booking = await this.bookingDBRepository.findOne({ where: { id }, relations: { bookingDetails: { availabilities: true } } })
+
+        if (!booking) throw new NotFoundException('No se encontró un booking con ese id.')
+        if (booking.bookingDetails.status === BookingDetailsStatus.ACTIVE) throw new BadRequestException('No se puede eliminar el booking ya que se encuentra activo.')
+
+        for (const availability of booking.bookingDetails.availabilities) {
+            await this.roomAvailabilityDBRepository.update({id: availability.id}, {isDeleted: true})
+        }
+
+        await this.bookingDBRepository.update({ id: booking.id }, { isDeleted: true })
+        await this.bookingDetailsDBRepository.update({ id: booking.bookingDetails.id }, { isDeleted: true })
+        return "El booking, su bookigDetails y sus availabilities han sido borrados con un borrado lógico."
     }
 }
