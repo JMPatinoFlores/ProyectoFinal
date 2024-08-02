@@ -32,11 +32,11 @@ function HotelDetail() {
 
   return (
     <div className="flex flex-wrap">
-      <div className="w-full mb-4 px-4">
+      <div className="w-full mb-4 mt-4 px-4">
         <h2 className="text-2xl font-bold">{hotel.name}</h2>
       </div>
-      <div className="w-1/2 px-4">
-        <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden">
+      <div className="lg:w-1/2 px-4">
+        <div className="relative w-full lg:h-64 mb-4 rounded-lg overflow-hidden">
           <img src={hotel.image} alt="Hotel Image" />
         </div>
         <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden">
@@ -55,7 +55,7 @@ function HotelDetail() {
           </GoogleMap>
         </div>
       </div>
-      <div className="w-1/2 px-4">
+      <div className="lg:w-1/2 px-4">
         <div className="mb-4">
           <h2 className="text-2xl font-bold">Descripción</h2>
           <p>{hotel.description}</p>
