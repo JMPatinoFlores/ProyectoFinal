@@ -7,7 +7,7 @@ export class RoomAvailability {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({type: 'varchar', length: 24, nullable: false})
+    @Column({ type: 'varchar', length: 24, nullable: false })
     startDate: string;
 
     @Column({ type: 'varchar', length: 24, nullable: false })
@@ -20,7 +20,10 @@ export class RoomAvailability {
     @Column({ default: false, nullable: false })
     isAvailable: boolean;
 
+    @Column({ type: 'boolean', default: false })
+    isDeleted: boolean;
+
     @ManyToOne(() => BookingDetails, (bookingDetails) => bookingDetails.availabilities)
-    @JoinColumn({name: 'booking-details'})
+    @JoinColumn({ name: 'booking-details' })
     bookingDetails: BookingDetails
 }

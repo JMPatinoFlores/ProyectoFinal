@@ -6,25 +6,34 @@ import { RoomAvailability } from "./availability.entity";
 import { Room } from "src/rooms/rooms.entity";
 import { RoomsType } from "src/roomstype/roomstype.entity";
 import { UpdateAvailabilityDto } from "./availability.dtos";
+import { BookingDetails } from "src/bookingDetails/booking-detail.entity";
 
 @Injectable()
 export class AvailabilityRepository {
     constructor(@InjectRepository(RoomAvailability) private readonly roomAvailabilityDBRepository: Repository<RoomAvailability>,
         @InjectRepository(Room) private readonly roomDBRepository: Repository<Room>,
-        @InjectRepository(RoomsType) private readonly roomTypeDBRepository: Repository<RoomsType>
+        @InjectRepository(RoomsType) private readonly roomTypeDBRepository: Repository<RoomsType>,
+        @InjectRepository(BookingDetails) private readonly bookingDetailsDBRepository: Repository<BookingDetails>
     ) { }
 
     async getAllAvailabilities() {
         const availabilities = await this.roomAvailabilityDBRepository.find()
-        if (availabilities.length === 0) throw new NotFoundException('No se encontraron availabilities.')
-        return availabilities
+        const availabilitiesToReturn: RoomAvailability[] = []
+        for (const availability of availabilities) {
+            if (!availability.isDeleted) availabilitiesToReturn.push(availability)
+        }
+        if (availabilitiesToReturn.length === 0) throw new NotFoundException('No se encontraron availabilities.')
+        return availabilitiesToReturn
     }
 
     async getAvailabilitiesByRoomTypeId(roomTypeId: string) {
-        const nonAvailabilityPeriods = await this.roomAvailabilityDBRepository.find({ where: { room: { roomtype: { id: roomTypeId } } } })
-
-        if (nonAvailabilityPeriods.length === 0) throw new NotFoundException('El roomtype no contiene availabilities.')
-        return nonAvailabilityPeriods
+        const allNonAvailabilityPeriods = await this.roomAvailabilityDBRepository.find({ where: { room: { roomtype: { id: roomTypeId } } } })
+        const nonAvailabilityPeriodsToReturn: RoomAvailability[] = []
+        for (const availability of allNonAvailabilityPeriods) {
+            if (!availability.isDeleted) nonAvailabilityPeriodsToReturn.push(availability)
+        }
+        if (nonAvailabilityPeriodsToReturn.length === 0) throw new NotFoundException('El roomtype no contiene availabilities.')
+        return nonAvailabilityPeriodsToReturn
     }
 
     async createRoomAvailability(roomId: string, startDate: string, endDate: string) {
