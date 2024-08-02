@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Customers } from './customers.entitiy';
+import { Customers } from './customers.entity';
 import { Repository } from 'typeorm';
 import { CreateCustomerDto, UpdateCustomerInfoDto } from './customers.dto';
 import { IdDto } from 'src/dto/id.dto';

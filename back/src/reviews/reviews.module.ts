@@ -5,7 +5,7 @@ import { ReviewsRepository } from "./reviews.repositories";
 import { ReviewsService } from "./reviews.service";
 import { Review } from "./reviews.entity";
 import { Hotel } from "src/hotels/hotels.entity";
-import { Customers } from "src/customers/customers.entitiy";
+import { Customers } from "src/customers/customers.entity";
 
 
 @Module({
