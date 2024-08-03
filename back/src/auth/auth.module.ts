@@ -10,7 +10,7 @@ import { CustomersModule } from 'src/customers/customers.module';
 import { HotelAdminsModule } from 'src/hotel-admins/hotel-admins.module';
 import { MailService } from 'src/email-notify/mail.service';
 import { PassportModule } from '@nestjs/passport';
-import { GoogleStrategy } from './strategies/google.startegy';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [
