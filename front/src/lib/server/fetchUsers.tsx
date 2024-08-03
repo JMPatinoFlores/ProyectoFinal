@@ -31,3 +31,12 @@ export const postLogin = async (credentials: ILogin) => {
   const data = await response.json();
   return data;
 };
+
+export const sendEmail = async (credentials: Partial<ILogin>) => {
+  const response = await fetch("http://localhost:3000/auth/password-recovery", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+  return response;
+};

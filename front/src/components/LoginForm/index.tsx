@@ -10,6 +10,7 @@ import { UserContext } from "@/context/userContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { signIn, useSession } from "next-auth/react";
+import ForgotPassword from "../ForgotPassword";
 
 export default function LoginForm() {
   const { login } = useContext(UserContext);
@@ -112,11 +113,6 @@ export default function LoginForm() {
                     className="text-red-600 text-sm"
                   />
                 </div>
-                <div className="flex items-center justify-end">
-                  <Link href={"#"} className="text-sm hover:text-[#f8263a]">
-                    Olvidé mi contraseña
-                  </Link>
-                </div>
                 <div>
                   <button
                     type="submit"
@@ -138,6 +134,9 @@ export default function LoginForm() {
               </Form>
             )}
           </Formik>
+          <div className="flex items-center justify-center my-4">
+            <ForgotPassword />
+          </div>
         </div>
       </div>
     </div>
