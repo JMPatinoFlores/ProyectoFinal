@@ -15,6 +15,14 @@ const handler = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
       clientSecret: process.env.GOOGLE_SECRET as string,
+      authorization: {
+        params: {
+          scope: "openid email profile",
+          prompt: "consent", // puedes ajustarlo según tus necesidades
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
   ],
   callbacks: {
