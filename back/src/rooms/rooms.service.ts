@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { CreateRoomDto } from "./rooms.dtos";
-import { RoomsRepository } from "./rooms.repositories";
+import { RoomsRepository } from "./rooms.repository";
 import { LoadRoomsDto } from "./rooms.loadDtos";
+import { UpdateRoomDto } from "./rooms.updateDto";
 
 @Injectable()
 export class RoomsService{
@@ -24,4 +25,21 @@ export class RoomsService{
     async loadRooms(loadroomDto: LoadRoomsDto){
         return await this.roomsDbRepository.loadRooms(loadroomDto);
     }
+
+    async updateDbRoom(id: string, updateroomDto: Partial<UpdateRoomDto>){
+        return await this.roomsDbRepository.updateDbRoom(id, updateroomDto);
+    }
+
+    async deleteDbRoom(id: string){
+        return await this.roomsDbRepository.deleteDbRoom(id);
+    }
+
+    async restoreDbRoom(id:string){
+        return await this.roomsDbRepository.restoreDbRoom(id);
+    }
+
+    async getDbRoomDeleted(){
+        return await this.roomsDbRepository.getDbRoomDeleted();
+    }
+
 }

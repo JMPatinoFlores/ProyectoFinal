@@ -30,15 +30,15 @@ export class CreateHotelDto {
   @IsNotEmpty()
   email: string;
 
-    @IsString()
-    @MaxLength(50)
-    @IsNotEmpty()
-    country: string;
+  @IsString()
+  @MaxLength(50)
+  @IsNotEmpty()
+  country: string;
 
-    @IsString()
-    @MaxLength(50)
-    @IsNotEmpty()
-    city: string;
+  @IsString()
+  @MaxLength(50)
+  @IsNotEmpty()
+  city: string;
 
   @IsString()
   @MaxLength(50)
@@ -65,18 +65,19 @@ export class CreateHotelDto {
   @Max(5)
   rating?: number;
 
-    @IsArray()
-    @IsString({each: true})
-    images: string[];
+  @IsOptional()
+  @IsArray()
+  @IsString({each: true})
+  images?: string[];
 
-    @IsString()
-    @MaxLength(300)
-    @IsNotEmpty()
-    recommendations: string;
+  // @IsString()
+  // @MaxLength(300)
+  // @IsNotEmpty()
+  // recommendations: string;
 
   @IsUUID()
   @IsNotEmpty()
-  hoteladminId: string;
+  hotel_admin_id: string;
   // @IsEmpty()
   // @IsBoolean()
   // status: boolean;

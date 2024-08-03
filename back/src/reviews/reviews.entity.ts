@@ -18,7 +18,7 @@ export class Review {
   @Column({ type: 'varchar', length: 100, nullable: false })
   comment: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: false })
+  @Column({ type:'varchar'})
   date: string;
 
   @Column({ type: 'float', default: 0 })
