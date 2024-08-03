@@ -33,7 +33,7 @@ export class AuthController {
   @Get('callback/google')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req) {
-    return req.user;
+    return this.authService.googleLogin(req);
   }
 
   @Post('cxSignUp')
