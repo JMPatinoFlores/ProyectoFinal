@@ -19,5 +19,6 @@ export class HotelAdmins extends User {
   isAdmin: boolean = true;
 
   @OneToMany(() => Hotel, (hotel) => hotel.hotelAdmin)
+  @JoinColumn()
   hotels: Hotel[];
 }

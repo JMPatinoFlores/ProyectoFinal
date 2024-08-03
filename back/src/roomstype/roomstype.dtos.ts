@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsEmpty, IsNotEmpty, IsNumber, IsString, IsUUID, MaxLength, Min } from "class-validator";
+import { IsArray, IsBoolean, IsEmpty, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, MaxLength, Min } from "class-validator";
 
 
 export class CreateRoomTypeDto{
@@ -20,9 +20,10 @@ export class CreateRoomTypeDto{
     @IsNotEmpty()
     totalBeds: number;
 
+    @IsOptional()
     @IsArray()
     @IsString({each: true})
-    images: string[];
+    images?: string[];
 
     @IsNumber()
     @Min(0)

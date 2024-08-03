@@ -1,17 +1,17 @@
-import { IsEmpty, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from "class-validator";
 
 
-export class CreateReviewDto {
+export class UpdateReviewDto {
      
     @IsString()
     @IsNotEmpty()
     @MaxLength(100)
     comment: string;
 
-    @IsOptional()
-    @IsString()
-    @MaxLength(20)
-    date?: string;
+    // @IsString()
+    // @IsNotEmpty()
+    // @MaxLength(20)
+    // date: string;
 
     //@IsOptional()
     @IsNumber()
@@ -27,5 +27,7 @@ export class CreateReviewDto {
     @IsUUID()
     @IsNotEmpty()
     clienteId: string;
+
+
 
 }

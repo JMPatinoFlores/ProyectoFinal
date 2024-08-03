@@ -41,6 +41,7 @@
     "class-validator": "^0.14.1",
     "cloudinary": "^2.2.0",
     "cors": "^2.8.5",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "node-nlp": "^4.27.0",
     "pg": "^8.12.0",
