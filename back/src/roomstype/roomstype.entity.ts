@@ -25,7 +25,7 @@ export class RoomsType {
     @Column({type:"float", nullable: false})
     price: number;
 
-    @Column({type:"simple-json"})
+    @Column({type:"simple-json", default:[]})
     images: string[];
 
     @Column({type:"boolean", default:false})

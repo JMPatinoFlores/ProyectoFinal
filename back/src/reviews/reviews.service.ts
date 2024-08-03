@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ReviewsRepository } from './reviews.repositories';
+import { ReviewsRepository } from './reviews.repository';
 import { CreateReviewDto } from './reviews.dtos';
+import { UpdateReviewDto } from './reviews.updateDto';
 
 @Injectable()
 export class ReviewsService {
@@ -16,5 +17,17 @@ export class ReviewsService {
 
   async createReview(createreviewDto: CreateReviewDto) {
     return await this.reviewRepository.createReview(createreviewDto);
+  }
+
+  async updateDbReview(id: string, updatereviewDto: Partial<UpdateReviewDto>){
+    return await this.reviewRepository.updateDbReview(id, updatereviewDto)
+  }
+
+  async deleteDbReview(id: string){
+    return await this.reviewRepository.deleteDbReview(id);
+  }
+
+  async getDbReviewDeleted(){
+    return await this.reviewRepository.getDbReviewDeleted();
   }
 }

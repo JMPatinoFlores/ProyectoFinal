@@ -25,5 +25,6 @@ export class HotelAdmins extends User {
   passwordResetExpires: Date;
 
   @OneToMany(() => Hotel, (hotel) => hotel.hotelAdmin)
+  @JoinColumn()
   hotels: Hotel[];
 }

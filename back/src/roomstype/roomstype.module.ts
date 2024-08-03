@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { RoomsType } from "./roomstype.entity";
-import { RoomsTypeController } from "./roomstype.controllers";
-import { RoomsTypeRepository } from "./roomstype.repositories";
-import { RoomsTypeService } from "./roomstype.services";
+import { RoomsTypeController } from "./roomstype.controller";
+import { RoomsTypeRepository } from "./roomstype.repository";
+import { RoomsTypeService } from "./roomstype.service";
 import { Hotel } from "src/hotels/hotels.entity";
 
 

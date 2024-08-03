@@ -48,14 +48,14 @@ export class Hotel {
   @Column({ type: 'float', default: 0 })
   rating: number;
 
-  @Column({ type: 'simple-json' })
+  @Column({ type: 'simple-json', default: [] })
   images: string[];
 
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
 
-  @Column({ type: 'varchar', length: 300 })
-  recommendations: string;
+  // @Column({type: 'varchar', length:300})
+  // recommendations: string;
 
   @OneToMany((type) => RoomsType, (roomstype) => roomstype.hotel)
   @JoinColumn()
