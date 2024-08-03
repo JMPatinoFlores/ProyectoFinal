@@ -25,6 +25,8 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { CustomersModule } from './customers/customers.module';
 import { NaturalLanguageProcessor } from './helper/natural-language-processor';
 import { AvailabilityModule } from './availabilities/availability.module';
+import { EmailNotifiModule } from './email-notify/email.module';
+import { MailService } from './email-notify/mail.service';
 
 @Module({
   imports: [
@@ -53,6 +55,7 @@ import { AvailabilityModule } from './availabilities/availability.module';
       signOptions: { expiresIn: '30m' },
     }),
     TypeOrmModule.forFeature([Customers, HotelAdmins]),
+    EmailNotifiModule,
   ],
   controllers: [AppController, HotelAdminsController, CustomersController],
   providers: [
@@ -62,7 +65,8 @@ import { AvailabilityModule } from './availabilities/availability.module';
     AuthService,
     CustomersRepository,
     HotelAdminRepository,
-    NaturalLanguageProcessor
+    NaturalLanguageProcessor,
+    MailService,
   ],
 })
 // export class AppModule implements OnModuleInit {

@@ -1,9 +1,10 @@
 import { IHotelRegister } from "@/interfaces";
 
 export const postHotel = async (hotel: Omit<IHotelRegister, "hotelId">) => {
+    const token = typeof window !== "undefined" && localStorage.getItem("token");
     const response = await fetch("http://localhost:3000/hotels", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `${token}` },
         body: JSON.stringify(hotel),
     });
     const data = await response.json();

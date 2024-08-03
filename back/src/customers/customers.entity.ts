@@ -1,10 +1,10 @@
-import { User } from "src/entities/baseUser.entitity";
-import { Booking } from "src/bookings/booking.entity";
-import { Column, Entity, JoinColumn, OneToMany } from "typeorm";
-import { Review } from "src/reviews/reviews.entity";
+import { Booking } from 'src/bookings/booking.entity';
+import { User } from 'src/entities/baseUser.entity';
+import { Review } from 'src/reviews/reviews.entity';
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 
 @Entity({
-  name: 'customers'
+  name: 'customers',
 })
 export class Customers extends User {
   @Column({
@@ -13,11 +13,16 @@ export class Customers extends User {
   })
   isAdmin: boolean = false;
 
-  @OneToMany((type) => Booking, (booking) => booking.customer)
-  @JoinColumn()
+  @Column({ nullable: true })
+  passwordResetToken: string;
+
+  @Column({ nullable: true })
+  passwordResetExpires: Date;
+
+  @OneToMany(() => Booking, (booking) => booking.customer)
   bookings: Booking[];
 
-  @OneToMany((type) => Review, (reviews) => reviews.customer)
-  @JoinColumn()
+  @OneToMany(() => Review, (review) => review.customer)
+  @JoinColumn({ name: 'review_id' })
   reviews: Review[];
 }

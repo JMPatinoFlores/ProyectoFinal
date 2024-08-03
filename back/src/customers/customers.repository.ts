@@ -1,10 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  BadRequestException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customers } from './customers.entity';
-import { Repository } from 'typeorm';
-import { CreateCustomerDto, UpdateCustomerInfoDto } from './customers.dto';
+import { MoreThan, Repository } from 'typeorm';
+import { CreateCustomerDto } from './customers.dto';
 import { IdDto } from 'src/dto/id.dto';
 import { validate } from 'class-validator';
+import * as bcrypt from 'bcrypt';
+import { MailService } from 'src/email-notify/mail.service';
 
 @Injectable()
 export class CustomersRepository {
@@ -36,7 +42,10 @@ export class CustomersRepository {
   //! Encontrar un cliente por email
 
   async getCustomerByEmail(email: string) {
-    return await this.customersRepository.findOneBy({ email });
+    return await this.customersRepository.findOne({
+      where: { email },
+      relations: ['bookings'],
+    });
   }
 
   //! Obtener un cliente por su ID
@@ -89,5 +98,21 @@ export class CustomersRepository {
       email: fakeEmail,
     });
     return { message: 'Borrado lógico de cliente exitoso' };
+  }
+
+  async saveCustomerChanges(customer: Customers): Promise<Customers> {
+    return await this.customersRepository.save(customer);
+  }
+
+  async findOne(options: any): Promise<Customers | undefined> {
+    return await this.customersRepository.findOne(options);
+  }
+
+  async findOneBy(options: any): Promise<Customers | undefined> {
+    return await this.customersRepository.findOneBy(options);
+  }
+
+  async update(id: string, updateData: Partial<Customers>): Promise<void> {
+    await this.customersRepository.update(id, updateData);
   }
 }

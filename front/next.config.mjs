@@ -3,6 +3,9 @@ const nextConfig = {
   // ...
   reactStrictMode: true,
   env: {
+    GOOGLE_ID: process.env.GOOGLE_ID,
+    GOOGLE_SECRET: process.env.GOOGLE_SECRET,
+    NESTJS_API_URL: process.env.NESTJS_API_URL,
     dotenv: {
       path: "./.env", // Load environment variables from .env file
     },

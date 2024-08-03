@@ -54,6 +54,8 @@ export interface IUserContextType {
   setUser: React.Dispatch<React.SetStateAction<Partial<IUser> | null>>;
   isLogged: boolean;
   setIsLogged: (isLogged: boolean) => void;
+  isAdmin: boolean;
+  setIsAdmin: (isLogged: boolean) => void;
   login: (credentials: ILogin) => Promise<boolean>;
   customerRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   hotelierRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
@@ -62,13 +64,14 @@ export interface IUserContextType {
 
 export interface IDecodeToken extends JwtPayload {
   id: number;
-  name: string;
   email: string;
+  isAdmin: boolean;
 }
 
 export interface IUserResponse {
   id: number;
   email: string;
+  isAdmin: boolean;
 }
 
 export interface IRoom {
@@ -104,7 +107,7 @@ export interface IHotelRegister {
   country: string;
   city: string;
   address: string;
-  location: string;
+  location: number[];
   services: string;
 }
 
@@ -222,4 +225,9 @@ export interface ILocationDetail {
   country: string;
   city: string;
   address: string;
+}
+
+export interface ISearchBarProps {
+  searchQuery: string;
+  onSearch: (query: string) => void;
 }

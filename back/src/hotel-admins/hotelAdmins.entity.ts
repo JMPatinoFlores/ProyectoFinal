@@ -1,4 +1,4 @@
-import { User } from 'src/entities/baseUser.entitity';
+import { User } from 'src/entities/baseUser.entity';
 import { Hotel } from 'src/hotels/hotels.entity';
 import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 
@@ -17,6 +17,12 @@ export class HotelAdmins extends User {
     default: true,
   })
   isAdmin: boolean = true;
+
+  @Column({ nullable: true })
+  passwordResetToken: string;
+
+  @Column({ nullable: true })
+  passwordResetExpires: Date;
 
   @OneToMany(() => Hotel, (hotel) => hotel.hotelAdmin)
   @JoinColumn()

@@ -1,5 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ArrayMinSize, IsArray, IsISO8601, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
+import {
+  ArrayMinSize,
+  IsArray, IsISO8601,
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateBookingDto {
     @ApiProperty({
@@ -19,15 +29,6 @@ export class CreateBookingDto {
     @IsNotEmpty()
     @IsUUID()
     hotelId: string
-
-    @ApiProperty({
-        name: 'discount',
-        description: 'Porcentaje de descuento de la reserva, tipo number.',
-        example: 15
-    })
-    @IsOptional()
-    @IsNumber()
-    discount: number
 
     @ApiProperty({
         name: 'roomTypesIdsAndDates',
