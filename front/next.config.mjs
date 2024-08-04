@@ -24,6 +24,15 @@ const nextConfig = {
     ],
   },
 
+  async rewrites() {
+    return [
+      {
+        source: "/reset-password/:token",
+        destination: "/reset-password",
+      },
+    ];
+  },
+
   async headers() {
     return [
       {

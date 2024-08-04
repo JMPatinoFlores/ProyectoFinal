@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { HotelsRepository } from "./hotels.repository";
 import { CreateHotelDto } from "./hotels.dtos";
 import { UpdateHotelDto } from "./hotels.updateDto";
@@ -9,8 +9,14 @@ export class HotelsService{
         private readonly hotelsDbRepository: HotelsRepository
     ){}
 
-    async getDbHotels(){
-        return await this.hotelsDbRepository.getDbHotels();
+    async getDbHotels(page:number, limit:number){
+        const startIndex = (page-1)*limit;
+        const endIndex = startIndex+limit;
+        const hotelList = (await this.hotelsDbRepository.getDbHotels()).slice(startIndex,endIndex);
+        if(hotelList.length !==0){
+            return hotelList;
+        }
+        else throw new NotFoundException("There are not hotels");
     }
 
     async getDbHotelById(id: string){
