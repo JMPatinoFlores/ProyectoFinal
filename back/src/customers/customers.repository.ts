@@ -1,16 +1,10 @@
-import {
-  BadGatewayException,
-  BadRequestException,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customers } from './customers.entity';
-import { MoreThan, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateCustomerDto } from './customers.dto';
 import { IdDto } from 'src/dto/id.dto';
 import { validate } from 'class-validator';
-import * as bcrypt from 'bcrypt';
-import { MailService } from 'src/email-notify/mail.service';
 
 @Injectable()
 export class CustomersRepository {
@@ -39,7 +33,13 @@ export class CustomersRepository {
     return customers.map(({ password, ...userNoPassword }) => userNoPassword);
   }
 
-  //! Encontrar un cliente por email
+  //! Encontrar un cliente por su email
+
+  async getCustomerByEmailOnly(email: string) {
+    return await this.customersRepository.findOneBy({ email });
+  }
+
+  //! Encontrar un cliente por email con sus bookings
 
   async getCustomerByEmail(email: string) {
     return await this.customersRepository.findOne({

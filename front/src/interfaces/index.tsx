@@ -36,6 +36,15 @@ export interface IRegisterValues {
   birthDate: string;
 }
 
+export interface INewPassword {
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface IResetPasswordProps {
+  token: string;
+}
+
 export interface IHotelierRegisterValues {
   name: string;
   lastName: string;

@@ -16,8 +16,12 @@ import {
   UpdatePasswordDto,
 } from './passwords.dto';
 import { MailService } from 'src/email-notify/mail.service';
-import { MoreThan } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
+import { Request } from 'express';
+import { Customers } from 'src/customers/customers.entity';
+import { UserDetails } from './user-details.type';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +30,8 @@ export class AuthService {
     private readonly hotelAdminRepository: HotelAdminRepository,
     private readonly mailService: MailService,
     private readonly jwtService: JwtService,
+    @InjectRepository(Customers) private readonly customersDBRepository: Repository<Customers>,
+    @InjectRepository(HotelAdmins) private readonly hotelAdminsDBRepository: Repository<HotelAdmins>
   ) {}
 
   //! Creación de Cliente
@@ -130,23 +136,49 @@ export class AuthService {
 
   async passwordRecovery(passwordRecovery: PasswordRecoveryDto) {
     const { email } = passwordRecovery;
-    const customer = await this.customersRepository.getCustomerByEmail(email);
+    const customer =
+      await this.customersRepository.getCustomerByEmailOnly(email);
     const adminHotel =
-      await this.hotelAdminRepository.getHotelAdminByEmail(email);
+      await this.hotelAdminRepository.getHotelAdminByEmailOnly(email);
     if (!customer && !adminHotel) {
       throw new BadRequestException(
         'No se encontró el cliente con el email proporcionado',
       );
     }
+
     const token = crypto.randomBytes(32).toString('hex');
     const expirationDate = new Date();
     expirationDate.setHours(expirationDate.getHours() + 1);
 
-    customer.passwordResetToken = token;
-    customer.passwordResetExpires = expirationDate;
-    await this.customersRepository.saveCustomerChanges(customer);
+    if (customer) {
+      customer.passwordResetToken = token;
+      customer.passwordResetExpires = expirationDate;
+      await this.customersRepository.saveCustomerChanges(customer);
 
-    const resetUrl = `http://localhost:3000/reset-password/${token}`;
+      const resetUrl = `http://localhost:3001/reset-password/${token}`;
+
+      await this.mailService.sendMail(
+        customer.email,
+        'Recuperación de contraseña',
+        `Hola, para restablecer tu contraseña, por favor haz clic en el siguiente enlace: ${resetUrl}`,
+        `<p>Hola,</p><p>Para restablecer tu contraseña, por favor haz clic en el siguiente enlace: <a href="${resetUrl}">${resetUrl}</a></p>`,
+      );
+    } else if (adminHotel) {
+      adminHotel.passwordResetToken = token;
+      adminHotel.passwordResetExpires = expirationDate;
+      await this.hotelAdminRepository.saveAdminChanges(adminHotel);
+
+      const resetUrl = `http://localhost:3001/reset-password/${token}`;
+
+      await this.mailService.sendMail(
+        adminHotel.email,
+        'Recuperación de contraseña',
+        `Hola, para restablecer tu contraseña, por favor haz clic en el siguiente enlace: ${resetUrl}`,
+        `<p>Hola,</p><p>Para restablecer tu contraseña, por favor haz clic en el siguiente enlace: <a href="${resetUrl}">${resetUrl}</a></p>`,
+      );
+    }
+
+    const resetUrl = `http://localhost:3001/reset-password/${token}`;
 
     await this.mailService.sendMail(
       customer.email,
@@ -178,32 +210,28 @@ export class AuthService {
       },
     });
 
-    if (!customer) {
+    if (!customer && !hotelAdmin) {
       throw new BadRequestException('Token inválido o expirado');
     }
+    if (!customer && !hotelAdmin) {
+      throw new BadRequestException('Token inválido o expirado');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
     if (customer) {
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
       customer.password = hashedPassword;
       customer.passwordResetToken = null;
       customer.passwordResetExpires = null;
-
       await this.customersRepository.saveCustomerChanges(customer);
-
-      return { message: 'Contraseña restablecida correctamente' };
-    }
-    if (!hotelAdmin) {
-      throw new BadRequestException('Token inválido o expirado');
-    }
-    if (hotelAdmin) {
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+    } else if (hotelAdmin) {
       hotelAdmin.password = hashedPassword;
       hotelAdmin.passwordResetToken = null;
       hotelAdmin.passwordResetExpires = null;
-
       await this.hotelAdminRepository.saveAdminChanges(hotelAdmin);
-
-      return { message: 'Contraseña restablecida correctamente' };
     }
+
+    return { message: 'Contraseña restablecida correctamente' };
   }
 
   //! Cambiar la contraseña
@@ -229,7 +257,7 @@ export class AuthService {
 
   //! Google Login
 
-  async googleLogin(req) {
+  async googleLogin(req: Request) {
     if (!req.user) {
       return 'No user from google';
     }
@@ -237,5 +265,27 @@ export class AuthService {
       message: 'User information from google',
       user: req.user,
     };
+  }
+
+  async validateCustomer(details: UserDetails) {
+    let user: Customers = await this.customersDBRepository.findOneBy({ email: details.email })
+    if (user) return user;
+    const newUser = await this.customersDBRepository.save(details)
+    return newUser
+  }
+
+  async validateHotelAdmin(details: UserDetails) {
+    let user: HotelAdmins = await this.hotelAdminsDBRepository.findOneBy({ email: details.email })
+    if (user) return user;
+    const newUser = await this.hotelAdminsDBRepository.save(details)
+    return newUser
+  }
+
+  async findUser(id: number) {
+    let user: Customers | HotelAdmins = await this.customersRepository.findOneBy({ id })
+    if (!user) {
+      user = await this.hotelAdminRepository.findOneBy({ id })
+    }
+    return user
   }
 }

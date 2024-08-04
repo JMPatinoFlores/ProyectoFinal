@@ -38,7 +38,13 @@ export class HotelAdminRepository {
     );
   }
 
-  //! Encontrar un Admin de Hotel por el email
+  //! Encontrar un Admin de Hotel por email
+
+  async getHotelAdminByEmailOnly(email: string) {
+    return await this.hotelAdminsRepository.findOneBy({ email });
+  }
+
+  //! Encontrar un Admin de Hotel por el email con sus Hoteles
 
   async getHotelAdminByEmail(email: string) {
     return await this.hotelAdminsRepository.findOne({

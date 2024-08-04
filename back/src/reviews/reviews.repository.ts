@@ -1,11 +1,15 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { Review } from "./reviews.entity";
-import { CreateReviewDto } from "./reviews.dtos";
-import { Hotel } from "src/hotels/hotels.entity";
-import { Customers } from "src/customers/customers.entity";
-import { UpdateReviewDto } from "./reviews.updateDto";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Review } from './reviews.entity';
+import { CreateReviewDto } from './reviews.dtos';
+import { Hotel } from 'src/hotels/hotels.entity';
+import { Customers } from 'src/customers/customers.entity';
+import { UpdateReviewDto } from './reviews.updateDto';
 import { format } from 'date-fns';
 
 @Injectable()
@@ -20,7 +24,9 @@ export class ReviewsRepository {
   ) {}
 
   async getDbReviews(): Promise<Review[]> {
-    const reviewsList: Review[] = await this.reviewsDbRepository.find({where:{isDeleted:false}});
+    const reviewsList: Review[] = await this.reviewsDbRepository.find({
+      where: { isDeleted: false },
+    });
     return reviewsList.length !== 0 ? reviewsList : [];
   }
 
@@ -34,7 +40,7 @@ export class ReviewsRepository {
   }
 
   async createReview(createreviewDto: CreateReviewDto): Promise<string> {
-    const { hotelId, clienteId, date,  ...reviewData } = createreviewDto;
+    const { hotelId, clienteId, date, ...reviewData } = createreviewDto;
 
     const hotelFound: Hotel = await this.hotelDbRepository.findOne({
       where: { id: hotelId },
@@ -68,7 +74,10 @@ export class ReviewsRepository {
     return newReview.id;
   }
 
-  async updateDbReview(id: string, updatereviewDto: Partial<UpdateReviewDto>): Promise<string>{
+  async updateDbReview(
+    id: string,
+    updatereviewDto: Partial<UpdateReviewDto>,
+  ): Promise<string> {
     const { hotelId, clienteId, ...reviewData } = updatereviewDto;
 
     const hotelFound: Hotel = await this.hotelDbRepository.findOne({
@@ -78,14 +87,15 @@ export class ReviewsRepository {
       where: { id: clienteId },
     });
 
-    if (!customerFound)throw new NotFoundException('this customer is not available');
+    if (!customerFound)
+      throw new NotFoundException('this customer is not available');
 
     if (!hotelFound) throw new NotFoundException('this hotel is not available');
-  
+
     await this.reviewsDbRepository.update(id, {
       ...reviewData,
       hotel: hotelFound,
-      customer: customerFound
+      customer: customerFound,
     });
 
     const calcAverage = await this.averageRating(hotelId);
@@ -106,12 +116,13 @@ export class ReviewsRepository {
     return id;
   }
 
-  async getDbReviewDeleted():Promise<Review[]>{
-    const listReview: Review[] = await this.reviewsDbRepository.find({where: {isDeleted:true}});
-    if(listReview.length !==0){
+  async getDbReviewDeleted(): Promise<Review[]> {
+    const listReview: Review[] = await this.reviewsDbRepository.find({
+      where: { isDeleted: true },
+    });
+    if (listReview.length !== 0) {
       return listReview;
-    }
-    else throw new NotFoundException("there are not reviews eliminated")
+    } else throw new NotFoundException('there are not reviews eliminated');
   }
 
   private async averageRating(id: string): Promise<number>{

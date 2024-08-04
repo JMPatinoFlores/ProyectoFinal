@@ -10,22 +10,30 @@ import { CustomersModule } from 'src/customers/customers.module';
 import { HotelAdminsModule } from 'src/hotel-admins/hotel-admins.module';
 import { MailService } from 'src/email-notify/mail.service';
 import { PassportModule } from '@nestjs/passport';
-import { GoogleStrategy } from './strategies/google.strategy';
+import { SessionSerializer } from './Serializer';
+import { CustomerGoogleStrategy } from './strategies/customer.google.strategy';
+import { HotelAdminGoogleStrategy } from './strategies/hotelAdmin.google.strategy';
+import { CustomerGoogleAuthGuard } from './guards/customer.google.authguard';
+import { HotelAdminGoogleAuthGuard } from './guards/hotelAdmin.google.authguard';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Customers, HotelAdmins]),
     CustomersModule,
     HotelAdminsModule,
-    PassportModule.register({ defaultStrategy: 'google' }),
   ],
   controllers: [AuthController],
   providers: [
+    CustomerGoogleStrategy,
+    HotelAdminGoogleStrategy,
+    CustomerGoogleAuthGuard,
+    HotelAdminGoogleAuthGuard,
     AuthService,
     CustomersRepository,
     HotelAdminRepository,
     MailService,
-    GoogleStrategy,
+    SessionSerializer,
+    { provide: 'AUTH_SERVICE', useClass: AuthService }
   ],
 })
-export class AuthModule {}
+export class AuthModule { }
