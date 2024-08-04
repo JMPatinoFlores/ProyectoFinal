@@ -149,7 +149,7 @@ export class AuthService {
       customer.passwordResetExpires = expirationDate;
       await this.customersRepository.saveCustomerChanges(customer);
 
-      const resetUrl = `http://localhost:3000/reset-password/${token}`;
+      const resetUrl = `http://localhost:3001/reset-password/${token}`;
 
       await this.mailService.sendMail(
         customer.email,
@@ -162,7 +162,7 @@ export class AuthService {
       adminHotel.passwordResetExpires = expirationDate;
       await this.hotelAdminRepository.saveAdminChanges(adminHotel);
 
-      const resetUrl = `http://localhost:3000/reset-password/${token}`;
+      const resetUrl = `http://localhost:3001/reset-password/${token}`;
 
       await this.mailService.sendMail(
         adminHotel.email,
@@ -172,7 +172,7 @@ export class AuthService {
       );
     }
 
-    const resetUrl = `http://localhost:3000/reset-password/${token}`;
+    const resetUrl = `http://localhost:3001/reset-password/${token}`;
 
     await this.mailService.sendMail(
       customer.email,
