@@ -66,33 +66,67 @@ export default function ResetPassword({ token }: ResetPasswordProps) {
   };
 
   return (
-    <div>
-      <h2>Cambia tu contraseña</h2>
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ isSubmitting }) => (
-          <Form>
-            <div>
-              <label htmlFor="newPassword">Nueva Contraseña:</label>
-              <Field type="password" name="newPassword" />
-              <ErrorMessage name="newPassword" component="div" />
-            </div>
-            <div>
-              <label htmlFor="confirmPassword">
-                Confirmar Nueva Contraseña:
-              </label>
-              <Field type="password" name="confirmPassword" />
-              <ErrorMessage name="confirmPassword" component="div" />
-            </div>
-            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-            {successMessage && (
-              <p style={{ color: "green" }}>{successMessage}</p>
-            )}
-            <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Enviando..." : "Cambiar Contraseña"}
-            </button>
-          </Form>
-        )}
-      </Formik>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-semibold mb-6 text-center">
+          Cambia tu contraseña
+        </h2>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          {({ isSubmitting }) => (
+            <Form>
+              <div className="mb-4">
+                <label
+                  htmlFor="newPassword"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Nueva Contraseña:
+                </label>
+                <Field
+                  type="password"
+                  name="newPassword"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+                <ErrorMessage
+                  name="newPassword"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Confirmar Nueva Contraseña:
+                </label>
+                <Field
+                  type="password"
+                  name="confirmPassword"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+                <ErrorMessage
+                  name="confirmPassword"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+              {errorMessage && (
+                <p className="text-red-500 text-sm mb-4">{errorMessage}</p>
+              )}
+              {successMessage && (
+                <p className="text-green-500 text-sm mb-4">{successMessage}</p>
+              )}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                {isSubmitting ? "Enviando..." : "Cambiar Contraseña"}
+              </button>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 }

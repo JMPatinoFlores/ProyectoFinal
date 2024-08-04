@@ -1,12 +1,12 @@
 "use client";
 
 import ResetPassword from "@/components/ResetPassword";
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function ResetPasswordPage() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const params = useParams();
+  const token = Array.isArray(params.token) ? params.token[0] : params.token;
   const [isTokenPresent, setIsTokenPresent] = useState(false);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function ResetPasswordPage() {
   return (
     <div>
       <h1>Cambiar contraseña</h1>
-      {isTokenPresent && token ? (
+      {isTokenPresent ? (
         <ResetPassword token={token} />
       ) : (
         <p>Token inválido o expirado.</p>
