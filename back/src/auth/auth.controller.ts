@@ -6,6 +6,7 @@ import {
   Post,
   Put,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -20,20 +21,32 @@ import {
   UpdatePasswordDto,
 } from './passwords.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
+import { CustomerGoogleAuthGuard } from './guards/customer.google.authguard';
+import { HotelAdminGoogleAuthGuard } from './guards/hotelAdmin.google.authguard';
 @ApiTags('Autenticación y recuperación de contraseñas')
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() req) {}
+  @Get('google/customer')
+  @UseGuards(CustomerGoogleAuthGuard)
+  async googleCustomerAuth(@Req() req: Request) {}
 
-  @Get('callback/google')
-  @UseGuards(AuthGuard('google'))
-  async googleAuthRedirect(@Req() req) {
-    return this.authService.googleLogin(req);
+  @Get('callback/google/customer')
+  @UseGuards(CustomerGoogleAuthGuard)
+  async googleCustomerAuthRedirect(@Req() req: Request, @Res() res: Response) {
+    res.redirect('http://localhost:3001')
+  }
+
+  @Get('google/hotelAdmin')
+  @UseGuards(HotelAdminGoogleAuthGuard)
+  async googleHotelAdminAuth(@Req() req: Request) {}
+
+  @Get('callback/google/hotelAdmin')
+  @UseGuards(HotelAdminGoogleAuthGuard)
+  async googleHotelAdminAuthRedirect(@Req() req: Request, @Res() res: Response) {
+    res.redirect('http://localhost:3001')
   }
 
   @Post('cxSignUp')

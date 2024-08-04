@@ -27,6 +27,7 @@ import { NaturalLanguageProcessor } from './helper/natural-language-processor';
 import { AvailabilityModule } from './availabilities/availability.module';
 import { EmailNotifiModule } from './email-notify/email.module';
 import { MailService } from './email-notify/mail.service';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { MailService } from './email-notify/mail.service';
     }),
     TypeOrmModule.forFeature([Customers, HotelAdmins]),
     EmailNotifiModule,
+    PassportModule.register({ session: true })
   ],
   controllers: [AppController, HotelAdminsController, CustomersController],
   providers: [

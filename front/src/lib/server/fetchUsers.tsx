@@ -1,4 +1,4 @@
-import { ILogin, IUser } from "@/interfaces";
+import { ILogin, INewPassword, IUser } from "@/interfaces";
 
 export const postCustomerRegister = async (user: Omit<IUser, "id">) => {
   const response = await fetch("http://localhost:3000/auth/cxSignUp", {
@@ -30,4 +30,24 @@ export const postLogin = async (credentials: ILogin) => {
   });
   const data = await response.json();
   return data;
+};
+
+export const sendEmail = async (credentials: Partial<ILogin>) => {
+  const response = await fetch("http://localhost:3000/auth/password-recovery", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+  return response;
+};
+
+export const tokenVerified = async (
+  credentials: Omit<INewPassword, "confirmPassword">
+) => {
+  const response = await fetch("http://localhost:3000/auth/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+  return response;
 };
