@@ -11,10 +11,12 @@ import { HotelAdminsModule } from 'src/hotel-admins/hotel-admins.module';
 import { MailService } from 'src/email-notify/mail.service';
 import { PassportModule } from '@nestjs/passport';
 import { SessionSerializer } from './Serializer';
-import { CustomerGoogleStrategy } from './strategies/customer.google.strategy';
-import { HotelAdminGoogleStrategy } from './strategies/hotelAdmin.google.strategy';
+import { CustomerGoogleStrategy } from './strategies/register.customer.google.strategy';
+import { HotelAdminGoogleStrategy } from './strategies/register.hotelAdmin.google.strategy';
 import { CustomerGoogleAuthGuard } from './guards/customer.google.authguard';
 import { HotelAdminGoogleAuthGuard } from './guards/hotelAdmin.google.authguard';
+import { LoginGoogleStrategy } from './strategies/login.google.strategy';
+import { LoginGoogleAuthGuard } from './guards/login.google.authguard copy';
 
 @Module({
   imports: [
@@ -28,12 +30,13 @@ import { HotelAdminGoogleAuthGuard } from './guards/hotelAdmin.google.authguard'
     HotelAdminGoogleStrategy,
     CustomerGoogleAuthGuard,
     HotelAdminGoogleAuthGuard,
+    LoginGoogleStrategy,
+    LoginGoogleAuthGuard,
     AuthService,
     CustomersRepository,
     HotelAdminRepository,
     MailService,
     SessionSerializer,
-    { provide: 'AUTH_SERVICE', useClass: AuthService }
   ],
 })
 export class AuthModule { }
