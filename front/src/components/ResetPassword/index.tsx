@@ -1,22 +1,30 @@
 "use client";
 
-import { INewPassword, IResetPasswordProps } from "@/interfaces";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function ResetPassword({ token }: IResetPasswordProps) {
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+interface FormValues {
+  newPassword: string;
+  confirmPassword: string;
+}
+
+interface ResetPasswordProps {
+  token: string;
+}
+
+export default function ResetPassword({ token }: ResetPasswordProps) {
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
   const router = useRouter();
 
-  const initialValues = {
+  const initialValues: FormValues = {
     newPassword: "",
     confirmPassword: "",
   };
 
   const handleSubmit = async (
-    values: INewPassword,
+    values: FormValues,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
     setSubmitting(true);
@@ -28,7 +36,7 @@ export default function ResetPassword({ token }: IResetPasswordProps) {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/auth/reset-password/`,
+        `http://localhost:3000/auth/reset-password`,
         {
           method: "POST",
           headers: {
@@ -45,7 +53,7 @@ export default function ResetPassword({ token }: IResetPasswordProps) {
 
       setSuccessMessage("Contraseña cambiada exitosamente.");
       setErrorMessage("");
-      router.push("/login"); // Redirigir al usuario a la página de login
+      router.push("/login");
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
