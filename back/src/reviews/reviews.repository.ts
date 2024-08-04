@@ -51,7 +51,6 @@ export class ReviewsRepository {
     const currentDate = new Date();
     const formatDate = format(currentDate, 'dd-MM-yyyy');
 
-
     const newReview = this.reviewsDbRepository.create({
       ...reviewData,
       date: formatDate,
@@ -60,6 +59,12 @@ export class ReviewsRepository {
     });
 
     await this.reviewsDbRepository.save(newReview);
+    
+    const calcAverage = await this.averageRating(hotelId);
+    console.log(calcAverage);
+    
+    await this.hotelDbRepository.update(hotelId, {rating: calcAverage});
+    
     return newReview.id;
   }
 
@@ -83,14 +88,21 @@ export class ReviewsRepository {
       customer: customerFound
     });
 
+    const calcAverage = await this.averageRating(hotelId);
+    await this.hotelDbRepository.update(hotelId, {rating: calcAverage});
+
     return id;
   }
 
   async deleteDbReview(id: string): Promise<string>{
-    const reviewFound: Review = await this.reviewsDbRepository.findOne({where:{id}});
+    const reviewFound: Review = await this.reviewsDbRepository.findOne({where:{id}, relations: ['hotel']});
     if(!reviewFound) throw new NotFoundException("Review not found");
     if(reviewFound.isDeleted === true) throw new BadRequestException("review was eliminated");
     await this.reviewsDbRepository.update(id, {isDeleted:true});
+
+    const calcAverage = await this.averageRating(reviewFound.hotel.id);
+    await this.hotelDbRepository.update(reviewFound.hotel.id, {rating: calcAverage});
+
     return id;
   }
 
@@ -100,6 +112,25 @@ export class ReviewsRepository {
       return listReview;
     }
     else throw new NotFoundException("there are not reviews eliminated")
+  }
+
+  private async averageRating(id: string): Promise<number>{
+    const reviewList: Review[] = await this.reviewsDbRepository.find({
+        where: {hotel: {id}, isDeleted:false},
+        select:['rating'], 
+    });
+
+    if(reviewList.length ===0) return 0;
+
+    console.log(reviewList);
+    
+    const totalRating = reviewList.reduce((acc, ini)=> acc + ini.rating, 0);
+    console.log(totalRating);
+    console.log(reviewList.length);
+        
+    const average = totalRating / reviewList.length;
+
+    return parseFloat(average.toFixed(2));
   }
 
 }
