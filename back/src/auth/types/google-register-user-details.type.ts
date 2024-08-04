@@ -1,4 +1,4 @@
-export type UserDetails = {
+export type GoogleRegisterUserDetails = {
     email: string,
     name: string,
     lastName: string
