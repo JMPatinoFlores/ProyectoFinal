@@ -130,21 +130,47 @@ export class AuthService {
 
   async passwordRecovery(passwordRecovery: PasswordRecoveryDto) {
     const { email } = passwordRecovery;
-    const customer = await this.customersRepository.getCustomerByEmail(email);
+    const customer =
+      await this.customersRepository.getCustomerByEmailOnly(email);
     const adminHotel =
-      await this.hotelAdminRepository.getHotelAdminByEmail(email);
+      await this.hotelAdminRepository.getHotelAdminByEmailOnly(email);
     if (!customer && !adminHotel) {
       throw new BadRequestException(
         'No se encontró el cliente con el email proporcionado',
       );
     }
+
     const token = crypto.randomBytes(32).toString('hex');
     const expirationDate = new Date();
     expirationDate.setHours(expirationDate.getHours() + 1);
 
-    customer.passwordResetToken = token;
-    customer.passwordResetExpires = expirationDate;
-    await this.customersRepository.saveCustomerChanges(customer);
+    if (customer) {
+      customer.passwordResetToken = token;
+      customer.passwordResetExpires = expirationDate;
+      await this.customersRepository.saveCustomerChanges(customer);
+
+      const resetUrl = `http://localhost:3000/reset-password/${token}`;
+
+      await this.mailService.sendMail(
+        customer.email,
+        'Recuperación de contraseña',
+        `Hola, para restablecer tu contraseña, por favor haz clic en el siguiente enlace: ${resetUrl}`,
+        `<p>Hola,</p><p>Para restablecer tu contraseña, por favor haz clic en el siguiente enlace: <a href="${resetUrl}">${resetUrl}</a></p>`,
+      );
+    } else if (adminHotel) {
+      adminHotel.passwordResetToken = token;
+      adminHotel.passwordResetExpires = expirationDate;
+      await this.hotelAdminRepository.saveAdminChanges(adminHotel);
+
+      const resetUrl = `http://localhost:3000/reset-password/${token}`;
+
+      await this.mailService.sendMail(
+        adminHotel.email,
+        'Recuperación de contraseña',
+        `Hola, para restablecer tu contraseña, por favor haz clic en el siguiente enlace: ${resetUrl}`,
+        `<p>Hola,</p><p>Para restablecer tu contraseña, por favor haz clic en el siguiente enlace: <a href="${resetUrl}">${resetUrl}</a></p>`,
+      );
+    }
 
     const resetUrl = `http://localhost:3000/reset-password/${token}`;
 
@@ -178,32 +204,28 @@ export class AuthService {
       },
     });
 
-    if (!customer) {
+    if (!customer && !hotelAdmin) {
       throw new BadRequestException('Token inválido o expirado');
     }
+    if (!customer && !hotelAdmin) {
+      throw new BadRequestException('Token inválido o expirado');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
     if (customer) {
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
       customer.password = hashedPassword;
       customer.passwordResetToken = null;
       customer.passwordResetExpires = null;
-
       await this.customersRepository.saveCustomerChanges(customer);
-
-      return { message: 'Contraseña restablecida correctamente' };
-    }
-    if (!hotelAdmin) {
-      throw new BadRequestException('Token inválido o expirado');
-    }
-    if (hotelAdmin) {
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+    } else if (hotelAdmin) {
       hotelAdmin.password = hashedPassword;
       hotelAdmin.passwordResetToken = null;
       hotelAdmin.passwordResetExpires = null;
-
       await this.hotelAdminRepository.saveAdminChanges(hotelAdmin);
-
-      return { message: 'Contraseña restablecida correctamente' };
     }
+
+    return { message: 'Contraseña restablecida correctamente' };
   }
 
   //! Cambiar la contraseña
