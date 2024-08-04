@@ -35,41 +35,41 @@ export abstract class User {
   @Column({
     type: 'varchar',
     length: 100,
-    nullable: false,
+    nullable: true,
   })
   password: string;
 
   @Column({
     type: 'varchar',
-    nullable: false,
+    nullable: true,
   })
   phone: string;
 
   @Column({
     type: 'varchar',
     length: 50,
-    nullable: false,
+    nullable: true,
   })
   country: string;
 
   @Column({
     type: 'varchar',
     length: 50,
-    nullable: false,
+    nullable: true,
   })
   city: string;
 
   @Column({
     type: 'varchar',
     length: 100,
-    nullable: false,
+    nullable: true,
   })
   address: string;
 
   @Column({
     type: 'varchar',
     length: 100,
-    nullable: false,
+    nullable: true,
   })
   birthDate: string;
 

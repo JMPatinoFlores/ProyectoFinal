@@ -53,7 +53,7 @@ export class BookingRepository {
             if (!booking.isDeleted) bookingsToReturn.push(booking)
         }
 
-        if (bookingsToReturn.length === 0) throw new BadRequestException('No se encontró ningún booking.')
+        if (bookingsToReturn.length === 0) throw new NotFoundException('No se encontró ningún booking.')
         return bookingsToReturn
     }
 
