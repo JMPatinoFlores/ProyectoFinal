@@ -32,8 +32,10 @@ export class AuthService {
     private readonly hotelAdminRepository: HotelAdminRepository,
     private readonly mailService: MailService,
     private readonly jwtService: JwtService,
-    @InjectRepository(Customers) private readonly customersDBRepository: Repository<Customers>,
-    @InjectRepository(HotelAdmins) private readonly hotelAdminsDBRepository: Repository<HotelAdmins>
+    @InjectRepository(Customers)
+    private readonly customersDBRepository: Repository<Customers>,
+    @InjectRepository(HotelAdmins)
+    private readonly hotelAdminsDBRepository: Repository<HotelAdmins>,
   ) {}
 
   //! Creación de Cliente
@@ -258,41 +260,57 @@ export class AuthService {
   }
 
   async googleRegisterCustomer(details: GoogleRegisterUserDetails) {
-    const foundCustomer = await this.customersRepository.getCustomerByEmail(details.email);
-    if (foundCustomer) throw new BadRequestException('Cuenta de Google ya registrada.');
-    const newCustomer = await this.customersDBRepository.save(details)
-    if (!newCustomer) throw new InternalServerErrorException('Error del servidor al hacer el registro.')
-    return newCustomer
+    const foundCustomer = await this.customersRepository.getCustomerByEmail(
+      details.email,
+    );
+    if (foundCustomer)
+      throw new BadRequestException('Cuenta de Google ya registrada.');
+    const newCustomer = await this.customersDBRepository.save(details);
+    if (!newCustomer)
+      throw new InternalServerErrorException(
+        'Error del servidor al hacer el registro.',
+      );
+    return newCustomer;
   }
 
   async googleRegisterHotelAdmin(details: GoogleRegisterUserDetails) {
-    const foundHotelAdmin = await this.hotelAdminRepository.getHotelAdminByEmail(details.email);
-    if (foundHotelAdmin) throw new BadRequestException('Cuenta de Google ya registrada.');
-    const newHotelAdmin = await this.hotelAdminsDBRepository.save(details)
-    if (!newHotelAdmin) throw new InternalServerErrorException('Error del servidor al hacer el registro.')
-    return newHotelAdmin
+    const foundHotelAdmin =
+      await this.hotelAdminRepository.getHotelAdminByEmail(details.email);
+    if (foundHotelAdmin)
+      throw new BadRequestException('Cuenta de Google ya registrada.');
+    const newHotelAdmin = await this.hotelAdminsDBRepository.save(details);
+    if (!newHotelAdmin)
+      throw new InternalServerErrorException(
+        'Error del servidor al hacer el registro.',
+      );
+    return newHotelAdmin;
   }
 
   async googleLogin(details: GoogleLoginUserDetails) {
-    const customer = await this.customersRepository.getCustomerByEmail(details.email);
-    const adminHotel =
-      await this.hotelAdminRepository.getHotelAdminByEmail(details.email);
+    const customer = await this.customersRepository.getCustomerByEmail(
+      details.email,
+    );
+    const adminHotel = await this.hotelAdminRepository.getHotelAdminByEmail(
+      details.email,
+    );
 
-    if (!customer && !adminHotel) throw new BadRequestException('Cuenta de Google no registrada aún.');
+    if (!customer && !adminHotel)
+      throw new BadRequestException('Cuenta de Google no registrada aún.');
 
     if (customer) {
-      return customer
+      return customer;
     }
     if (adminHotel) {
-      return adminHotel
+      return adminHotel;
     }
   }
 
   async findUser(id: number) {
-    let user: Customers | HotelAdmins = await this.customersRepository.findOneBy({ id })
+    let user: Customers | HotelAdmins =
+      await this.customersRepository.findOneBy({ id });
     if (!user) {
-      user = await this.hotelAdminRepository.findOneBy({ id })
+      user = await this.hotelAdminRepository.findOneBy({ id });
     }
-    return user
+    return user;
   }
 }

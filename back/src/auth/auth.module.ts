@@ -39,4 +39,4 @@ import { LoginGoogleAuthGuard } from './guards/login.google.authguard copy';
     SessionSerializer,
   ],
 })
-export class AuthModule { }
+export class AuthModule {}

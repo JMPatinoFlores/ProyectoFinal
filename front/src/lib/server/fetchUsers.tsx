@@ -1,7 +1,7 @@
 import { ILogin, INewPassword, IUser } from "@/interfaces";
 
 export const postCustomerRegister = async (user: Omit<IUser, "id">) => {
-  const response = await fetch("http://localhost:3000/auth/cxSignUp", {
+  const response = await fetch("http://localhost:3000/api/auth/cxSignUp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
@@ -11,7 +11,7 @@ export const postCustomerRegister = async (user: Omit<IUser, "id">) => {
 };
 
 export const postAdminRegister = async (user: Omit<IUser, "id">) => {
-  const response = await fetch("http://localhost:3000/auth/adminSignUp", {
+  const response = await fetch("http://localhost:3000/api/auth/adminSignUp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
@@ -21,7 +21,7 @@ export const postAdminRegister = async (user: Omit<IUser, "id">) => {
 };
 
 export const postLogin = async (credentials: ILogin) => {
-  const response = await fetch("http://localhost:3000/auth/SignIn", {
+  const response = await fetch("http://localhost:3000/api/auth/SignIn", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33,21 +33,27 @@ export const postLogin = async (credentials: ILogin) => {
 };
 
 export const sendEmail = async (credentials: Partial<ILogin>) => {
-  const response = await fetch("http://localhost:3000/auth/password-recovery", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(credentials),
-  });
+  const response = await fetch(
+    "http://localhost:3000/api/auth/password-recovery",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+    }
+  );
   return response;
 };
 
 export const tokenVerified = async (
   credentials: Omit<INewPassword, "confirmPassword">
 ) => {
-  const response = await fetch("http://localhost:3000/auth/reset-password", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(credentials),
-  });
+  const response = await fetch(
+    "http://localhost:3000/api/auth/reset-password",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+    }
+  );
   return response;
 };

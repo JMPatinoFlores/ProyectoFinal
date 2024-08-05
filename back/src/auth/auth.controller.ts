@@ -40,7 +40,7 @@ export class AuthController {
   @Get('callback/google/register/customer')
   @UseGuards(CustomerGoogleAuthGuard)
   async googleCustomerAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    res.redirect('http://localhost:3001')
+    res.redirect('http://localhost:3001');
   }
 
   @Get('google/register/hotelAdmin')
@@ -49,8 +49,11 @@ export class AuthController {
 
   @Get('callback/google/register/hotelAdmin')
   @UseGuards(HotelAdminGoogleAuthGuard)
-  async googleHotelAdminAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    res.redirect('http://localhost:3001')
+  async googleHotelAdminAuthRedirect(
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    res.redirect('http://localhost:3001');
   }
 
   @Get('google/login')
