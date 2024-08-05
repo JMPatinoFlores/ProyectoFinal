@@ -4,6 +4,7 @@ import { IBooking, IBookingForm } from "@/interfaces";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
+import GatewayPayment from "../PaymentGateaway";
 
 export default function BookingForm() {
   const initialValues = {
@@ -64,6 +65,7 @@ export default function BookingForm() {
             </Form>
           )}
         </Formik>
+        <GatewayPayment />
       </div>
     </div>
   );

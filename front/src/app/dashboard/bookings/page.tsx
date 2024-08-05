@@ -1,3 +1,4 @@
+import GatewayPayment from "@/components/PaymentGateaway";
 import Link from "next/link";
 
 function BookingsPage() {
@@ -52,6 +53,7 @@ function BookingsPage() {
                     Cancelar
                   </button>
                 </Link>
+                <GatewayPayment />
               </td>
             </tr>
           </tbody>

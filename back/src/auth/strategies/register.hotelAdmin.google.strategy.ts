@@ -6,14 +6,16 @@ import { AuthService } from '../auth.service';
 
 dotenvConfig({ path: './.development.env' });
 @Injectable()
-export class HotelAdminGoogleStrategy extends PassportStrategy(Strategy, 'google-hotelAdmin') {
-  constructor(
-    private readonly authService: AuthService
-  ) {
+export class HotelAdminGoogleStrategy extends PassportStrategy(
+  Strategy,
+  'google-hotelAdmin',
+) {
+  constructor(private readonly authService: AuthService) {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/auth/api/callback/google/register/hotelAdmin',
+      callbackURL:
+        'http://localhost:3000/api/auth/callback/google/register/hotelAdmin',
       scope: ['profile', 'email'],
       state: true,
     });
@@ -25,9 +27,12 @@ export class HotelAdminGoogleStrategy extends PassportStrategy(Strategy, 'google
     profile: Profile,
     done: VerifyCallback,
   ) {
-
-    const user = await this.authService.googleRegisterHotelAdmin({email: profile.emails[0].value, name: profile.name.givenName, lastName: profile.name.familyName})
-    return user || null
+    const user = await this.authService.googleRegisterHotelAdmin({
+      email: profile.emails[0].value,
+      name: profile.name.givenName,
+      lastName: profile.name.familyName,
+    });
+    return user || null;
     // done(null, user);
   }
 }

@@ -8,14 +8,15 @@ import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 
 dotenvConfig({ path: './.development.env' });
 @Injectable()
-export class LoginGoogleStrategy extends PassportStrategy(Strategy, 'google-login') {
-  constructor(
-    private readonly authService: AuthService
-  ) {
+export class LoginGoogleStrategy extends PassportStrategy(
+  Strategy,
+  'google-login',
+) {
+  constructor(private readonly authService: AuthService) {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/auth/api/callback/google/login',
+      callbackURL: 'http://localhost:3000/api/auth/callback/google/login',
       scope: ['profile', 'email'],
       state: true,
     });
@@ -27,8 +28,9 @@ export class LoginGoogleStrategy extends PassportStrategy(Strategy, 'google-logi
     profile: Profile,
     done: VerifyCallback,
   ) {
-
-    const user: Customers | HotelAdmins = await this.authService.googleLogin({email: profile.emails[0].value})
+    const user: Customers | HotelAdmins = await this.authService.googleLogin({
+      email: profile.emails[0].value,
+    });
     return user || null;
     // done(null, user);
   }
