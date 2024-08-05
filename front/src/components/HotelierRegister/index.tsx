@@ -1,16 +1,15 @@
 "use client";
 
 import { validateRegisterForm } from "@/helpers/validateData";
-import { IHotelierRegisterValues, IRegisterValues } from "@/interfaces";
+import { IHotelierRegisterValues } from "@/interfaces";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import registerHotelierImage from "../../../public/registrohotelero.jpg";
 import Link from "next/link";
 import { useContext } from "react";
 import { UserContext } from "@/context/userContext";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { signIn, useSession } from "next-auth/react";
-import GoogleRegisterButton from "../GoogleRegisterButton";
+import GoogleHotelierRegisterButton from "../GoogleHotelierRegisterButton";
 
 export default function HotelierRegisterForm() {
   const { hotelierRegister } = useContext(UserContext);
@@ -268,7 +267,7 @@ export default function HotelierRegisterForm() {
               ¡Registrate y publica tu hotel!
             </h1>
           </div>
-          <GoogleRegisterButton />
+          <GoogleHotelierRegisterButton />
           <Formik
             initialValues={initialValues}
             validate={validateRegisterForm}
