@@ -33,7 +33,7 @@ import { HotelAdminGoogleAuthGuard } from './guards/hotelAdmin.google.authguard'
     HotelAdminRepository,
     MailService,
     SessionSerializer,
-    { provide: 'AUTH_SERVICE', useClass: AuthService }
+    { provide: 'AUTH_SERVICE', useClass: AuthService },
   ],
 })
-export class AuthModule { }
+export class AuthModule {}

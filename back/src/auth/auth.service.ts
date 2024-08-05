@@ -30,8 +30,10 @@ export class AuthService {
     private readonly hotelAdminRepository: HotelAdminRepository,
     private readonly mailService: MailService,
     private readonly jwtService: JwtService,
-    @InjectRepository(Customers) private readonly customersDBRepository: Repository<Customers>,
-    @InjectRepository(HotelAdmins) private readonly hotelAdminsDBRepository: Repository<HotelAdmins>
+    @InjectRepository(Customers)
+    private readonly customersDBRepository: Repository<Customers>,
+    @InjectRepository(HotelAdmins)
+    private readonly hotelAdminsDBRepository: Repository<HotelAdmins>,
   ) {}
 
   //! Creación de Cliente
@@ -268,24 +270,29 @@ export class AuthService {
   }
 
   async validateCustomer(details: UserDetails) {
-    let user: Customers = await this.customersDBRepository.findOneBy({ email: details.email })
+    const user: Customers = await this.customersDBRepository.findOneBy({
+      email: details.email,
+    });
     if (user) return user;
-    const newUser = await this.customersDBRepository.save(details)
-    return newUser
+    const newUser = await this.customersDBRepository.save(details);
+    return newUser;
   }
 
   async validateHotelAdmin(details: UserDetails) {
-    let user: HotelAdmins = await this.hotelAdminsDBRepository.findOneBy({ email: details.email })
+    const user: HotelAdmins = await this.hotelAdminsDBRepository.findOneBy({
+      email: details.email,
+    });
     if (user) return user;
-    const newUser = await this.hotelAdminsDBRepository.save(details)
-    return newUser
+    const newUser = await this.hotelAdminsDBRepository.save(details);
+    return newUser;
   }
 
   async findUser(id: number) {
-    let user: Customers | HotelAdmins = await this.customersRepository.findOneBy({ id })
+    let user: Customers | HotelAdmins =
+      await this.customersRepository.findOneBy({ id });
     if (!user) {
-      user = await this.hotelAdminRepository.findOneBy({ id })
+      user = await this.hotelAdminRepository.findOneBy({ id });
     }
-    return user
+    return user;
   }
 }
