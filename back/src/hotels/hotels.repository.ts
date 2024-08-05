@@ -1,163 +1,209 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Hotel } from "./hotels.entity";
-import { Repository } from "typeorm";
-import { CreateHotelDto } from "./hotels.dtos";
-import { HotelAdmins } from "src/hotel-admins/hotelAdmins.entity";
-import { UpdateHotelDto } from "./hotels.updateDto";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Hotel } from './hotels.entity';
+import { Repository } from 'typeorm';
+import { CreateHotelDto } from './hotels.dtos';
+import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
+import { UpdateHotelDto } from './hotels.updateDto';
 //import { NaturalLanguageProcessor } from "src/helper/natural-language-processor";
 //import { removeAccents } from "src/utils/removeAcceents";
-
+import * as data from '../utils/dataHotels.json';
 
 @Injectable()
-export class HotelsRepository{
-    constructor(
-        //private readonly naturalLanguageProcessor: NaturalLanguageProcessor,
-        @InjectRepository(Hotel) private readonly hotelDbRepository: Repository<Hotel>,
-        @InjectRepository(HotelAdmins) private readonly hotelAdminRepository: Repository<HotelAdmins>
-        
-    ){}
+export class HotelsRepository {
+  constructor(
+    //private readonly naturalLanguageProcessor: NaturalLanguageProcessor,
+    @InjectRepository(Hotel)
+    private readonly hotelDbRepository: Repository<Hotel>,
+    @InjectRepository(HotelAdmins)
+    private readonly hotelAdminRepository: Repository<HotelAdmins>,
+  ) {}
 
-    async getDbHotels(): Promise<Hotel[]>  {
-        let hotelsList: Hotel[] = await this.hotelDbRepository.find({relations:{reviews:{customer:true}}});  ///customer :true
-        if(hotelsList.length !== 0 ){
-            hotelsList = hotelsList.filter((eleDel) => eleDel.isDeleted===false);
-            return hotelsList;
-        }
-        else throw new NotFoundException("there are not hotels");
+  async getDbHotels(): Promise<Hotel[]> {
+    let hotelsList: Hotel[] = await this.hotelDbRepository.find({
+      relations: { reviews: { customer: true } },
+    }); ///customer :true
+    if (hotelsList.length !== 0) {
+      hotelsList = hotelsList.filter((eleDel) => eleDel.isDeleted === false);
+      return hotelsList;
+    } else throw new NotFoundException('there are not hotels');
+  }
+
+  async getDbHotelById(id: string): Promise<Hotel> {
+    const hotelFound: Hotel = await this.hotelDbRepository
+      .createQueryBuilder('hotel')
+      .leftJoinAndSelect('hotel.roomstype', 'roomstype')
+      .leftJoinAndSelect('roomstype.rooms', 'room')
+      .where('hotel.id = :id', { id })
+      .andWhere('hotel.isDeleted = false')
+      .getOne();
+
+    if (!hotelFound) {
+      throw new NotFoundException('This hotel is not available11111111');
     }
 
-    async getDbHotelById(id: string): Promise<Hotel> {
-        const hotelFound: Hotel = await this.hotelDbRepository
-        .createQueryBuilder('hotel')
-        .leftJoinAndSelect('hotel.roomstype', 'roomstype')
-        .leftJoinAndSelect('roomstype.rooms', 'room')
-        .where('hotel.id = :id', { id })
-        .andWhere('hotel.isDeleted = false') 
-        .getOne();
+    hotelFound.roomstype = hotelFound.roomstype.filter(
+      (roomType) => !roomType.isDeleted,
+    );
+    hotelFound.roomstype.forEach((roomType) => {
+      roomType.rooms = roomType.rooms.filter((room) => !room.isDeleted);
+    });
+    return hotelFound;
+  }
 
-        if (!hotelFound) {
-            throw new NotFoundException("This hotel is not available11111111");
-        }
+  async createDbHotel(hotelDto: CreateHotelDto): Promise<string> {
+    const { hotel_admin_id, name, email, ...hotelData } = hotelDto;
+    const nameHotel = await this.hotelDbRepository.findOne({ where: { name } });
+    if (nameHotel) throw new BadRequestException('this hotel exists');
 
-        hotelFound.roomstype = hotelFound.roomstype.filter(roomType => !roomType.isDeleted);
-        hotelFound.roomstype.forEach(roomType => {
-            roomType.rooms = roomType.rooms.filter(room => !room.isDeleted);
-        });
-        return hotelFound;
+    const emailHotel = await this.hotelDbRepository.findOne({
+      where: { email },
+    });
+    if (emailHotel) throw new BadRequestException('this email exists');
+
+    const hoteladminFound = await this.hotelAdminRepository.findOne({
+      where: { id: hotel_admin_id },
+    });
+    if (!hoteladminFound)
+      throw new NotFoundException('this Admin is not available');
+
+    const newHotel = this.hotelDbRepository.create({
+      ...hotelData,
+      name,
+      email,
+      hotelAdmin: hoteladminFound,
+    });
+    await this.hotelDbRepository.save(newHotel);
+    return newHotel.id;
+  }
+
+  async searchHotels(query?: string): Promise<Hotel[]> {
+    if (!query) {
+      return [];
     }
+    console.log('buscando hotel...');
+    const searchTerm = `%${query.toLowerCase()}%`;
 
-    async createDbHotel(hotelDto: CreateHotelDto): Promise<string>{
-        const { hotel_admin_id, name, email,...hotelData } = hotelDto;
-        const nameHotel = await this.hotelDbRepository.findOne({where: {name}});
-        if(nameHotel) throw new BadRequestException("this hotel exists");
+    // Consulta SQL con la función unaccent
+    return await this.hotelDbRepository
+      .createQueryBuilder('hotel')
+      .where('unaccent(LOWER(hotel.name)) ILIKE unaccent(:searchTerm)', {
+        searchTerm,
+      })
+      .orWhere('unaccent(LOWER(hotel.country)) ILIKE unaccent(:searchTerm)', {
+        searchTerm,
+      })
+      .orWhere('unaccent(LOWER(hotel.city)) ILIKE unaccent(:searchTerm)', {
+        searchTerm,
+      })
+      .orWhere(
+        'unaccent(LOWER(hotel.description)) ILIKE unaccent(:searchTerm)',
+        { searchTerm },
+      )
+      .getMany();
+  }
 
-        const emailHotel = await this.hotelDbRepository.findOne({where: {email}});
-        if(emailHotel) throw new BadRequestException("this email exists");
+  async updateDbHotel(
+    id: string,
+    updateHotelDto: Partial<UpdateHotelDto>,
+  ): Promise<string> {
+    const { hotel_admin_id, ...hotelData } = updateHotelDto;
+    const hotelAdminFound: HotelAdmins =
+      await this.hotelAdminRepository.findOne({
+        where: { id: hotel_admin_id },
+      });
+    if (!hotelAdminFound) throw new NotFoundException('Hotel Admin not found');
 
-        const hoteladminFound = await this.hotelAdminRepository.findOne({where: {id:hotel_admin_id}});
-        if(!hoteladminFound)throw new NotFoundException("this Admin is not available");
+    const foundHotel: Hotel = await this.hotelDbRepository.findOne({
+      where: { id },
+    });
+    if (!foundHotel) throw new NotFoundException('Hotel not found');
+    await this.hotelDbRepository.update(id, {
+      ...hotelData,
+      hotelAdmin: hotelAdminFound,
+    });
+    return id;
+  }
 
-        const newHotel = this.hotelDbRepository.create(
-            {
-                ...hotelData,
-                name,
-                email,
-                hotelAdmin: hoteladminFound
-            }
+  async deleteDbHotel(id: string): Promise<string> {
+    const foundHotel: Hotel = await this.hotelDbRepository.findOne({
+      where: { id },
+    });
+    if (!foundHotel) throw new NotFoundException('Hotel not found');
+    if (foundHotel.isDeleted === true)
+      throw new BadRequestException('Hotel was eliminated');
+    await this.hotelDbRepository.update(id, { isDeleted: true });
+    return id;
+  }
+
+  async restoreHotel(id: string): Promise<string> {
+    const foundHotel: Hotel = await this.hotelDbRepository.findOne({
+      where: { id },
+    });
+    if (!foundHotel) throw new NotFoundException('Hotel not found');
+    if (foundHotel.isDeleted === false)
+      throw new BadRequestException('the Hotel is active');
+    await this.hotelDbRepository.update(id, { isDeleted: false });
+    return id;
+  }
+
+  async getDbHotelsDeleted(): Promise<Hotel[]> {
+    const listHotel: Hotel[] = await this.hotelDbRepository.find({
+      where: { isDeleted: true },
+    });
+    if (listHotel.length !== 0) {
+      return listHotel;
+    } else throw new NotFoundException('there are not hotels');
+  }
+  async addHotels() {
+    data?.map(async (e, index) => {
+      const hotelAdminExists = await this.hotelAdminRepository.exists({
+        where: { id: e.hotel_admin_id },
+      });
+
+      if (!hotelAdminExists) {
+        throw new NotFoundException(
+          `Hotel Admin not found with id ${e.hotel_admin_id}`,
         );
-        await this.hotelDbRepository.save(newHotel);
-        return newHotel.id;     
-    }
- 
-    
-    async searchHotels(query?: string): Promise<Hotel[]> {
-        if (!query) {
-          return [];
-        }
-        console.log("buscando hotel...")
-        const searchTerm = `%${query.toLowerCase()}%`;
-      
-        // Consulta SQL con la función unaccent
-        return await this.hotelDbRepository.createQueryBuilder('hotel')
-          .where('unaccent(LOWER(hotel.name)) ILIKE unaccent(:searchTerm)', { searchTerm })
-          .orWhere('unaccent(LOWER(hotel.country)) ILIKE unaccent(:searchTerm)', { searchTerm })
-          .orWhere('unaccent(LOWER(hotel.city)) ILIKE unaccent(:searchTerm)', { searchTerm })
-          .orWhere('unaccent(LOWER(hotel.description)) ILIKE unaccent(:searchTerm)', { searchTerm })
-          .getMany();
-    }
+      }
+      const hotels = new Hotel();
+      hotels.name = e.name;
+      hotels.description = e.description;
+      hotels.email = e.email;
+      hotels.country = e.country;
+      hotels.city = e.city;
+      hotels.address = e.address;
+      hotels.location = e.location;
+      hotels.totalRooms = e.totalRooms;
+      hotels.services = e.services;
+      hotels.rating = e.rating;
+      hotels.images = e.images;
+      (hotels as any).__hotelAdminId = e.hotel_admin_id;
 
-    async updateDbHotel(id: string, updateHotelDto: Partial<UpdateHotelDto>): Promise<string>{
-        const {hotel_admin_id, ...hotelData} = updateHotelDto;
-        const hotelAdminFound: HotelAdmins = await this.hotelAdminRepository.findOne({where: {id:hotel_admin_id}});
-        if(!hotelAdminFound)  throw new NotFoundException("Hotel Admin not found");
-        
-        const foundHotel: Hotel = await this.hotelDbRepository.findOne({where:{id}});
-        if(!foundHotel) throw new NotFoundException("Hotel not found");
-        await this.hotelDbRepository.update(id,{
-            ...hotelData,
-            hotelAdmin:hotelAdminFound
-        });
-        return id;
-    }
-
-    async deleteDbHotel(id: string): Promise<string> {
-        const foundHotel: Hotel = await this.hotelDbRepository.findOne({where:{id}});
-        if(!foundHotel) throw new NotFoundException("Hotel not found");
-        if(foundHotel.isDeleted === true) throw new BadRequestException("Hotel was eliminated");
-        await this.hotelDbRepository.update(id, {isDeleted: true});
-        return id;
-    }
-
-    async restoreHotel(id: string): Promise<string>{
-        const foundHotel: Hotel = await this.hotelDbRepository.findOne({where:{id}});
-        if(!foundHotel) throw new NotFoundException("Hotel not found");
-        if(foundHotel.isDeleted === false) throw new BadRequestException("the Hotel is active");
-        await this.hotelDbRepository.update(id,{isDeleted: false});
-        return id;
-    }
-
-    async getDbHotelsDeleted(): Promise<Hotel[]>{
-        const listHotel: Hotel[] = await this.hotelDbRepository.find({where:{isDeleted:true}});
-        if(listHotel.length !==0){
-            return listHotel;            
-        }
-        else throw new NotFoundException("there are not hotels");
-    }
-
+      await this.hotelDbRepository
+        .createQueryBuilder()
+        .insert()
+        .into(Hotel)
+        .values(hotels)
+        .execute();
+    });
+    return 'Added Hotels';
+  }
 }
 
+// async searchHotels(name: string) {
+//     const hotels = await this.hotelDbRepository
+//         .createQueryBuilder('hotel')
+//         .where('LOWER(hotel.name) LIKE LOWER(:name)', { name: `%${name}%` })
+//         .getMany();
+//       console.log("hola a todos");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-    // async searchHotels(name: string) {
-    //     const hotels = await this.hotelDbRepository
-    //         .createQueryBuilder('hotel')
-    //         .where('LOWER(hotel.name) LIKE LOWER(:name)', { name: `%${name}%` })
-    //         .getMany();
-    //       console.log("hola a todos");
-          
-    //     return hotels;
-    // }
-
-
-
-
+//     return hotels;
+// }
 
 // async searchHotels(filter: any): Promise<Hotel[]> {
 //   const query = this.hotelDbRepository
