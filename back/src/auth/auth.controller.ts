@@ -29,38 +29,38 @@ import { JwtService } from '@nestjs/jwt';
 import { Customers } from 'src/customers/customers.entity';
 import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 @ApiTags('Autenticación y recuperación de contraseñas')
-@Controller('api/auth')
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService, private readonly jwtService: JwtService) {}
 
-  @Get('google/register/customer')
+  @Get('api/google/register/customer')
   @UseGuards(CustomerGoogleAuthGuard)
   async googleCustomerAuth(@Req() req: Request) {}
 
-  @Get('callback/google/register/customer')
+  @Get('api/callback/google/register/customer')
   @UseGuards(CustomerGoogleAuthGuard)
   async googleCustomerAuthRedirect(@Req() req: Request, @Res() res: Response) {
     res.redirect('http://localhost:3001')
   }
 
-  @Get('google/register/hotelAdmin')
+  @Get('api/google/register/hotelAdmin')
   @UseGuards(HotelAdminGoogleAuthGuard)
   async googleHotelAdminAuth(@Req() req: Request) {}
 
-  @Get('callback/google/register/hotelAdmin')
+  @Get('api/callback/google/register/hotelAdmin')
   @UseGuards(HotelAdminGoogleAuthGuard)
   async googleHotelAdminAuthRedirect(@Req() req: Request, @Res() res: Response) {
     res.redirect('http://localhost:3001')
   }
 
-  @Get('google/login')
+  @Get('api/google/login')
   @UseGuards(LoginGoogleAuthGuard)
   async googleLoginAuth(@Req() req: Request) {}
 
-  @Get('callback/google/login')
+  @Get('api/callback/google/login')
   @UseGuards(LoginGoogleAuthGuard)
   async googleLoginAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    const user = req.user;
+    const user: any = req.user;
     const payload = {
       id: user.id,
       name: user.name,
