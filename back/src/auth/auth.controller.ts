@@ -31,7 +31,10 @@ import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 @ApiTags('Autenticación y recuperación de contraseñas')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Get('api/google/register/customer')
   @UseGuards(CustomerGoogleAuthGuard)
@@ -71,12 +74,7 @@ export class AuthController {
       isAdmin: user.isAdmin,
     };
     const token = this.jwtService.sign(payload);
-    
-    return res.json({
-      message: 'Usuario logueado',
-      user,
-      token,
-    });
+    res.redirect(`http://localhost:3001/dashboard?token=${token}`);
   }
 
   @Post('cxSignUp')
