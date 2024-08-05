@@ -24,32 +24,59 @@ import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { CustomerGoogleAuthGuard } from './guards/customer.google.authguard';
 import { HotelAdminGoogleAuthGuard } from './guards/hotelAdmin.google.authguard';
+import { LoginGoogleAuthGuard } from './guards/login.google.authguard copy';
+import { JwtService } from '@nestjs/jwt';
+import { Customers } from 'src/customers/customers.entity';
+import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 @ApiTags('Autenticación y recuperación de contraseñas')
 @Controller('api/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly jwtService: JwtService) {}
 
-  @Get('google/customer')
+  @Get('google/register/customer')
   @UseGuards(CustomerGoogleAuthGuard)
   async googleCustomerAuth(@Req() req: Request) {}
 
-  @Get('callback/google/customer')
+  @Get('callback/google/register/customer')
   @UseGuards(CustomerGoogleAuthGuard)
   async googleCustomerAuthRedirect(@Req() req: Request, @Res() res: Response) {
     res.redirect('http://localhost:3001');
   }
 
-  @Get('google/hotelAdmin')
+  @Get('google/register/hotelAdmin')
   @UseGuards(HotelAdminGoogleAuthGuard)
   async googleHotelAdminAuth(@Req() req: Request) {}
 
-  @Get('callback/google/hotelAdmin')
+  @Get('callback/google/register/hotelAdmin')
   @UseGuards(HotelAdminGoogleAuthGuard)
   async googleHotelAdminAuthRedirect(
     @Req() req: Request,
     @Res() res: Response,
   ) {
     res.redirect('http://localhost:3001');
+  }
+
+  @Get('google/login')
+  @UseGuards(LoginGoogleAuthGuard)
+  async googleLoginAuth(@Req() req: Request) {}
+
+  @Get('callback/google/login')
+  @UseGuards(LoginGoogleAuthGuard)
+  async googleLoginAuthRedirect(@Req() req: Request, @Res() res: Response) {
+    const user = req.user;
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    };
+    const token = this.jwtService.sign(payload);
+    
+    return res.json({
+      message: 'Usuario logueado',
+      user,
+      token,
+    });
   }
 
   @Post('cxSignUp')

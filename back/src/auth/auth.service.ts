@@ -2,6 +2,7 @@ import {
   BadGatewayException,
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateCustomerDto } from 'src/customers/customers.dto';
@@ -20,8 +21,9 @@ import { MoreThan, Repository } from 'typeorm';
 import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 import { Request } from 'express';
 import { Customers } from 'src/customers/customers.entity';
-import { UserDetails } from './user-details.type';
+import { GoogleRegisterUserDetails } from './types/google-register-user-details.type';
 import { InjectRepository } from '@nestjs/typeorm';
+import { GoogleLoginUserDetails } from './types/google-login-user-details.type';
 
 @Injectable()
 export class AuthService {
@@ -257,34 +259,50 @@ export class AuthService {
     return { message: 'Contraseña actualizada correctamente' };
   }
 
-  //! Google Login
+  async googleRegisterCustomer(details: GoogleRegisterUserDetails) {
+    const foundCustomer = await this.customersRepository.getCustomerByEmail(
+      details.email,
+    );
+    if (foundCustomer)
+      throw new BadRequestException('Cuenta de Google ya registrada.');
+    const newCustomer = await this.customersDBRepository.save(details);
+    if (!newCustomer)
+      throw new InternalServerErrorException(
+        'Error del servidor al hacer el registro.',
+      );
+    return newCustomer;
+  }
 
-  async googleLogin(req: Request) {
-    if (!req.user) {
-      return 'No user from google';
+  async googleRegisterHotelAdmin(details: GoogleRegisterUserDetails) {
+    const foundHotelAdmin =
+      await this.hotelAdminRepository.getHotelAdminByEmail(details.email);
+    if (foundHotelAdmin)
+      throw new BadRequestException('Cuenta de Google ya registrada.');
+    const newHotelAdmin = await this.hotelAdminsDBRepository.save(details);
+    if (!newHotelAdmin)
+      throw new InternalServerErrorException(
+        'Error del servidor al hacer el registro.',
+      );
+    return newHotelAdmin;
+  }
+
+  async googleLogin(details: GoogleLoginUserDetails) {
+    const customer = await this.customersRepository.getCustomerByEmail(
+      details.email,
+    );
+    const adminHotel = await this.hotelAdminRepository.getHotelAdminByEmail(
+      details.email,
+    );
+
+    if (!customer && !adminHotel)
+      throw new BadRequestException('Cuenta de Google no registrada aún.');
+
+    if (customer) {
+      return customer;
     }
-    return {
-      message: 'User information from google',
-      user: req.user,
-    };
-  }
-
-  async validateCustomer(details: UserDetails) {
-    const user: Customers = await this.customersDBRepository.findOneBy({
-      email: details.email,
-    });
-    if (user) return user;
-    const newUser = await this.customersDBRepository.save(details);
-    return newUser;
-  }
-
-  async validateHotelAdmin(details: UserDetails) {
-    const user: HotelAdmins = await this.hotelAdminsDBRepository.findOneBy({
-      email: details.email,
-    });
-    if (user) return user;
-    const newUser = await this.hotelAdminsDBRepository.save(details);
-    return newUser;
+    if (adminHotel) {
+      return adminHotel;
+    }
   }
 
   async findUser(id: number) {
