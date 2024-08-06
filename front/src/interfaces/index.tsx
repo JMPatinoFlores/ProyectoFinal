@@ -119,7 +119,11 @@ export interface IHotelRegister {
   city: string;
   address: string;
   location: number[];
-  services: string;
+  totalRooms: number;
+  services: string[];
+  rating: number;
+  images: string[] | File[];
+  hotel_admin_id: string;
 }
 
 export interface IHotelImage {
@@ -150,7 +154,7 @@ export interface IHotelContextType {
   fetchHotels: () => Promise<void>;
   fetchBookingsByHotel: (hotelId: string) => Promise<IBooking[]>;
   fetchRoomsByHotel: (hotelId: string) => Promise<IRoom[]>;
-  fetchHotelById: (hotelId: string) => Promise<IHotel | null>;
+  fetchHotelById: (hotelId: string) => Promise<IHotelDetail | null>;
 }
 
 export interface IHotelResponse {
