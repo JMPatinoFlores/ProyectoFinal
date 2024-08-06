@@ -1,6 +1,6 @@
 import { IHotelRegister } from "@/interfaces";
 
-export const postHotel = async (hotel: Omit<IHotelRegister, "hotelId">) => {
+export const postHotel = async (hotel: IHotelRegister) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
   const response = await fetch("http://localhost:3000/hotels", {
     method: "POST",

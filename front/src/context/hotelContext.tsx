@@ -1,7 +1,7 @@
 "use client"
 
-import { IHotel, IHotelContextType, IHotelRegister } from "@/interfaces"
-import { getBookingByHotel, getHotelById, getHotels, getRoomsByHotel, postHotel } from "@/lib/server/fetchHotels"
+import { IHotel, IHotelContextType, IHotelDetail, IHotelRegister } from "@/interfaces"
+import { getBookingByHotel, getHotels, getRoomsByHotel, postHotel } from "@/lib/server/fetchHotels"
 import { createContext, useEffect, useState } from "react"
 
 export const HotelContext = createContext<IHotelContextType>({
@@ -17,12 +17,12 @@ export const HotelContext = createContext<IHotelContextType>({
 export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     const [hotels, setHotels] = useState<IHotel[] | null>(null)
 
-    const addHotel = async (hotel: Omit<IHotelRegister, "hotelId">) => {
+    const addHotel = async (hotel: IHotelRegister) => {
         try {
             const data = await postHotel(hotel);
-            console.log("data", data);
+            console.log("data:", data);
             
-            if(data.hotelId) {
+            if(data) {
                 await fetchHotels();
                 return true;
             }
@@ -63,10 +63,10 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const fetchHotelById = async (hotelId: string) => {
+    const fetchHotelById = async (hotelId: string): Promise<IHotelDetail | null> => {
         try {
-            const data = await getHotelById(hotelId)
-            return data as IHotel;
+            const data = await fetchHotelById(hotelId)
+            return data as IHotelDetail;
         } catch (error) {
             console.log(error);
             return null;
