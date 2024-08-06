@@ -23,7 +23,7 @@ export default function BookingForm() {
     <div>
       <h1>Reserva ahora!</h1>
       <div>
-        <Formik values={initialValues} onSubmit={handleSubmit}>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           {({ isSubmitting }) => (
             <Form>
               <div>
