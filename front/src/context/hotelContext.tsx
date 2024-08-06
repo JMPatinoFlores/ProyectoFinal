@@ -1,17 +1,18 @@
 "use client"
 
 import { IHotel, IHotelContextType, IHotelDetail, IHotelRegister } from "@/interfaces"
-import { getBookingByHotel, getHotels, getRoomsByHotel, postHotel } from "@/lib/server/fetchHotels"
+import { getBookingByHotel, getHotelById, getHotels, getRoomsByHotel, postHotel, getHotelsBySearch } from "@/lib/server/fetchHotels"
 import { createContext, useEffect, useState } from "react"
 
 export const HotelContext = createContext<IHotelContextType>({
     hotels: null,
     setHotels: () => {},
     addHotel: async () => false,
-    fetchHotels: async () => {},
+    fetchHotels: async () => [],
     fetchBookingsByHotel: async () => [],
     fetchRoomsByHotel: async () => [],
     fetchHotelById: async () => null,
+    fetchHotelsBySearch: async() =>[],
 })
 
 export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
@@ -33,15 +34,17 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const fetchHotels = async () => {
+
+    const fetchHotels = async (): Promise<IHotelDetail[]> => {
         try {
-            const data = await getHotels();
-            setHotels(data);
-            typeof window !== "undefined" && localStorage.setItem("hotels", JSON.stringify(data))
+          const data = await getHotels();
+          typeof window !== "undefined" && localStorage.setItem("hotels", JSON.stringify(data))
+          return data;
         } catch (error) {
-            console.log(error);            
+          console.log(error);
+          return []; // Return an empty array if there's an error
         }
-    };
+      };
 
     const fetchBookingsByHotel = async (hotelId: string) => {
         try {
@@ -53,6 +56,17 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    const  fetchHotelsBySearch = async (searchQuery:string)=>{
+        try{
+            const data = await getHotelsBySearch(searchQuery)
+            typeof window !== "undefined" && localStorage.setItem("hotels", JSON.stringify(data))
+            return data;
+        }catch(error){
+            console.log(error);
+            return [];            
+        }
+    }
+
     const fetchRoomsByHotel = async (hotelId: string) => {
         try {
             const data = await getRoomsByHotel(hotelId);
@@ -63,9 +77,9 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const fetchHotelById = async (hotelId: string): Promise<IHotelDetail | null> => {
+    const fetchHotelById = async (hotelId: string): Promise<IHotelDetail | null>=> {
         try {
-            const data = await fetchHotelById(hotelId)
+            const data = await getHotelById(hotelId)
             return data as IHotelDetail;
         } catch (error) {
             console.log(error);
@@ -92,6 +106,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
                 fetchBookingsByHotel,
                 fetchRoomsByHotel,
                 fetchHotelById,
+                fetchHotelsBySearch,
             }}
         >
             {children}

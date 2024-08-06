@@ -7,16 +7,8 @@ import { UpdateHotelDto } from './hotels.updateDto';
 export class HotelsService {
   constructor(private readonly hotelsDbRepository: HotelsRepository) {}
 
-  async getDbHotels(page: number, limit: number) {
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const hotelList = (await this.hotelsDbRepository.getDbHotels()).slice(
-      startIndex,
-      endIndex,
-    );
-    if (hotelList.length !== 0) {
-      return hotelList;
-    } else throw new NotFoundException('There are not hotels');
+  async getDbHotels() {
+    return await this.hotelsDbRepository.getDbHotels();
   }
 
   async getDbHotelById(id: string) {
