@@ -30,16 +30,27 @@ export const postRoom = async () => {
   return data;
 };
 
-// export const getHotelById = async () => {
-//   const { hotelId } =
-//     typeof window !== "undefined" && localStorage.getItem("id");
-//   const response = await fetch(`http://localhost:3000/hotels/${hotelId}`);
-//   const data = await response.json();
-//   return data;
-// };
+export const getHotelById = async (hotelId: string) => {
+  if (!hotelId) {
+    throw new Error("Hotel ID is not available in local storage.");
+  }
+
+  const response = await fetch(`http://localhost:3000/hotels/${hotelId}`);
+  if (!response.ok) {
+    throw new Error(`HTTP error status: ${response.status}`);
+  }
+  const data = await response.json();  
+  return data;
+};
 
 export const getHotels = async () => {
   const response = await fetch("http://localhost:3000/hotels");
+  const data = await response.json();
+  return data;
+};
+
+export const getHotelsBySearch = async (searchQuery:string) => {
+  const response = await fetch(`http://localhost:3000/api/hotels/search?search=${searchQuery}`);
   const data = await response.json();
   return data;
 };

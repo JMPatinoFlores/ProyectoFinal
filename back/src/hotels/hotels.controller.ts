@@ -25,10 +25,8 @@ export class HotelsController {
   constructor(private readonly hotelDbService: HotelsService) {}
 
   @Get()
-  getDbHotels(@Query('page') page: string, @Query('limit') limit: string) {
-    !page ? (page = '1') : page;
-    !limit ? (limit = '8') : limit;
-    return this.hotelDbService.getDbHotels(Number(page), Number(limit));
+  getDbHotels() {
+    return this.hotelDbService.getDbHotels();
   }
 
   @Post()

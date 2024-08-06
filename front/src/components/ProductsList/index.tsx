@@ -1,15 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ProductCard from "../ProductCard";
 import { IHotelDetail, IProductsListProps } from "@/interfaces";
+import { HotelContext, HotelProvider } from "@/context/hotelContext";
 
 function ProductsList({ searchQuery }: IProductsListProps) {
   const [hotels, setHotels] = useState<IHotelDetail[]>([]);
   const [filteredHotels, setFilteredHotels] = useState<IHotelDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
-
+  const {fetchHotels} = useContext(HotelContext)
+  const { fetchHotelsBySearch } = useContext(HotelContext);
+  
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -23,10 +26,12 @@ function ProductsList({ searchQuery }: IProductsListProps) {
   };
 
   useEffect(() => {
-    fetch("/hotels.json")
-      .then((response) => response.json())
-      .then((data) => setHotels(data));
-  }, []);
+    fetchHotels().then((data) => {
+      if (data) {
+        setHotels(data);
+      }
+    });
+  }, [fetchHotels]);
 
   useEffect(() => {
     if (searchQuery) {
@@ -43,6 +48,7 @@ function ProductsList({ searchQuery }: IProductsListProps) {
       setFilteredHotels(hotels);
     }
   }, [searchQuery, hotels]);
+ 
 
   const paginatedHotels = filteredHotels.slice(
     (currentPage - 1) * itemsPerPage,
