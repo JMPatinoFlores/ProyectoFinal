@@ -153,6 +153,7 @@ export class BookingRepository {
     });
 
     if (!hotelToBook) throw new NotFoundException('Hotel no encontrado.');
+    let atLeastOneRoomTypeIdMatches = false
 
     for (const roomTypeIdAndDate of roomTypesIdsAndDates) {
       const { roomTypeId, checkInDate, checkOutDate } = roomTypeIdAndDate;
@@ -166,7 +167,7 @@ export class BookingRepository {
 
       for (const roomTypeOfHotel of hotelToBook.roomstype) {
         if (roomTypeId !== roomTypeOfHotel.id) continue;
-
+        atLeastOneRoomTypeIdMatches = true
         for (const room of roomTypeOfHotel.rooms) {
           if (isBooked) {
             break;
@@ -211,6 +212,8 @@ export class BookingRepository {
         }
         if (isBooked) break;
       }
+
+      if (!atLeastOneRoomTypeIdMatches) throw new BadRequestException('El roomTypeId enviado no coincide con ningún id de los roomtypes del hotel con el hotelId enviado.')
 
       if (!isBooked) {
         throw new BadRequestException(
