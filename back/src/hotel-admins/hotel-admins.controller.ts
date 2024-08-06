@@ -58,6 +58,12 @@ export class HotelAdminsController {
       );
   }
 
+  //* Cargar un seeder
+  @Get('seeder')
+  addHotelsAdmins() {
+    return this.hotelAdminService.addHotelsAdmins();
+  }
+
   //* Obtener un admin de hotel por su ID
 
   @Get(':id')

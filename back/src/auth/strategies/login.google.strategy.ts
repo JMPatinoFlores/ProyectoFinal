@@ -15,7 +15,7 @@ export class LoginGoogleStrategy extends PassportStrategy(Strategy, 'google-logi
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/api/auth/callback/google/login',
+      callbackURL: 'http://localhost:3000/auth/api/callback/google/login',
       scope: ['profile', 'email'],
       state: true,
     });

@@ -66,6 +66,7 @@ export interface IUserContextType {
   isAdmin: boolean;
   setIsAdmin: (isLogged: boolean) => void;
   login: (credentials: ILogin) => Promise<boolean>;
+  googleLogin: (token: string, user: IUserResponse) => Promise<boolean>;
   customerRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   hotelierRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   logOut: () => void;
@@ -73,6 +74,7 @@ export interface IUserContextType {
 
 export interface IDecodeToken extends JwtPayload {
   id: number;
+  name: string;
   email: string;
   isAdmin: boolean;
 }
@@ -117,7 +119,11 @@ export interface IHotelRegister {
   city: string;
   address: string;
   location: number[];
-  services: string;
+  totalRooms: number;
+  services: string[];
+  rating: number;
+  images: string[] | File[];
+  hotel_admin_id: string;
 }
 
 export interface IHotelImage {
@@ -148,7 +154,7 @@ export interface IHotelContextType {
   fetchHotels: () => Promise<void>;
   fetchBookingsByHotel: (hotelId: string) => Promise<IBooking[]>;
   fetchRoomsByHotel: (hotelId: string) => Promise<IRoom[]>;
-  fetchHotelById: (hotelId: string) => Promise<IHotel | null>;
+  fetchHotelById: (hotelId: string) => Promise<IHotelDetail | null>;
 }
 
 export interface IHotelResponse {

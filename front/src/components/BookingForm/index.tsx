@@ -1,10 +1,12 @@
+"use client";
+
 import { IBooking, IBookingForm } from "@/interfaces";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function BookingForm() {
-  const initialValues: IBookingForm = {
+  const initialValues = {
     checkInDate: "",
     checkOutDate: "",
   };
