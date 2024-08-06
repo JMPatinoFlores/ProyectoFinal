@@ -1,32 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "next/navigation";
 import HotelDetail from "../../../components/HotelDetails";
 import { IHotelDetail, ILocationDetail } from "@/interfaces";
+import { HotelContext, HotelProvider } from "@/context/hotelContext";
 
 const Page = () => {
   const { id } = useParams();
   const [hotel, setHotel] = useState<IHotelDetail | null>(null);
-  const [hotelLocation, setHotelLocation] = useState<ILocationDetail | null>(
-    null
-  );
+
+  const {fetchHotelById} = useContext(HotelContext)
 
   useEffect(() => {
     if (typeof id === "string") {
-      fetch("/hotels.json")
-        .then((response) => response.json())
-        .then((data) => {
-          const selectedHotel = data.find(
-            (hotel: { id: string }) => hotel.id === id.toUpperCase()
-          );
-          setHotelLocation(selectedHotel);
-          setHotel(selectedHotel);
-        });
+      fetchHotelById(id).then((data) => {        
+        setHotel(data as IHotelDetail);
+      });
     }
-  }, [id]);
+  }, [id, fetchHotelById]);
 
-  return <HotelDetail hotel={hotel} hotelLocation={hotelLocation} />;
+  return <HotelDetail hotel={hotel}   />;
 };
 
 export default Page;

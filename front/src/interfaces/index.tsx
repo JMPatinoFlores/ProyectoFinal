@@ -151,10 +151,11 @@ export interface IHotelContextType {
   hotels: IHotel[] | null;
   setHotels: React.Dispatch<React.SetStateAction<IHotel[] | null>>;
   addHotel: (hotel: IHotelRegister) => Promise<boolean>;
-  fetchHotels: () => Promise<void>;
+  fetchHotels: () => Promise<IHotelDetail[]>;
   fetchBookingsByHotel: (hotelId: string) => Promise<IBooking[]>;
   fetchRoomsByHotel: (hotelId: string) => Promise<IRoom[]>;
   fetchHotelById: (hotelId: string) => Promise<IHotelDetail | null>;
+  fetchHotelsBySearch:(searchQuery:string)=>Promise<IHotelDetail[]>;
 }
 
 export interface IHotelResponse {
@@ -215,15 +216,19 @@ export interface IBookingForm {
 export interface IHotelDetail {
   id: string;
   name: string;
+  description: string;
+  email: string;
   price: number;
   country: string;
   city: string;
-  distance: number;
-  image: string;
   address: string;
-  description: string;
+  location: number[];
+  totalRooms: number;
   services: string[];
-  recommendations: string;
+  rating: string;
+  images: string[];
+  isDeleted:boolean;
+  roomstype: [];
 }
 
 export interface IHotelLocation {
