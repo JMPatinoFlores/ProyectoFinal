@@ -23,6 +23,10 @@ export class HotelsService {
     return await this.hotelsDbRepository.searchHotels(query);
   }
 
+  async getFilteredHotels(rating: number, country: string, city: string, maxPrice: number) {
+    return await this.hotelsDbRepository.getFilteredHotels(rating, country, city, maxPrice)
+  }
+
   async updateDbHotel(id: string, updateHotelDto: Partial<UpdateHotelDto>) {
     return await this.hotelsDbRepository.updateDbHotel(id, updateHotelDto);
   }

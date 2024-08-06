@@ -21,7 +21,7 @@ export class HotelsRepository {
     private readonly hotelDbRepository: Repository<Hotel>,
     @InjectRepository(HotelAdmins)
     private readonly hotelAdminRepository: Repository<HotelAdmins>,
-  ) {}
+  ) { }
 
   async getDbHotels(): Promise<Hotel[]> {
     let hotelsList: Hotel[] = await this.hotelDbRepository.find({
@@ -105,6 +105,18 @@ export class HotelsRepository {
         { searchTerm },
       )
       .getMany();
+  }
+
+  async getFilteredHotels(rating: number, country: string, city: string, maxPrice: number) {
+    const query = this.hotelDbRepository.createQueryBuilder('hotel')
+
+    if (rating) query.andWhere('hotel.rating >= :rating', { rating })
+    if (country) query.andWhere('hotel.country = :country', { country })
+    if (city) query.andWhere('hotel.city = :city', { city })
+    if (maxPrice) query.andWhere('hotel.price <= :maxPrice', { maxPrice })
+    const hotels = await query.getMany()
+    if (!hotels) throw new NotFoundException('No se encontró ningún hotel con esas características.')
+    return hotels
   }
 
   async updateDbHotel(
