@@ -141,21 +141,21 @@ export class BookingRepository {
     if (!customer) throw new NotFoundException('Customer no encontrado.')
 
     let total: number = 0
-    const availabilitiesSaved = []
+    const availabilitiesCreated = []
+    let numberOfAvailabilitiesToSave = roomTypesIdsAndDates.length
+    let numberOfAvailabilitiesCreated = 0
 
-    const hotelToBook = await this.hotelDBRepository.findOne({
+    const hotel = await this.hotelDBRepository.findOne({
       where: { id: hotelId },
-      relations: [
-        'roomstype',
-        'roomstype.rooms',
-        'roomstype.rooms.availabilities',
-      ],
+      relations: { roomstype: { rooms: { availabilities: true } } },
     });
 
+    const hotelToBook = hotel
+
     if (!hotelToBook) throw new NotFoundException('Hotel no encontrado.');
-    let atLeastOneRoomTypeIdMatches = false
 
     for (const roomTypeIdAndDate of roomTypesIdsAndDates) {
+      let atLeastOneRoomTypeIdMatches = false
       const { roomTypeId, checkInDate, checkOutDate } = roomTypeIdAndDate;
       const customerCheckInDate = new Date(checkInDate).getTime();
       const customerCheckOutDate = new Date(checkOutDate).getTime();
@@ -166,6 +166,7 @@ export class BookingRepository {
       let isBooked = false;
 
       for (const roomTypeOfHotel of hotelToBook.roomstype) {
+        if (isBooked) break
         if (roomTypeId !== roomTypeOfHotel.id) continue;
         atLeastOneRoomTypeIdMatches = true
         for (const room of roomTypeOfHotel.rooms) {
@@ -200,11 +201,10 @@ export class BookingRepository {
               room: newRoom,
             });
 
-            const savedAvailability =
-              await this.roomAvailabilityDBRepository.save(newAvailability);
-
-            availabilitiesSaved.push(savedAvailability);
-
+            const createdAvailability = this.roomAvailabilityDBRepository.create(newAvailability);
+            numberOfAvailabilitiesCreated += 1
+            availabilitiesCreated.push(createdAvailability);
+            room.availabilities.push(createdAvailability)
             total += roomTypeOfHotel.price;
             isBooked = true;
             break;
@@ -221,8 +221,14 @@ export class BookingRepository {
         );
       }
     }
-
-    if (availabilitiesSaved.length > 0) {
+    const availabilitiesSaved = []
+    console.log(availabilitiesCreated);
+    
+    if ((numberOfAvailabilitiesCreated === numberOfAvailabilitiesToSave) && availabilitiesCreated.length > 0) {
+      for (const availability of availabilitiesCreated) {
+        const savedAvailability = await this.roomAvailabilityDBRepository.save(availability)
+        availabilitiesSaved.push(savedAvailability)
+      }
       const { roomstype, ...newHotel } = hotelToBook
       const bookingDetails = this.bookingDetailsDBRepository.create({ total, hotel: newHotel, availabilities: availabilitiesSaved })
       const newBookingDetails = await this.bookingDetailsDBRepository.save(bookingDetails)
@@ -230,7 +236,7 @@ export class BookingRepository {
       const newBooking = await this.bookingDBRepository.save(booking)
       return newBooking
     } else {
-      throw new BadRequestException('Booking could not be completed.');
+      throw new BadRequestException('No hay fechas libres para las fechas solicitadas.');
     }
 
   }
@@ -260,10 +266,13 @@ export class BookingRepository {
     const { bookingId, newAvailabilities } = bookingData
     const booking = await this.bookingDBRepository.findOne({ where: { id: bookingId }, relations: { bookingDetails: { hotel: { roomstype: { rooms: { availabilities: true } } } } } })
     if (!booking) throw new NotFoundException('No se encontró un booking con ese id.')
-    const availabilitiesSaved: RoomAvailability[] = []
+    const availabilitiesCreated = []
     let total: number = 0
+    let numberOfAvailabilitiesToSave = newAvailabilities.length
+    let numberOfAvailabilitiesCreated = 0
 
     for (const newAvailability of newAvailabilities) {
+      let atLeastOneRoomTypeIdMatches = false
       const newAvailabilityWithId = await this.roomAvailabilityDBRepository.findOne({ where: { id: newAvailability.id }, relations: { room: { roomtype: true } } })
       if (!newAvailabilityWithId) throw new NotFoundException(`No se encontró un availability con id ${newAvailabilityWithId.id}`)
       const customerCheckInDate = new Date(newAvailability.startDate).getTime()
@@ -273,7 +282,9 @@ export class BookingRepository {
       for (const roomType of booking.bookingDetails.hotel.roomstype) {
         if (isBooked) break
         if (roomType.id !== newAvailabilityWithId.room.roomtype.id) continue
+        atLeastOneRoomTypeIdMatches = true
         for (const room of roomType.rooms) {
+          if (isBooked) break
           let isAvailable = true
 
           for (const oldAvailability of room.availabilities) {
@@ -281,19 +292,27 @@ export class BookingRepository {
             const oldAvailabilityStartDate = new Date(oldAvailability.startDate).getTime()
             const oldAvailabilityEndDate = new Date(oldAvailability.endDate).getTime()
 
+            // console.log(oldAvailabilityStartDate);
+            // console.log(oldAvailabilityEndDate);
+            // console.log(customerCheckInDate);
+            // console.log(customerCheckOutDate);
+            
+
             if (!(customerCheckOutDate <= oldAvailabilityStartDate || customerCheckInDate >= oldAvailabilityEndDate)) {
               if (oldAvailability.isAvailable || oldAvailability.isDeleted) continue
+              if (oldAvailability.id === newAvailability.id) continue
               isAvailable = false
               break
             }
 
           }
           if (isAvailable) {
+            
             const { availabilities, ...newRoom } = room;
             const newRoomType = await this.roomTypeDBRepository.findOneBy({ id: roomType.id })
 
             newRoom.roomtype = newRoomType;
-            const availabilityToBook = this.roomAvailabilityDBRepository.create(
+            const createdAvailability = this.roomAvailabilityDBRepository.create(
               {
                 id: newAvailability.id,
                 startDate: newAvailability.startDate,
@@ -302,12 +321,9 @@ export class BookingRepository {
                 isAvailable: false,
               },
             );
-
-            const savedAvailability =
-              await this.roomAvailabilityDBRepository.save(availabilityToBook);
-
-            availabilitiesSaved.push(savedAvailability);
-
+            numberOfAvailabilitiesCreated += 1
+            availabilitiesCreated.push(createdAvailability)
+            room.availabilities.push(createdAvailability)
             total += roomType.price;
             isBooked = true;
             break;
@@ -315,16 +331,19 @@ export class BookingRepository {
         }
         if (isBooked) break;
       }
+
+      if (!atLeastOneRoomTypeIdMatches) throw new BadRequestException('El roomTypeId enviado no coincide con ningún id de los roomtypes del hotel con el hotelId enviado.')
+
       if (!isBooked) {
         throw new BadRequestException(
           'No available rooms for the specified dates.',
         );
       }
     }
-
-    if (availabilitiesSaved.length > 0) {
-      console.log('hola');
-
+    if ((numberOfAvailabilitiesCreated === numberOfAvailabilitiesToSave) && availabilitiesCreated.length > 0) {
+      for (const availability of availabilitiesCreated) {
+        await this.roomAvailabilityDBRepository.save(availability)
+      }
       const newBooking = await this.bookingDBRepository.findOne({
         where: { id: booking.id },
         relations: { bookingDetails: { availabilities: { room: { roomtype: true } }, hotel: true }, customer: true }, select: {
@@ -348,7 +367,7 @@ export class BookingRepository {
         newBooking,
       };
     } else {
-      throw new BadRequestException('Booking could not be completed.');
+      throw new BadRequestException('No hay fechas libres para las fechas solicitadas.');
     }
   }
 
