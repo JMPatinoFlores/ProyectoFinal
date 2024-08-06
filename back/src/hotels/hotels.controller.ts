@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -19,6 +20,7 @@ import { Role } from 'src/auth/guards/roles.enum';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { count } from 'console';
 
 @Controller('hotels')
 export class HotelsController {
@@ -72,6 +74,17 @@ export class HotelsController {
   @Get(':id')
   getDbHotelById(@Param('id', ParseUUIDPipe) id: string) {
     return this.hotelDbService.getDbHotelById(id);
+  }
+
+  @Get('filter')
+  async getFilteredHotels(
+    @Query('rating') rating: number,
+    @Query('country') country: string,
+    @Query('city') city: string,
+    @Query('maxPrice') maxPrice: number,
+  ) {
+    if (!rating && !country && !city && !maxPrice) throw new BadRequestException('Es necesario enviar el valor de al menos un filtro por query."')
+    return await this.hotelDbService.getFilteredHotels(rating, country, city, maxPrice)
   }
 
   @Put('restore/:id')
