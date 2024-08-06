@@ -5,10 +5,10 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cors from 'cors';
 import * as session from 'express-session';
-import { config as dotenvConfig } from 'dotenv'
+import { config as dotenvConfig } from 'dotenv';
 import * as passport from 'passport';
 
-dotenvConfig({ path: './.development.env' })
+dotenvConfig({ path: './.development.env' });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -24,9 +24,12 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
-  
-  app.enableCors();
-  app.use(cors());
+
+  app.enableCors({
+    origin: 'http://localhost:3001',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
 
   app.use(
     session({
@@ -35,12 +38,12 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         maxAge: 60000,
-      }
+      },
     }),
   );
 
-  app.use(passport.initialize())
-  app.use(passport.session())
+  app.use(passport.initialize());
+  app.use(passport.session());
   app.use(LoggerGlobalMiddleware);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.listen(3000);

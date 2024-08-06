@@ -64,6 +64,11 @@ export class HotelsController {
     return this.hotelDbService.getDbHotelsDeleted();
   }
 
+  @Get('seeder')
+  addHotels() {
+    return this.hotelDbService.addHotels();
+  }
+
   @Get(':id')
   getDbHotelById(@Param('id', ParseUUIDPipe) id: string) {
     return this.hotelDbService.getDbHotelById(id);

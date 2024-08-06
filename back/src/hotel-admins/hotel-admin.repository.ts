@@ -8,6 +8,7 @@ import {
 } from './hotel-admin.dto';
 import { IdDto } from 'src/dto/id.dto';
 import { validate } from 'class-validator';
+import * as data from '../utils/dataHotelAdmins.json';
 
 @Injectable()
 export class HotelAdminRepository {
@@ -119,5 +120,29 @@ export class HotelAdminRepository {
 
   async update(id: string, updateData: Partial<HotelAdmins>): Promise<void> {
     await this.hotelAdminsRepository.update(id, updateData);
+  }
+
+  // ! Cargar usuarios predefinidos de hotel
+  async addHotelsAdmins() {
+    data?.map(async (e) => {
+      const hotelAdmins = new HotelAdmins();
+      hotelAdmins.name = e.name;
+      hotelAdmins.lastName = e.lastName;
+      hotelAdmins.email = e.email;
+      hotelAdmins.password = e.password;
+      hotelAdmins.country = e.country;
+      hotelAdmins.city = e.city;
+      hotelAdmins.address = e.address;
+      hotelAdmins.birthDate = e.birthDate;
+      hotelAdmins.phone = e.phone;
+
+      await this.hotelAdminsRepository
+        .createQueryBuilder()
+        .insert()
+        .into(HotelAdmins)
+        .values(hotelAdmins)
+        .execute();
+    });
+    return 'Added Hotel Admins';
   }
 }

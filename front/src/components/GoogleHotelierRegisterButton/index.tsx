@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const GoogleCustomerRegisterButton = () => {
+const GoogleHotelierRegisterButton = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
   const handleGoogleRegister = () => {
     window.location.href =
-      "http://localhost:3000/api/auth/google/register/customer";
+      "http://localhost:3000/api/auth/google/register/hotelAdmin";
   };
 
   useEffect(() => {
@@ -24,8 +24,18 @@ const GoogleCustomerRegisterButton = () => {
           alert("Registro exitoso. Ahora puedes iniciar sesión.");
           router.push("/login");
         } else {
-          console.log("No se encontró token en la respuesta JSON");
-          setError("No se encontró token en la respuesta JSON");
+          // Obtener posibles errores de la respuesta
+          const error = urlParams.get("error");
+          const message = urlParams.get("message");
+
+          if (error && message) {
+            console.log("Error del backend:", message);
+            setError(message);
+            alert(`Error: ${message}`);
+          } else {
+            setError("No se encontró token en la respuesta.");
+            alert("Ocurrió un error durante el registro.");
+          }
         }
       } catch (err) {
         console.error("Error al obtener datos de autenticación:", err);
@@ -34,12 +44,14 @@ const GoogleCustomerRegisterButton = () => {
         } else {
           setError("Ocurrió un error desconocido");
         }
+        alert(`Error: ${error}`);
       }
     };
 
     if (
       typeof window !== "undefined" &&
-      window.location.pathname === "/api/auth/callback/google/register/customer"
+      window.location.pathname ===
+        "/api/auth/callback/google/register/hotelAdmin"
     ) {
       handleAuthCallback();
     }
@@ -61,4 +73,4 @@ const GoogleCustomerRegisterButton = () => {
   );
 };
 
-export default GoogleCustomerRegisterButton;
+export default GoogleHotelierRegisterButton;
