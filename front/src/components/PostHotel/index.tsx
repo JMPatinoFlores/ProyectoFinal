@@ -280,11 +280,10 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     let imageUrls: string[] = [];
     if (values.images && values.images.length > 0) {
       try {
-        const files = values.images.filter((file): file is File => file instanceof File);
-      for (const file of files) {
-        const imageUrl = await uploadImageToCloudinary(file);
-        imageUrls.push(imageUrl);
-      }
+        for (const file of values.images) {
+          const imageUrl = await uploadImageToCloudinary(file);
+          imageUrls.push(imageUrl);
+        }
       } catch (error) {
         console.log("Error al subir la imagen: ", error);
         alert("Error al subir la imagen. Intentalo de nuevo");
@@ -304,11 +303,10 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     try {
       const data = await postHotel(formData);
       console.log("Data:", data);
-      if(data) {
-        router.push(`/dashboard`)
+      if (data) {
+        router.push(`/dashboard`);
       }
       console.log(data);
-      
     } catch (error) {
       console.log("Error al registrar hotel:", error);
     } finally {
@@ -547,7 +545,7 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
                       ))}
                   </div>
                 )}
-                
+
                 <div>
                   <button
                     type="submit"
