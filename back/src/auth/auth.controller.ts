@@ -63,7 +63,7 @@ export class AuthController {
   @Get('callback/google/login')
   @UseGuards(LoginGoogleAuthGuard)
   async googleLoginAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    const user = req.user;
+    const user: any = req.user;
     const payload = {
       id: user.id,
       name: user.name,
