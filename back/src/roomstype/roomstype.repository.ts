@@ -47,7 +47,7 @@ export class RoomsTypeRepository {
         }
         const arrayOfPrices = hotelFound.roomstype.map(roomtype => roomtype.price);
         arrayOfPrices.push(price)
-        const fixedMin = 50
+        const fixedMin = 0
         const fixedMax = 300
         const minNew = 1;
         const maxNew = 4;

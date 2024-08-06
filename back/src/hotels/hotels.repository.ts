@@ -110,11 +110,12 @@ export class HotelsRepository {
   async getFilteredHotels(rating: number, country: string, city: string, maxPrice: number) {
     const query = this.hotelDbRepository.createQueryBuilder('hotel')
 
-    if (rating) query.andWhere('hotel.rating = :rating', { rating })
+    if (rating) query.andWhere('hotel.rating >= :rating', { rating })
     if (country) query.andWhere('hotel.country = :country', { country })
     if (city) query.andWhere('hotel.city = :city', { city })
     if (maxPrice) query.andWhere('hotel.price <= :maxPrice', { maxPrice })
     const hotels = await query.getMany()
+    if (!hotels) throw new NotFoundException('No se encontró ningún hotel con esas características.')
     return hotels
   }
 
