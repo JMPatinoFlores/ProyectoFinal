@@ -56,16 +56,36 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const  fetchHotelsBySearch = async (searchQuery:string)=>{
-        try{
-            const data = await getHotelsBySearch(searchQuery)
-            typeof window !== "undefined" && localStorage.setItem("hotels", JSON.stringify(data))
+    // const  fetchHotelsBySearch = async (searchQuery:string)=>{
+    //     try{
+    //         const data = await getHotelsBySearch(searchQuery)
+    //         typeof window !== "undefined" && localStorage.setItem("hotels", JSON.stringify(data))
+    //         return data;
+    //     }catch(error){
+    //         console.log(error);
+    //         return [];            
+    //     }
+    // }
+
+    const fetchHotelsBySearch = async (searchQuery: string): Promise<IHotelDetail[]> => {
+        try {
+          const response = await fetch(`http://localhost:3000/hotels/search?search=${searchQuery}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log("Data from API:", data); // Add this line for debugging
+          if (Array.isArray(data)) {
             return data;
-        }catch(error){
-            console.log(error);
-            return [];            
+          } else {
+            console.error("fetchHotelsBySearch did not return an array.");
+            return [];
+          }
+        } catch (error) {
+          console.error("Error fetching hotels by search:", error);
+          return [];
         }
-    }
+      };
 
     const fetchRoomsByHotel = async (hotelId: string) => {
         try {
