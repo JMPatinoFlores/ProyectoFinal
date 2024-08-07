@@ -21,4 +21,8 @@ export class HotelAdminsService {
   logicalDeleteHotelAdmin(id: string) {
     return this.hotelAdminRepository.logicalDeleteHotelAdmin(id);
   }
+
+  addHotelsAdmins() {
+    return this.hotelAdminRepository.addHotelsAdmins();
+  }
 }

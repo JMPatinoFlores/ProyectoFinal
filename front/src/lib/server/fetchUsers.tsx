@@ -44,10 +44,13 @@ export const sendEmail = async (credentials: Partial<ILogin>) => {
 export const tokenVerified = async (
   credentials: Omit<INewPassword, "confirmPassword">
 ) => {
-  const response = await fetch("http://localhost:3000/auth/reset-password", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(credentials),
-  });
+  const response = await fetch(
+    "http://localhost:3000/auth/api/reset-password",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+    }
+  );
   return response;
 };

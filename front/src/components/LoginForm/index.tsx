@@ -8,16 +8,12 @@ import Link from "next/link";
 import { useContext } from "react";
 import { UserContext } from "@/context/userContext";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { signIn, useSession } from "next-auth/react";
 import ForgotPassword from "../ForgotPassword";
+import GoogleLoginButton from "../GoogleLoginButton";
 
 export default function LoginForm() {
   const { login } = useContext(UserContext);
   const router = useRouter();
-
-  const { data: session } = useSession();
-  console.log(session);
 
   const initialValues: ILogin = {
     email: "",
@@ -61,18 +57,7 @@ export default function LoginForm() {
               Iniciar sesión
             </h1>
           </div>
-          <div className="flex justify-center items-center border border-[#f8263a] rounded-md w-full p-2 mb-5">
-            <button onClick={() => signIn()} className="flex">
-              <Image
-                src={"/google.png"}
-                alt="google"
-                width={24}
-                height={24}
-                className="mr-2"
-              />
-              <h2>Iniciar sesión con Google</h2>
-            </button>
-          </div>
+          <GoogleLoginButton />
           <h1 className="text-center my-2">- O -</h1>
           <Formik
             initialValues={initialValues}

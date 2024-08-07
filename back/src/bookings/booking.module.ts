@@ -10,6 +10,7 @@ import { RoomsType } from 'src/roomstype/roomstype.entity';
 import { Hotel } from 'src/hotels/hotels.entity';
 import { RoomAvailability } from 'src/availabilities/availability.entity';
 import { Customers } from 'src/customers/customers.entity';
+import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { Customers } from 'src/customers/customers.entity';
       Hotel,
       RoomAvailability,
       Customers,
+      HotelAdmins
     ]),
   ],
   controllers: [BookingController],

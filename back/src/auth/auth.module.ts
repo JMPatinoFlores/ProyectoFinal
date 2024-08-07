@@ -10,13 +10,15 @@ import { CustomersModule } from 'src/customers/customers.module';
 import { HotelAdminsModule } from 'src/hotel-admins/hotel-admins.module';
 import { MailService } from 'src/email-notify/mail.service';
 import { SessionSerializer } from './Serializer';
-import { CustomerGoogleStrategy } from './strategies/customer.google.strategy';
-import { HotelAdminGoogleStrategy } from './strategies/hotelAdmin.google.strategy';
+import { CustomerGoogleStrategy } from './strategies/register.customer.google.strategy';
+import { HotelAdminGoogleStrategy } from './strategies/register.hotelAdmin.google.strategy';
 import { CustomerGoogleAuthGuard } from './guards/customer.google.authguard';
 import { HotelAdminGoogleAuthGuard } from './guards/hotelAdmin.google.authguard';
 import { SuperAdmins } from 'src/super-admin/superAdmin.entity';
 import { SuperAdminModule } from 'src/super-admin/super-admin.module';
 import { SuperAdminRepository } from 'src/super-admin/superAdmin.repository';
+import { LoginGoogleStrategy } from './strategies/login.google.strategy';
+import { LoginGoogleAuthGuard } from './guards/login.google.authguard copy';
 
 @Module({
   imports: [
@@ -31,13 +33,14 @@ import { SuperAdminRepository } from 'src/super-admin/superAdmin.repository';
     HotelAdminGoogleStrategy,
     CustomerGoogleAuthGuard,
     HotelAdminGoogleAuthGuard,
+    LoginGoogleStrategy,
+    LoginGoogleAuthGuard,
     AuthService,
     CustomersRepository,
     HotelAdminRepository,
     SuperAdminRepository,
     MailService,
     SessionSerializer,
-    { provide: 'AUTH_SERVICE', useClass: AuthService },
   ],
 })
 export class AuthModule {}

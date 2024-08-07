@@ -1,28 +1,29 @@
 "use client"
 
-import { IHotel, IHotelContextType, IHotelRegister } from "@/interfaces"
-import { getBookingByHotel, getHotelById, getHotels, getRoomsByHotel, postHotel } from "@/lib/server/fetchHotels"
+import { IHotel, IHotelContextType, IHotelDetail, IHotelRegister } from "@/interfaces"
+import { getBookingByHotel, getHotelById, getHotels, getRoomsByHotel, postHotel, getHotelsBySearch } from "@/lib/server/fetchHotels"
 import { createContext, useEffect, useState } from "react"
 
 export const HotelContext = createContext<IHotelContextType>({
     hotels: null,
     setHotels: () => {},
     addHotel: async () => false,
-    fetchHotels: async () => {},
+    fetchHotels: async () => [],
     fetchBookingsByHotel: async () => [],
     fetchRoomsByHotel: async () => [],
     fetchHotelById: async () => null,
+    fetchHotelsBySearch: async() =>[],
 })
 
 export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     const [hotels, setHotels] = useState<IHotel[] | null>(null)
 
-    const addHotel = async (hotel: Omit<IHotelRegister, "hotelId">) => {
+    const addHotel = async (hotel: IHotelRegister) => {
         try {
             const data = await postHotel(hotel);
-            console.log("data", data);
+            console.log("data:", data);
             
-            if(data.hotelId) {
+            if(data) {
                 await fetchHotels();
                 return true;
             }
@@ -33,15 +34,17 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const fetchHotels = async () => {
+
+    const fetchHotels = async (): Promise<IHotelDetail[]> => {
         try {
-            const data = await getHotels();
-            setHotels(data);
-            typeof window !== "undefined" && localStorage.setItem("hotels", JSON.stringify(data))
+          const data = await getHotels();
+          typeof window !== "undefined" && localStorage.setItem("hotels", JSON.stringify(data))
+          return data;
         } catch (error) {
-            console.log(error);            
+          console.log(error);
+          return []; // Return an empty array if there's an error
         }
-    };
+      };
 
     const fetchBookingsByHotel = async (hotelId: string) => {
         try {
@@ -53,6 +56,37 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    // const  fetchHotelsBySearch = async (searchQuery:string)=>{
+    //     try{
+    //         const data = await getHotelsBySearch(searchQuery)
+    //         typeof window !== "undefined" && localStorage.setItem("hotels", JSON.stringify(data))
+    //         return data;
+    //     }catch(error){
+    //         console.log(error);
+    //         return [];            
+    //     }
+    // }
+
+    const fetchHotelsBySearch = async (searchQuery: string): Promise<IHotelDetail[]> => {
+        try {
+          const response = await fetch(`http://localhost:3000/hotels/search?search=${searchQuery}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log("Data from API:", data); // Add this line for debugging
+          if (Array.isArray(data)) {
+            return data;
+          } else {
+            console.error("fetchHotelsBySearch did not return an array.");
+            return [];
+          }
+        } catch (error) {
+          console.error("Error fetching hotels by search:", error);
+          return [];
+        }
+      };
+
     const fetchRoomsByHotel = async (hotelId: string) => {
         try {
             const data = await getRoomsByHotel(hotelId);
@@ -63,10 +97,10 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const fetchHotelById = async (hotelId: string) => {
+    const fetchHotelById = async (hotelId: string): Promise<IHotelDetail | null>=> {
         try {
             const data = await getHotelById(hotelId)
-            return data as IHotel;
+            return data as IHotelDetail;
         } catch (error) {
             console.log(error);
             return null;
@@ -92,6 +126,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
                 fetchBookingsByHotel,
                 fetchRoomsByHotel,
                 fetchHotelById,
+                fetchHotelsBySearch,
             }}
         >
             {children}
