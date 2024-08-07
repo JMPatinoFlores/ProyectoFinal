@@ -67,6 +67,9 @@ export class HotelAdminRepository {
       },
     });
     if (!hotelAdmin) return `No se encontro el administrador con ID: ${id}`;
+    hotelAdmin.numberOfHotels = hotelAdmin.hotels
+      ? hotelAdmin.hotels.length
+      : 0;
     const { password, ...userNoPassword } = hotelAdmin;
     return userNoPassword;
   }

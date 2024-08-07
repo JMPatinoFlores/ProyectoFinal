@@ -58,12 +58,11 @@ export class AuthController {
   @Get('api/callback/google/register/hotelAdmin')
   @UseGuards(HotelAdminGoogleAuthGuard)
   async googleHotelAdminAuthRedirect(
-    
     @Req() req: Request,
-   
+
     @Res() res: Response,
   ) {
-    res.redirect('http://localhost:3001');;
+    res.redirect('http://localhost:3001');
   }
 
   @Get('api/google/login')
