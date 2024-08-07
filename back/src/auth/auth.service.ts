@@ -266,6 +266,9 @@ export class AuthService {
     if (!customer && !hotelAdmin) {
       throw new BadRequestException('Token inválido o expirado');
     }
+    if (!customer && !hotelAdmin) {
+      throw new BadRequestException('Token inválido o expirado');
+    }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
