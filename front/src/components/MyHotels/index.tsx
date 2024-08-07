@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { UserContext } from "@/context/userContext";
@@ -8,7 +8,7 @@ import { UserContext } from "@/context/userContext";
 function MyHotels() {
   const { user } = useContext(UserContext);
 
-  const hotels = user?.hotels || null;
+  const hotels = user?.hotels || [];
 
   return (
     <div>
@@ -24,6 +24,7 @@ function MyHotels() {
               width={24}
               height={24}
               className="invert mr-2"
+              style={{ width: "auto", height: "auto" }}
             />
             Editar perfil
           </button>
@@ -37,6 +38,7 @@ function MyHotels() {
               width={24}
               height={24}
               className="mr-2"
+              style={{ width: "auto", height: "auto" }}
             />
             Publicar un hotel
           </Link>
@@ -66,7 +68,7 @@ function MyHotels() {
             {Array.isArray(hotels) && hotels.length > 0 ? (
               hotels.map((hotel) => (
                 <tr
-                  key={hotel.hotelId}
+                  key={hotel.id}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
                   <th

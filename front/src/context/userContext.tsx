@@ -44,7 +44,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const customerRegister = async (user: Omit<IUser, "id">) => {
     try {
       const data = await postCustomerRegister(user);
-      console.log(data); // cambiar al await login
+      console.log(data);
       return true;
     } catch (error) {
       console.error(error);
@@ -66,7 +66,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (credentials: ILoginUser) => {
     try {
       const data = await postLogin(credentials);
-      console.log(data);
+      console.log("Datos del servidor: ", data);
       if (data.token) {
         const decodedToken = jwtDecode<IDecodeToken>(data.token);
         console.log("Token decodificado", decodedToken);
@@ -76,24 +76,17 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           name: data.user.name,
           lastName: data.user.lastName,
           email: decodedToken.email,
-          password: data.user.password,
           phone: data.user.phone,
           country: data.user.country,
           city: data.user.city,
           address: data.user.address,
           birthDate: data.user.birthDate,
           isAdmin: decodedToken.isAdmin,
-          hotels: data.user.hotels,
+          hotels: data.hotels,
         };
 
-        if (data.user) {
-          setUser(data.user);
-          localStorage.setItem("user", JSON.stringify(data.user));
-        } else {
-          setUser(user);
-          localStorage.setItem("user", JSON.stringify(user));
-        }
-
+        setUser(user);
+        localStorage.setItem("user", JSON.stringify(user));
         setIsLogged(true);
         setIsAdmin(decodedToken.isAdmin);
         localStorage.setItem("token", data.token);

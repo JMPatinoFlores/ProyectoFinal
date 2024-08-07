@@ -5,7 +5,7 @@ export interface IUser {
   name: string;
   lastName: string;
   email: string;
-  password: string;
+  password?: string;
   phone: string;
   country: string;
   city: string;
@@ -158,7 +158,7 @@ export interface IHotelImage {
 }
 
 export interface IHotel {
-  hotelId: string;
+  id: string;
   name: string;
   description: string;
   email: string;
