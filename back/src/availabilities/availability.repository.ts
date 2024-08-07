@@ -54,4 +54,9 @@ export class AvailabilityRepository {
         await this.roomAvailabilityDBRepository.delete({ id })
         return "Availability eliminada."
     }
+
+    async softDeleteRoomAvailability(id: string) {
+        await this.roomAvailabilityDBRepository.update({ id }, {isDeleted: true})
+        return "Availability borrada con un borrado lógico."
+    }
 }
