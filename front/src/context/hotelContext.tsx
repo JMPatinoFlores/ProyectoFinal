@@ -8,26 +8,29 @@ import {
 } from "@/interfaces";
 import {
   getBookingByHotel,
+  getHotelById,
   getHotels,
   getHotelsByAdminId,
   getRoomsByHotel,
   postHotel,
+  getHotelsBySearch,
 } from "@/lib/server/fetchHotels";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 export const HotelContext = createContext<IHotelContextType>({
   hotels: null,
   setHotels: () => {},
   addHotel: async () => false,
-  fetchHotels: async () => {},
+  fetchHotels: async () => [],
   fetchBookingsByHotel: async () => [],
   fetchRoomsByHotel: async () => [],
   fetchHotelById: async () => null,
+  fetchHotelsBySearch: async () => [],
   fetchHotelsByAdmin: async () => [],
 });
 
 export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
-  const [hotels, setHotels] = useState<IHotel[] | null>(null);
+  const [hotels, setHotels] = useState<IHotel[] | null>([]);
 
   const addHotel = async (hotel: IHotelRegister) => {
     try {
@@ -45,29 +48,18 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const fetchHotels = async () => {
+  const fetchHotels = useCallback(async (): Promise<IHotelDetail[]> => {
     try {
       const data = await getHotels();
       setHotels(data);
       typeof window !== "undefined" &&
         localStorage.setItem("hotels", JSON.stringify(data));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchHotelsByAdmin = async (adminId: string) => {
-    try {
-      const data = await getHotelsByAdminId(adminId);
-      setHotels(data);
-      if (typeof window !== "undefined")
-        localStorage.setItem("adminHotels", JSON.stringify(data));
       return data;
     } catch (error) {
       console.log(error);
       return [];
     }
-  };
+  }, []);
 
   const fetchBookingsByHotel = async (hotelId: string) => {
     try {
@@ -78,6 +70,43 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
       return [];
     }
   };
+
+  const fetchHotelsBySearch = useCallback(
+    async (searchQuery: string): Promise<IHotelDetail[]> => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/hotels/search?search=${searchQuery}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          return data;
+        } else {
+          console.error("fetchHotelsBySearch did not return an array.");
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching hotels by search:", error);
+        return [];
+      }
+    },
+    []
+  );
+
+  const fetchHotelsByAdmin = useCallback(async (adminId: string) => {
+    try {
+      const data = await getHotelsByAdminId(adminId);
+      setHotels(data);
+      if (typeof window !== "undefined")
+        localStorage.setItem("adminHotels", JSON.stringify(data));
+      return data;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  }, []);
 
   const fetchRoomsByHotel = async (hotelId: string) => {
     try {
@@ -93,7 +122,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     hotelId: string
   ): Promise<IHotelDetail | null> => {
     try {
-      const data = await fetchHotelById(hotelId);
+      const data = await getHotelById(hotelId);
       return data as IHotelDetail;
     } catch (error) {
       console.log(error);
@@ -121,6 +150,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         fetchBookingsByHotel,
         fetchRoomsByHotel,
         fetchHotelById,
+        fetchHotelsBySearch,
         fetchHotelsByAdmin,
       }}
     >

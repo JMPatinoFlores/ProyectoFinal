@@ -36,7 +36,7 @@ export const UserContext = createContext<IUserContextType>({
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<Partial<IUserResponse> | null>(null);
+  const [user, setUser] = useState<IUserResponse | null>(null);
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [reviews, setReviews] = useState<IReviewResponse[]>([]);
@@ -73,8 +73,17 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
         const user: IUserResponse = {
           id: decodedToken.id,
+          name: data.user.name,
+          lastName: data.user.lastName,
           email: decodedToken.email,
+          password: data.user.password,
+          phone: data.user.phone,
+          country: data.user.country,
+          city: data.user.city,
+          address: data.user.address,
+          birthDate: data.user.birthDate,
           isAdmin: decodedToken.isAdmin,
+          hotels: data.user.hotels,
         };
 
         if (data.user) {
@@ -148,7 +157,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
       const user = localStorage.getItem("user");
       if (user) {
-        setUser(JSON.parse(user));
+        setUser(JSON.parse(user) as IUserResponse);
       } else {
         setUser(null);
       }

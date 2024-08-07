@@ -37,6 +37,18 @@ export class BookingController {
     return await this.bookingService.getBookings(Number(page), Number(limit));
   }
 
+  @HttpCode(200)
+  @Get('isDeleted')
+  async getIsDeletedBookings(
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+  ) {
+    if (!page) page = '1';
+    if (!limit) limit = '10';
+
+    return await this.bookingService.getIsDeletedBookings(Number(page), Number(limit));
+  }
+
   @ApiBearerAuth()
   @Roles(Role.Admin, Role.User)
   @UseGuards(AuthGuard, RolesGuard)
@@ -51,8 +63,13 @@ export class BookingController {
   @UseGuards(AuthGuard, RolesGuard)
   @Get('customer/:id')
   @HttpCode(200)
-  async getBookingsByCustomerId(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.bookingService.getBookingsByCustomerId(id)
+  async getBookingsByCustomerId(@Param('id', ParseUUIDPipe) id: string,
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+  ) {
+    if (!page) page = '1';
+    if (!limit) limit = '10';
+    return await this.bookingService.getBookingsByCustomerId(id, Number(page), Number(limit))
   }
 
   @ApiBearerAuth()
@@ -60,8 +77,13 @@ export class BookingController {
   @UseGuards(AuthGuard, RolesGuard)
   @Get('hotelAdminId/:id')
   @HttpCode(200)
-  async getBookingsByHotelAdminId(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.bookingService.getBookingsByHotelAdminId(id)
+  async getBookingsByHotelAdminId(@Param('id', ParseUUIDPipe) id: string,
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+  ) {
+    if (!page) page = '1';
+    if (!limit) limit = '10';
+    return await this.bookingService.getBookingsByHotelAdminId(id, Number(page), Number(limit))
   }
 
   @ApiBearerAuth()

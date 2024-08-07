@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { UserProvider } from "@/context/userContext";
 import SessionWrapper from "@/lib/auth/SessionWrapper";
+import { HotelProvider } from "@/context/hotelContext";
 import { ThemeModeScript } from "flowbite-react";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -28,9 +29,11 @@ export default function RootLayout({
         <SessionWrapper>
           <div className="min-h-screen flex flex-col justify-between">
             <UserProvider>
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
+              <HotelProvider>
+                <Navbar />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </HotelProvider>
             </UserProvider>
           </div>
         </SessionWrapper>

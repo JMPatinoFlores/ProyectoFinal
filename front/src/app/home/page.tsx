@@ -13,7 +13,7 @@ function Home() {
 
   return (
     <div>
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
       <ProductsList searchQuery={searchQuery} />
     </div>
   );

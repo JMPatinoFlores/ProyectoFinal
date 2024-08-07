@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { AvailabilityService } from "./availability.service";
 import { CreateAvailabilityDto, UpdateAvailabilityDto } from "./availability.dtos";
 import { Roles } from "src/decorators/roles.decorator";
@@ -14,14 +14,25 @@ export class AvailabilityController {
 
     @Get()
     @HttpCode(200)
-    async getAllAvailabilities() {
-        return await this.availabilityService.getAllAvailabilities()
+    async getAllAvailabilities(
+        @Query('page') page: string,
+        @Query('limit') limit: string,
+    ) {
+        if (!page) page = '1';
+        if (!limit) limit = '10';
+
+        return await this.availabilityService.getAllAvailabilities(Number(page), Number(limit))
     }
 
     @Get('/roomtype/:id')
     @HttpCode(200)
-    async getAvailabilitiesByRoomTypeId(@Param('id', ParseUUIDPipe) roomTypeId: string) {
-        return await this.availabilityService.getAvailabilitiesByRoomTypeId(roomTypeId)
+    async getAvailabilitiesByRoomTypeId(@Param('id', ParseUUIDPipe) roomTypeId: string,
+        @Query('page') page: string,
+        @Query('limit') limit: string,
+    ) {
+        if (!page) page = '1';
+        if (!limit) limit = '10';
+        return await this.availabilityService.getAvailabilitiesByRoomTypeId(roomTypeId, Number(page), Number(limit))
     }
 
     @ApiBearerAuth()

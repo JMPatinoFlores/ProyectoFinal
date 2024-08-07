@@ -3,21 +3,15 @@
 import { useContext, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { HotelContext } from "@/context/hotelContext";
 import { UserContext } from "@/context/userContext";
 
 function MyHotels() {
-  const { fetchHotelsByAdmin, hotels } = useContext(HotelContext);
   const { user } = useContext(UserContext);
 
-  useEffect(() => {
-    if (user?.id) {
-      fetchHotelsByAdmin(user.id.toString());
-    }
-  }, [user]);
+  const hotels = user?.hotels || null;
 
   return (
-    <div className="text-black">
+    <div>
       <div className="flex justify-between items-center mx-4 my-6">
         <div className="flex-1">
           <h1 className="text-4xl font-semibold">Mis hoteles</h1>
@@ -55,13 +49,10 @@ function MyHotels() {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Número
+                Nombre
               </th>
               <th scope="col" className="px-6 py-3">
-                Camas
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Baños
+                Total de Habitaciones
               </th>
               <th scope="col" className="px-6 py-3">
                 Ver Habitacion
@@ -72,35 +63,42 @@ function MyHotels() {
             </tr>
           </thead>
           <tbody>
-            {hotels?.map((hotel) => (
-              <tr
-                key={hotel.hotelId}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-              >
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            {Array.isArray(hotels) && hotels.length > 0 ? (
+              hotels.map((hotel) => (
+                <tr
+                  key={hotel.hotelId}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
-                  {hotel.name}
-                </th>
-                <td className="px-6 py-4">{hotel.totalRooms}</td>
-                <td className="px-6 py-4">{/* Número de baños */}</td>
-                <td className="px-6 py-4">
-                  <Link href="#">
-                    <button className="p-1 bg-blue-500 rounded text-white hover:bg-blue-600">
-                      Ver
-                    </button>
-                  </Link>
-                </td>
-                <td className="px-6 py-4">
-                  <Link href="#">
-                    <button className="p-1 bg-sky-500 rounded text-white hover:bg-sky-600">
-                      Editar
-                    </button>
-                  </Link>
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {hotel.name}
+                  </th>
+                  <td className="px-6 py-4">{hotel.totalRooms}</td>
+                  <td className="px-6 py-4">
+                    <Link href="#">
+                      <button className="p-1 bg-blue-500 rounded text-white hover:bg-blue-600">
+                        Ver
+                      </button>
+                    </Link>
+                  </td>
+                  <td className="px-6 py-4">
+                    <Link href="#">
+                      <button className="p-1 bg-sky-500 rounded text-white hover:bg-sky-600">
+                        Editar
+                      </button>
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="text-center py-4">
+                  No tienes hoteles registrados.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
