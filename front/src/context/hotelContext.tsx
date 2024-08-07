@@ -1,6 +1,6 @@
 "use client"
 
-import { IHotel, IHotelContextType, IHotelDetail, IHotelRegister } from "@/interfaces"
+import { ICreateBooking, IHotel, IHotelContextType, IHotelDetail, IHotelRegister } from "@/interfaces"
 import { getBookingByHotel, getHotels, getRoomsByHotel, postHotel } from "@/lib/server/fetchHotels"
 import { createContext, useEffect, useState } from "react"
 
@@ -12,6 +12,7 @@ export const HotelContext = createContext<IHotelContextType>({
     fetchBookingsByHotel: async () => [],
     fetchRoomsByHotel: async () => [],
     fetchHotelById: async () => null,
+    postBooking: async () => null,
 })
 
 export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
@@ -73,6 +74,16 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    const postBooking = async (booking: ICreateBooking): Promise<ICreateBooking | null> => {
+      try {
+        const data = await postBooking(booking);
+        return data;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    };
+
     useEffect(() => {
         const hotels = typeof window !== "undefined" && localStorage.getItem("hotels");
         if (hotels) {
@@ -92,6 +103,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
                 fetchBookingsByHotel,
                 fetchRoomsByHotel,
                 fetchHotelById,
+                postBooking,
             }}
         >
             {children}

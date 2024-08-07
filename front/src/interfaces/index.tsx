@@ -108,7 +108,9 @@ export interface IRoomTypeRegister {
   capacity: number;
   totalBathrooms: number;
   totalBeds: number;
+  images: string[];
   price: number;
+  hotelId: string;
 }
 
 export interface IHotelRegister {
@@ -155,6 +157,7 @@ export interface IHotelContextType {
   fetchBookingsByHotel: (hotelId: string) => Promise<IBooking[]>;
   fetchRoomsByHotel: (hotelId: string) => Promise<IRoom[]>;
   fetchHotelById: (hotelId: string) => Promise<IHotelDetail | null>;
+  postBooking: (booking: ICreateBooking) => Promise<any>;
 }
 
 export interface IHotelResponse {
@@ -188,6 +191,18 @@ export interface IReview {
   comment: string;
   date: string;
   rating: number;
+}
+
+export interface ICreateBooking {
+  customerId: string;
+  hotelId: string;
+  roomTypesIdsAndDates: [
+    {
+      roomTypeId: string;
+      checkInDate: string;
+      checkOutDate: string;
+    }
+  ];
 }
 
 export interface IBooking {

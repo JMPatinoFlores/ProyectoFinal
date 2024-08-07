@@ -13,7 +13,7 @@ const GoogleLoginButton = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/api/auth/google/login";
+    window.location.href = "http://localhost:3000/auth/api/google/login";
   };
 
   useEffect(() => {

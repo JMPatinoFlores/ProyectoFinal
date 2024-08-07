@@ -303,15 +303,13 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     try {
       const data = await postHotel(formData);
       console.log("Data:", data);
-      if (data) {
-        router.push(`/dashboard`);
+      if (!data) {
+        console.log(data);
       }
-      console.log(data);
     } catch (error) {
-      console.log("Error al registrar hotel:", error);
-    } finally {
-      setSubmitting(false);
-    }
+      router.push("/post-hotel-types");
+      console.log(error);
+    } 
   };
 
   return (

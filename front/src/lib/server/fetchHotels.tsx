@@ -1,4 +1,4 @@
-import { IHotelRegister } from "@/interfaces";
+import { ICreateBooking, IHotelRegister, IRoomType } from "@/interfaces";
 
 export const postHotel = async (hotel: IHotelRegister) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
@@ -14,10 +14,17 @@ export const postHotel = async (hotel: IHotelRegister) => {
   return data;
 };
 
-export const postRoomType = async () => {
+export const postRoomType = async (roomType: IRoomType) => {
+  const token = typeof window !== "undefined" && localStorage.getItem("token");
   const response = await fetch("http://localhost:3000/roomstype", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(roomType),
   });
+
   const data = await response.json();
   return data;
 };
@@ -52,6 +59,20 @@ export const getBookingByHotel = async (hotelId: string) => {
 
 export const getRoomsByHotel = async (hotelId: string) => {
   const response = await fetch("#");
+  const data = await response.json();
+  return data;
+};
+
+export const postBooking = async (booking: ICreateBooking) => {
+  const token = typeof window !== "undefined" && localStorage.getItem("token");
+  const response = await fetch("http://localhost:3000/bookings", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(booking),
+  });
   const data = await response.json();
   return data;
 };

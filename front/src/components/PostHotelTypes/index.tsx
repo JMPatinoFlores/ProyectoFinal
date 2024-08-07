@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { IRoomTypeRegister } from "@/interfaces";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -6,6 +6,7 @@ import Link from "next/link";
 import continueImage from "../../../public/continue.png";
 import createImage from "../../../public/create.png";
 import Image from "next/image";
+import { postRoomType } from "@/lib/server/fetchHotels";
 
 export default function TypesRegister() {
   const initialValues = {
@@ -13,7 +14,9 @@ export default function TypesRegister() {
     capacity: 0,
     totalBathrooms: 0,
     totalBeds: 0,
+    images: [],
     price: 0,
+    hotelId: "",
   };
 
   const typesOptions = [
@@ -22,16 +25,75 @@ export default function TypesRegister() {
     "Suite",
     "Familiar",
     "Accesible(para personas con discapacidad)",
-    "Otro",
   ];
+
+  const uploadImageToCloudinary = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""
+    );
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.secure_url) {
+        return data.secure_url;
+      } else {
+        throw new Error("No se recibió el enlace de la imagen");
+      }
+    } catch (error) {
+      console.error("Error al subir la imagen a Cloudinary:", error);
+      throw new Error("Error al subir la imagen");
+    }
+  };
 
   const handleSubmit = async (
     values: IRoomTypeRegister,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    // Simulación de envío de datos
-    console.log("Datos enviados", values);
-    alert("Datos enviados");
+
+    let imageUrls: string[] = [];
+    if (values.images && values.images.length > 0) {
+      try {
+        for (const file of values.images) {
+          const imageUrl = await uploadImageToCloudinary(file);
+          imageUrls.push(imageUrl);
+        }
+      } catch (error) {
+        console.log("Error al subir la imagen: ", error);
+        alert("Error al subir la imagen. Intentalo de nuevo");
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    const formData = {
+      ... values,
+      images: imageUrls,
+    }
+
+    console.log("Datos enviados: ", formData);
+    
+    try {
+      const response = await postRoomType(formData);
+      console.log("Datos enviados: ", response);
+      alert("Tipo de habitación registrado exitosamente");
+    } catch (error) {
+      console.error("Error al registrar el tipo de habitación: ", error);
+      alert("Error al registrar el tipo de habitación. Inténtalo de nuevo");
+    } finally {
+      setSubmitting(false);
+    }
+
     setSubmitting(false);
   };
 
@@ -69,7 +131,7 @@ export default function TypesRegister() {
                     className="text-red-600 text-sm"
                   />
                 </div>
-                <div>
+                <div className="formDiv flex-1 mr-2">
                   <label htmlFor="capacity" className="formLabel">
                     ¿Para cuántas personas es?
                   </label>
@@ -85,7 +147,7 @@ export default function TypesRegister() {
                     className="text-red-600 text-sm"
                   />
                 </div>
-                <div>
+                <div className="formDiv flex-1 mr-2">
                   <label htmlFor="totalBathrooms" className="formLabel">
                     ¿Cuántos baños tiene?
                   </label>
@@ -101,7 +163,7 @@ export default function TypesRegister() {
                     className="text-red-600 text-sm"
                   />
                 </div>
-                <div>
+                <div className="formDiv flex-1 mr-2">
                   <label htmlFor="totalBeds" className="formLabel">
                     ¿Cuántas camas tiene?
                   </label>
@@ -117,9 +179,33 @@ export default function TypesRegister() {
                     className="text-red-600 text-sm"
                   />
                 </div>
-                <div>
+                <div className="formDiv flex-1 mr-2">
+                  <label htmlFor="images" className="formLabel">
+                    Imagen de la habitación
+                  </label>
+                  <Field name="images">
+                    {({ field }: any) => (
+                      <input
+                        type="file"
+                        multiple
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            const files = Array.from(e.target.files);
+                          }
+                        }}
+                        className="formInput"
+                      />
+                    )}
+                  </Field>
+                  <ErrorMessage
+                    name="images"
+                    component="div"
+                    className="text-red-500"
+                  />
+                </div>
+                <div className="formDiv flex-1 mr-2">
                   <label htmlFor="price" className="formLabel">
-                    ¿Cuál es el precio por noche?
+                    ¿Cuál es el precio por noche? (USD)
                   </label>
                   <Field
                     type="number"
@@ -135,27 +221,25 @@ export default function TypesRegister() {
                 </div>
                 <div className="flex mx-4 justify-between">
                   <div>
-                    <Link href={"#"}>
-                      <button
-                        type="submit"
-                        className="w-full flex justify-center py-2 px-4 border border-black rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8263a]"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? (
-                          "Creando..."
-                        ) : (
-                          <div className="flex items-center">
-                            <h1 className="mr-1">Guardar</h1>
-                            <Image
-                              src={createImage}
-                              alt="Crear"
-                              width={24}
-                              height={24}
-                            />
-                          </div>
-                        )}
-                      </button>
-                    </Link>
+                    <button
+                      type="submit"
+                      className="w-full flex justify-center py-2 px-4 border border-black rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8263a]"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        "Creando..."
+                      ) : (
+                        <div className="flex items-center">
+                          <h1 className="mr-1">Guardar</h1>
+                          <Image
+                            src={createImage}
+                            alt="Crear"
+                            width={24}
+                            height={24}
+                          />
+                        </div>
+                      )}
+                    </button>
                   </div>
                   <div>
                     <Link href={"#"}>
@@ -189,3 +273,7 @@ export default function TypesRegister() {
     </div>
   );
 }
+function uploadImageToCloudinary(file: string) {
+  throw new Error("Function not implemented.");
+}
+
