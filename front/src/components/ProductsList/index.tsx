@@ -9,40 +9,49 @@ function ProductsList({ searchQuery }: IProductsListProps) {
   const [hotels, setHotels] = useState<IHotelDetail[]>([]);
   const [filteredHotels, setFilteredHotels] = useState<IHotelDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
-
+  const [itemsPerPage, setItemsPerPage] = useState(8);
   const { fetchHotels, fetchHotelsBySearch } = useContext(HotelContext);
 
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage(currentPage - 1);
+  };
+
   useEffect(() => {
-    fetchHotels()
-      .then((data) => {
+    fetchHotels().then((data) => {
+      if (Array.isArray(data)) {
         setHotels(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching hotels:", error);
+      } else {
+        console.error("fetchHotels did not return an array.");
         setHotels([]);
-      });
+      }
+    });
   }, [fetchHotels]);
 
   useEffect(() => {
     if (searchQuery) {
-      fetchHotelsBySearch(searchQuery)
-        .then((data) => {
-          setFilteredHotels(Array.isArray(data) ? data : []);
-        })
-        .catch((error) => {
-          console.error("Error fetching hotels by search:", error);
+      fetchHotelsBySearch(searchQuery).then((data) => {
+        if (Array.isArray(data)) {
+          setFilteredHotels(data);
+        } else {
+          console.error("fetchHotelsBySearch did not return an array.");
           setFilteredHotels([]);
-        });
+        }
+      });
     } else {
       setFilteredHotels(hotels);
     }
   }, [searchQuery, hotels, fetchHotelsBySearch]);
 
-  const paginatedHotels = filteredHotels.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedHotels = Array.isArray(filteredHotels)
+    ? filteredHotels.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+    : [];
 
   return (
     <div className="p-4">
@@ -60,20 +69,18 @@ function ProductsList({ searchQuery }: IProductsListProps) {
           )}
         </div>
       </div>
-      {filteredHotels.length > itemsPerPage && (
+      {filteredHotels.length > 8 && (
         <div className="flex justify-center mt-4">
           <button
             className="bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]"
-            onClick={() =>
-              setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
-            }
+            onClick={handlePrevPage}
             disabled={currentPage === 1}
           >
             Anterior
           </button>
           <button
             className="bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]"
-            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+            onClick={handleNextPage}
             disabled={
               currentPage >= Math.ceil(filteredHotels.length / itemsPerPage)
             }
