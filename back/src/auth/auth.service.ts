@@ -125,16 +125,21 @@ export class AuthService {
       const payload = {
         id: customer.id,
         name: customer.name,
+        lastName: customer.lastName,
         email: customer.email,
-        city: customer.city,
-        country: customer.country,
-        adress: customer.address,
         isAdmin: customer.isAdmin,
       };
       const token = this.jwtService.sign(payload);
 
       return {
         message: 'Usuario logueado',
+        user: {
+          phone: customer.phone,
+          country: customer.country,
+          city: customer.city,
+          address: customer.address,
+          birthDate: customer.birthDate,
+        },
         bookings: customer.bookings,
         token,
       };
@@ -149,16 +154,23 @@ export class AuthService {
       const payload = {
         id: adminHotel.id,
         name: adminHotel.name,
+        lastName: adminHotel.lastName,
         email: adminHotel.email,
-        city: adminHotel.city,
-        country: adminHotel.country,
-        address: adminHotel.address,
         isAdmin: adminHotel.isAdmin,
       };
       const token = this.jwtService.sign(payload);
 
       return {
         message: 'Hotelero logueado',
+        user: {
+          user: {
+            phone: adminHotel.phone,
+            country: adminHotel.country,
+            city: adminHotel.city,
+            address: adminHotel.address,
+            birthDate: adminHotel.birthDate,
+          },
+        },
         hotels: adminHotel.hotels,
         token,
       };
