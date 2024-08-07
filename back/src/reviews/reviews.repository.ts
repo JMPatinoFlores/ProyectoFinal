@@ -40,7 +40,7 @@ export class ReviewsRepository {
   }
 
   async createReview(createreviewDto: CreateReviewDto): Promise<string> {
-    const { hotelId, clienteId, date, ...reviewData } = createreviewDto;
+    const { hotelId, clienteId, ...reviewData } = createreviewDto;
 
     const hotelFound: Hotel = await this.hotelDbRepository.findOne({
       where: { id: hotelId },

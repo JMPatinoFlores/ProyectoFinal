@@ -40,21 +40,29 @@ export class RoomsTypeRepository{
     }
 
     async createDbRoomtype(roomtypeDto: CreateRoomTypeDto): Promise<string>{
-        const {hotelId, ...roomtypeData} = roomtypeDto;
-        const hotelFound: Hotel = await this.hotelDbRepository.findOne({where:{id:hotelId}});
+        const {hotelId, name, ...roomtypeData} = roomtypeDto;
+        console.log('Received room type DTO:', roomtypeDto);
 
+        const nameRoomtypeFound = await this.roomstypeDbRepository.findOne({where:{name}});
+        console.log('Existing room type found:', nameRoomtypeFound);
+        if(nameRoomtypeFound) throw new BadRequestException("this roomtype already exists");
+
+        const hotelFound: Hotel = await this.hotelDbRepository.findOne({where:{id:hotelId}});
         if(!hotelFound){
             throw new NotFoundException("Hotel with ID not found");
         }
-        else{
-            const newRoomtype: RoomsType = this.roomstypeDbRepository.create({
-                ...roomtypeData,
-                hotel:hotelFound
-            });
+        console.log('Hotel found:', hotelFound);
 
-            await this.roomstypeDbRepository.save(newRoomtype);
-            return newRoomtype.id;
-        }
+        const newRoomtype: RoomsType = this.roomstypeDbRepository.create({
+            name:name,
+            ...roomtypeData,
+            hotel:hotelFound
+        });
+        
+        console.log('New room type to be saved:', newRoomtype);
+        await this.roomstypeDbRepository.save(newRoomtype);
+        return newRoomtype.id;
+        
     }
 
     async updateDbRoomstype(id:string, updateDbRoomstype: Partial<UpdateRoomsTypeDto>): Promise<string>{

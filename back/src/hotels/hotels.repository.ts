@@ -88,7 +88,6 @@ export class HotelsRepository {
     console.log('buscando hotel...');
     const searchTerm = `%${query.toLowerCase()}%`;
 
-    // Consulta SQL con la función unaccent
     return await this.hotelDbRepository
       .createQueryBuilder('hotel')
       .where('unaccent(LOWER(hotel.name)) ILIKE unaccent(:searchTerm)', {
@@ -159,6 +158,7 @@ export class HotelsRepository {
       return listHotel;
     } else throw new NotFoundException('there are not hotels');
   }
+
   async addHotels() {
     data?.map(async (e, index) => {
       const hotelAdminExists = await this.hotelAdminRepository.exists({
@@ -194,6 +194,32 @@ export class HotelsRepository {
     return 'Added Hotels';
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // async searchHotels(name: string) {
 //     const hotels = await this.hotelDbRepository
