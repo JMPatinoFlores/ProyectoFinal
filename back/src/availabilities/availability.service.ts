@@ -41,4 +41,8 @@ export class AvailabilityService {
     async deleteRoomAvailability(id: string) {
         return await this.availabilityRepository.deleteRoomAvailability(id)
     }
+
+    async softDeleteRoomAvailability(id: string) {
+        return await this.availabilityRepository.softDeleteRoomAvailability(id)
+    }
 }
