@@ -24,9 +24,16 @@ export class AuthGuard implements CanActivate {
       if (!user) {
         throw new UnauthorizedException('Error al validar el token');
       }
+      //Verificación de expiración
       user.exp = new Date(user.exp * 1000);
 
-      user.roles = user.isAdmin ? [Role.Admin] : [Role.User];
+      if (user.superAdmin) {
+        user.roles = [Role.SuperAdmin];
+      } else if (user.isAdmin) {
+        user.roles = [Role.Admin];
+      } else {
+        user.roles = [Role.User];
+      }
 
       request.user = user;
 

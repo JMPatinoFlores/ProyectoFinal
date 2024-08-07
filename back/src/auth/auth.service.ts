@@ -22,16 +22,24 @@ import { Request } from 'express';
 import { Customers } from 'src/customers/customers.entity';
 import { UserDetails } from './user-details.type';
 import { InjectRepository } from '@nestjs/typeorm';
+import { SuperAdminRepository } from 'src/super-admin/superAdmin.repository';
+import { SuperAdmins } from 'src/super-admin/superAdmin.entity';
+import { CreateSuperAdmin } from 'src/super-admin/superAdmin.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly customersRepository: CustomersRepository,
     private readonly hotelAdminRepository: HotelAdminRepository,
+    private readonly superAdminRepository: SuperAdminRepository,
     private readonly mailService: MailService,
     private readonly jwtService: JwtService,
-    @InjectRepository(Customers) private readonly customersDBRepository: Repository<Customers>,
-    @InjectRepository(HotelAdmins) private readonly hotelAdminsDBRepository: Repository<HotelAdmins>
+    @InjectRepository(Customers)
+    private readonly customersDBRepository: Repository<Customers>,
+    @InjectRepository(HotelAdmins)
+    private readonly hotelAdminsDBRepository: Repository<HotelAdmins>,
+    @InjectRepository(SuperAdmins)
+    private readonly SuperAdminsDBRepository: Repository<SuperAdmins>,
   ) {}
 
   //! Creación de Cliente
@@ -72,14 +80,35 @@ export class AuthService {
     });
   }
 
-  //! Logueo de Cliente y Hotelero
+  //! Creación de Super Admin
+
+  async signUpSuperAdmin(superAdmin: CreateSuperAdmin) {
+    const { email, password } = superAdmin;
+    const foundSuperAdmin =
+      await this.superAdminRepository.getSuperAdminByEmail(email);
+    if (foundSuperAdmin) throw new BadRequestException('Email ya registrado');
+
+    //*Hasheo de la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    //*Crear el super admin en la BBDD
+
+    return await this.superAdminRepository.createSuperAdmin({
+      ...superAdmin,
+      password: hashedPassword,
+    });
+  }
+
+  //! Logueo de Cliente, Hotelero y Super Admin
 
   async signIn(email: string, password: string) {
     const customer = await this.customersRepository.getCustomerByEmail(email);
     const adminHotel =
       await this.hotelAdminRepository.getHotelAdminByEmail(email);
+    const superAdmin =
+      await this.superAdminRepository.getSuperAdminByEmail(email);
 
-    if (!customer && !adminHotel)
+    if (!customer && !adminHotel && !superAdmin)
       throw new BadRequestException('Credenciales incorrectas');
 
     if (customer) {
@@ -125,8 +154,28 @@ export class AuthService {
       const token = this.jwtService.sign(payload);
 
       return {
-        message: 'Usuario logueado',
+        message: 'Hotelero logueado',
         hotels: adminHotel.hotels,
+        token,
+      };
+    }
+    if (superAdmin) {
+      const validPassword = await bcrypt.compare(password, superAdmin.password);
+      if (!validPassword)
+        throw new BadRequestException('Credenciales incorrectas');
+
+      //*Firmar el Token
+
+      const payload = {
+        id: superAdmin.id,
+        name: superAdmin.name,
+        email: superAdmin.email,
+        superAdmin: superAdmin.superAdmin,
+      };
+      const token = this.jwtService.sign(payload);
+
+      return {
+        message: 'Super Admin logueado',
         token,
       };
     }
@@ -265,24 +314,29 @@ export class AuthService {
   }
 
   async validateCustomer(details: UserDetails) {
-    let user: Customers = await this.customersDBRepository.findOneBy({ email: details.email })
+    const user: Customers = await this.customersDBRepository.findOneBy({
+      email: details.email,
+    });
     if (user) return user;
-    const newUser = await this.customersDBRepository.save(details)
-    return newUser
+    const newUser = await this.customersDBRepository.save(details);
+    return newUser;
   }
 
   async validateHotelAdmin(details: UserDetails) {
-    let user: HotelAdmins = await this.hotelAdminsDBRepository.findOneBy({ email: details.email })
+    const user: HotelAdmins = await this.hotelAdminsDBRepository.findOneBy({
+      email: details.email,
+    });
     if (user) return user;
-    const newUser = await this.hotelAdminsDBRepository.save(details)
-    return newUser
+    const newUser = await this.hotelAdminsDBRepository.save(details);
+    return newUser;
   }
 
   async findUser(id: number) {
-    let user: Customers | HotelAdmins = await this.customersRepository.findOneBy({ id })
+    let user: Customers | HotelAdmins =
+      await this.customersRepository.findOneBy({ id });
     if (!user) {
-      user = await this.hotelAdminRepository.findOneBy({ id })
+      user = await this.hotelAdminRepository.findOneBy({ id });
     }
-    return user
+    return user;
   }
 }

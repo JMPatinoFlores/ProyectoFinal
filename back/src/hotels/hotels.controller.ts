@@ -7,29 +7,32 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  Query, UseGuards,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateHotelDto } from './hotels.dtos';
 import { Hotel } from './hotels.entity';
 import { UpdateHotelDto } from './hotels.updateDto';
 import { HotelsService } from './hotels.service';
-import { Roles } from "src/decorators/roles.decorator";
-import { Role } from "src/auth/guards/roles.enum";
-import { AuthGuard } from "src/auth/guards/auth.guard";
-import { RolesGuard } from "src/auth/guards/roles.guard";
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/auth/guards/roles.enum';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('hotels')
 export class HotelsController {
   constructor(private readonly hotelDbService: HotelsService) {}
 
   @Get()
-  getDbHotels(@Query('page') page:string, @Query('limit') limit:string) {
-    !page ? page = '1' : page;
-    !limit ? limit = '8' : limit;
+  getDbHotels(@Query('page') page: string, @Query('limit') limit: string) {
+    !page ? (page = '1') : page;
+    !limit ? (limit = '8') : limit;
     return this.hotelDbService.getDbHotels(Number(page), Number(limit));
   }
 
   @Post()
+  @ApiBearerAuth()
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   createDbHotel(@Body() hotelDto: CreateHotelDto) {
