@@ -69,7 +69,35 @@ export interface IUserContextType {
   googleLogin: (token: string, user: IUserResponse) => Promise<boolean>;
   customerRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   hotelierRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
+  postReview: (review: ICreateReview) => Promise<boolean>;
+  getReviews: () => void;
+  reviews: IReviewResponse[];
   logOut: () => void;
+}
+
+export interface ICreateReview {
+  userId: number;
+  hotelId: number;
+  rating: number;
+  comment: string;
+}
+
+export interface IReview {
+  rating: number;
+  comment: string;
+}
+
+export interface IReviewResponse {
+  id: string;
+  userId: string;
+  hotelId: string;
+  comment: string;
+  date: string;
+  rating: number;
+}
+
+export interface IReviewProps {
+  review: IReviewResponse;
 }
 
 export interface IDecodeToken extends JwtPayload {
@@ -155,6 +183,7 @@ export interface IHotelContextType {
   fetchBookingsByHotel: (hotelId: string) => Promise<IBooking[]>;
   fetchRoomsByHotel: (hotelId: string) => Promise<IRoom[]>;
   fetchHotelById: (hotelId: string) => Promise<IHotelDetail | null>;
+  fetchHotelsByAdmin: (adminId: string) => Promise<IHotel[]>;
 }
 
 export interface IHotelResponse {
@@ -179,15 +208,6 @@ export interface IHotelAdmin {
   hotelsNumber: number;
   isAdmin: boolean;
   userId: string;
-}
-
-export interface IReview {
-  reviewId: string;
-  userId: string;
-  hotelId: string;
-  comment: string;
-  date: string;
-  rating: number;
 }
 
 export interface IBooking {

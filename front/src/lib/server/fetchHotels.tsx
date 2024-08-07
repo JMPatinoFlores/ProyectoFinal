@@ -30,13 +30,17 @@ export const postRoom = async () => {
   return data;
 };
 
-// export const getHotelById = async () => {
-//   const { hotelId } =
-//     typeof window !== "undefined" && localStorage.getItem("id");
-//   const response = await fetch(`http://localhost:3000/hotels/${hotelId}`);
-//   const data = await response.json();
-//   return data;
-// };
+export const getHotelById = async (hotelId: string) => {
+  const response = await fetch(`http://localhost:3000/hotels/${hotelId}`);
+  const data = await response.json();
+  return data;
+};
+
+export const getHotelsByAdminId = async (adminId: string) => {
+  const response = await fetch(`http://localhost:3000/hotels/admin/${adminId}`);
+  const data = await response.json();
+  return data;
+};
 
 export const getHotels = async () => {
   const response = await fetch("http://localhost:3000/hotels");

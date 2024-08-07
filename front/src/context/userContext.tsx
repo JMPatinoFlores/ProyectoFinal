@@ -3,17 +3,20 @@
 import {
   IDecodeToken,
   ILoginUser,
+  IReviewResponse,
   IUser,
   IUserContextType,
   IUserResponse,
 } from "@/interfaces";
 import {
+  getAllReviews,
   postAdminRegister,
   postCustomerRegister,
   postLogin,
+  postReview,
 } from "@/lib/server/fetchUsers";
 import { jwtDecode } from "jwt-decode";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 export const UserContext = createContext<IUserContextType>({
   user: null,
@@ -26,6 +29,9 @@ export const UserContext = createContext<IUserContextType>({
   googleLogin: async () => false,
   customerRegister: async () => false,
   hotelierRegister: async () => false,
+  postReview: async () => false,
+  getReviews: async () => {},
+  reviews: [],
   logOut: () => {},
 });
 
@@ -33,6 +39,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<Partial<IUserResponse> | null>(null);
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [reviews, setReviews] = useState<IReviewResponse[]>([]);
 
   const customerRegister = async (user: Omit<IUser, "id">) => {
     try {
@@ -111,6 +118,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const getReviews = useCallback(async () => {
+    const data = await getAllReviews();
+    console.log(data);
+  }, []);
+
   const logOut = () => {
     const confirm = window.confirm("¿Seguro que quieres cerrar sesión?");
     if (confirm) {
@@ -156,6 +168,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         googleLogin,
         hotelierRegister,
         customerRegister,
+        postReview,
+        getReviews,
+        reviews,
         logOut,
       }}
     >
