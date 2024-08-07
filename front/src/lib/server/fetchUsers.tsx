@@ -1,4 +1,4 @@
-import { ILogin, INewPassword, IUser } from "@/interfaces";
+import { ILogin, INewPassword, IReview, IUser } from "@/interfaces";
 
 export const postCustomerRegister = async (user: Omit<IUser, "id">) => {
   const response = await fetch("http://localhost:3000/auth/cxSignUp", {
@@ -53,4 +53,18 @@ export const tokenVerified = async (
     }
   );
   return response;
+};
+
+export const postReview = async (review: IReview) => {
+  const response = await fetch("http://localhost:3000/reviews", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(review),
+  });
+  const data = await response.json();
+  return data;
+};
+
+export const getAllReviews = async () => {
+  const response = await fetch("http://localhost:3000/reviews");
 };
