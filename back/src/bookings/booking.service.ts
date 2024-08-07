@@ -15,16 +15,32 @@ export class BookingService {
     return bookings.slice(start, end);
   }
 
+  async getIsDeletedBookings(page: number, limit: number) {
+    const bookings = await this.bookingRepository.getIsDeletedBookings();
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    return bookings.slice(start, end);
+  }
+
   async getBookingById(id: string) {
     return await this.bookingRepository.getBookingById(id);
   }
 
-  async getBookingsByCustomerId(id: string) {
-    return await this.bookingRepository.getBookingsByCustomerId(id)
+  async getBookingsByCustomerId(id: string, page: number, limit: number) {
+    const bookings = await this.bookingRepository.getBookingsByCustomerId(id);
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    return bookings.slice(start, end);
   }
 
-  async getBookingsByHotelAdminId(id: string) {
-    return await this.bookingRepository.getBookingsByHotelAdminId(id)
+  async getBookingsByHotelAdminId(id: string, page: number, limit: number) {
+    const bookings = await this.bookingRepository.getBookingsByHotelAdminId(id);
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    return bookings.slice(start, end);
   }
 
   async createBooking(bookingData: CreateBookingDto) {

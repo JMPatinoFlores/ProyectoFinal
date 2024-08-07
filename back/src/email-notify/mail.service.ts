@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import { from } from 'rxjs';
+import { config as config } from 'dotenv';
 
+config({ path: './.development.env' });
 @Injectable()
 export class MailService {
   private transporter;
@@ -12,8 +13,8 @@ export class MailService {
       port: 587,
       secure: false,
       auth: {
-        user: 'projectmgray@gmail.com',
-        pass: 'hzrz fuqs vzgs bgab',
+        user: process.env.MAIL as string,
+        pass: process.env.PASS as string,
       },
     });
   }

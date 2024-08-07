@@ -10,7 +10,7 @@ const GoogleCustomerRegisterButton = () => {
 
   const handleGoogleRegister = () => {
     window.location.href =
-      "http://localhost:3000/api/auth/google/register/customer";
+      "http://localhost:3000/auth/api/google/register/customer";
   };
 
   useEffect(() => {

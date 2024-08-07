@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -96,6 +97,20 @@ export class HotelsController {
     return this.hotelDbService.addHotels();
   }
 
+
+  @Get('filter')
+  async getFilteredHotels(
+    @Query('rating') rating: string,
+    @Query('country') country: string,
+    @Query('city') city: string,
+    @Query('maxPrice') maxPrice: string,
+  ) {
+    if (!rating && !country && !city && !maxPrice) throw new BadRequestException('Es necesario enviar el valor de al menos un filtro por query.')
+    if (Number(maxPrice) < 1 || Number(maxPrice) > 4) throw new BadRequestException('El maxPrice enviado por query debe ser un string de un número del 1 al 4.')
+    if (Number(rating) < 1 || Number(rating) > 5) throw new BadRequestException('El rating enviado por query debe ser un string de un número del 1 al 5.')
+    return await this.hotelDbService.getFilteredHotels(Number(rating), country, city, Number(maxPrice))
+  }
+
   @ApiOperation({summary: 'List only one hotel by ID'})
   @ApiParam({ name: 'id', required: true, description: 'ID Hotel', example: '1121qwewasd-qw54wqeqwe-45121' })
   @ApiResponse({ status: 200, description: 'Hotel found successfuly :)'})
@@ -104,6 +119,7 @@ export class HotelsController {
   getDbHotelById(@Param('id', ParseUUIDPipe) id: string) {
     return this.hotelDbService.getDbHotelById(id);
   }
+
 
   @ApiOperation({summary: 'Restore a Hotel'})
   @ApiParam({ name: 'id', required: true, description: 'ID Hotel', example: '1121qwewasd-qw54wqeqwe-45121' })

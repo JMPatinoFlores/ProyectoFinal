@@ -10,7 +10,7 @@ export default function HotelierDashboard() {
         {isLogged ? (
           <div className="grid gap-6">
             <div className="grid gap-2">
-              <h1 className="text-2xl font-bold">¡Hola, Esteban Romero!</h1>
+              <h1 className="text-2xl font-bold">¡Hola, {user?.name}!</h1>
               <h2 className="text-muted-foreground">Tú información personal</h2>
             </div>
             <div className="grid gap-2">

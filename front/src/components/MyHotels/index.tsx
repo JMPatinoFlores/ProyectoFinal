@@ -1,7 +1,15 @@
+"use client";
+
+import { useContext, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { UserContext } from "@/context/userContext";
 
 function MyHotels() {
+  const { user } = useContext(UserContext);
+
+  const hotels = user?.hotels || null;
+
   return (
     <div>
       <div className="flex justify-between items-center mx-4 my-6">
@@ -41,13 +49,10 @@ function MyHotels() {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Número
+                Nombre
               </th>
               <th scope="col" className="px-6 py-3">
-                Camas
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Baños
+                Total de Habitaciones
               </th>
               <th scope="col" className="px-6 py-3">
                 Ver Habitacion
@@ -58,30 +63,42 @@ function MyHotels() {
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                A101
-              </th>
-              <td className="px-6 py-4">2</td>
-              <td className="px-6 py-4">1</td>
-              <td className="px-6 py-4">
-                <Link href="#">
-                  <button className="p-1 bg-blue-500 rounded text-white hover:bg-blue-600">
-                    Ver
-                  </button>
-                </Link>
-              </td>
-              <td className="px-6 py-4">
-                <Link href="#">
-                  <button className="p-1 bg-sky-500 rounded text-white hover:bg-sky-600">
-                    Editar
-                  </button>
-                </Link>
-              </td>
-            </tr>
+            {Array.isArray(hotels) && hotels.length > 0 ? (
+              hotels.map((hotel) => (
+                <tr
+                  key={hotel.hotelId}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                >
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {hotel.name}
+                  </th>
+                  <td className="px-6 py-4">{hotel.totalRooms}</td>
+                  <td className="px-6 py-4">
+                    <Link href="#">
+                      <button className="p-1 bg-blue-500 rounded text-white hover:bg-blue-600">
+                        Ver
+                      </button>
+                    </Link>
+                  </td>
+                  <td className="px-6 py-4">
+                    <Link href="#">
+                      <button className="p-1 bg-sky-500 rounded text-white hover:bg-sky-600">
+                        Editar
+                      </button>
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="text-center py-4">
+                  No tienes hoteles registrados.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

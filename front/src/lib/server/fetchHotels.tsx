@@ -1,6 +1,6 @@
 import { IHotelRegister } from "@/interfaces";
 
-export const postHotel = async (hotel: Omit<IHotelRegister, "hotelId">) => {
+export const postHotel = async (hotel: IHotelRegister) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
   const response = await fetch("http://localhost:3000/hotels", {
     method: "POST",
@@ -30,16 +30,28 @@ export const postRoom = async () => {
   return data;
 };
 
-// export const getHotelById = async () => {
-//   const { hotelId } =
-//     typeof window !== "undefined" && localStorage.getItem("id");
-//   const response = await fetch(`http://localhost:3000/hotels/${hotelId}`);
-//   const data = await response.json();
-//   return data;
-// };
+export const getHotelById = async (hotelId: string) => {
+  const response = await fetch(`http://localhost:3000/hotels/${hotelId}`);
+  const data = await response.json();
+  return data;
+};
+
+export const getHotelsByAdminId = async (adminId: string) => {
+  const response = await fetch(`http://localhost:3000/hotels-admin/${adminId}`);
+  const data = await response.json();
+  return data;
+};
 
 export const getHotels = async () => {
   const response = await fetch("http://localhost:3000/hotels");
+  const data = await response.json();
+  return data;
+};
+
+export const getHotelsBySearch = async (searchQuery: string) => {
+  const response = await fetch(
+    `http://localhost:3000/api/hotels/search?search=${searchQuery}`
+  );
   const data = await response.json();
   return data;
 };

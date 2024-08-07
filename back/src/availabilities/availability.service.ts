@@ -6,12 +6,28 @@ import { UpdateAvailabilityDto } from "./availability.dtos";
 export class AvailabilityService {
     constructor(private readonly availabilityRepository: AvailabilityRepository) { }
 
-    async getAllAvailabilities() {
-        return await this.availabilityRepository.getAllAvailabilities()
+    async getAllAvailabilities(page: number, limit: number) {
+        const availabilities = await this.availabilityRepository.getAllAvailabilities();
+        const start = (page - 1) * limit;
+        const end = start + limit;
+
+        return availabilities.slice(start, end);
     }
 
-    async getAvailabilitiesByRoomTypeId(roomTypeId: string) {
-        return await this.availabilityRepository.getAvailabilitiesByRoomTypeId(roomTypeId)
+    async getIsDeletedAvailabilities(page: number, limit: number) {
+        const availabilities = await this.availabilityRepository.getIsDeletedAvailabilities();
+        const start = (page - 1) * limit;
+        const end = start + limit;
+
+        return availabilities.slice(start, end);
+    }
+
+    async getAvailabilitiesByRoomTypeId(roomTypeId: string, page: number, limit: number) {
+        const availabilities = await this.availabilityRepository.getAvailabilitiesByRoomTypeId(roomTypeId);
+        const start = (page - 1) * limit;
+        const end = start + limit;
+
+        return availabilities.slice(start, end);
     }
 
     async createRoomAvailability(roomId: string, startDate: string, endDate: string) {
@@ -24,5 +40,9 @@ export class AvailabilityService {
 
     async deleteRoomAvailability(id: string) {
         return await this.availabilityRepository.deleteRoomAvailability(id)
+    }
+
+    async softDeleteRoomAvailability(id: string) {
+        return await this.availabilityRepository.softDeleteRoomAvailability(id)
     }
 }

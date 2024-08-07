@@ -1,48 +1,43 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ProductCard from "../ProductCard";
 import { IHotelDetail, IProductsListProps } from "@/interfaces";
+import { HotelContext } from "@/context/hotelContext";
 
 function ProductsList({ searchQuery }: IProductsListProps) {
   const [hotels, setHotels] = useState<IHotelDetail[]>([]);
   const [filteredHotels, setFilteredHotels] = useState<IHotelDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(8);
+  const itemsPerPage = 8;
 
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage(currentPage + 1);
-  };
-
-  const handlePrevPage = () => {
-    setCurrentPage(currentPage - 1);
-  };
+  const { fetchHotels, fetchHotelsBySearch } = useContext(HotelContext);
 
   useEffect(() => {
-    fetch("/hotels.json")
-      .then((response) => response.json())
-      .then((data) => setHotels(data));
-  }, []);
+    fetchHotels()
+      .then((data) => {
+        setHotels(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching hotels:", error);
+        setHotels([]);
+      });
+  }, [fetchHotels]);
 
   useEffect(() => {
     if (searchQuery) {
-      const filteredHotels = hotels.filter((hotel) => {
-        return (
-          hotel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          hotel.country.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          hotel.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          hotel.description.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      });
-      setFilteredHotels(filteredHotels);
+      fetchHotelsBySearch(searchQuery)
+        .then((data) => {
+          setFilteredHotels(Array.isArray(data) ? data : []);
+        })
+        .catch((error) => {
+          console.error("Error fetching hotels by search:", error);
+          setFilteredHotels([]);
+        });
     } else {
       setFilteredHotels(hotels);
     }
-  }, [searchQuery, hotels]);
+  }, [searchQuery, hotels, fetchHotelsBySearch]);
 
   const paginatedHotels = filteredHotels.slice(
     (currentPage - 1) * itemsPerPage,
@@ -65,18 +60,20 @@ function ProductsList({ searchQuery }: IProductsListProps) {
           )}
         </div>
       </div>
-      {filteredHotels.length > 8 && (
+      {filteredHotels.length > itemsPerPage && (
         <div className="flex justify-center mt-4">
           <button
             className="bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]"
-            onClick={handlePrevPage}
+            onClick={() =>
+              setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
+            }
             disabled={currentPage === 1}
           >
             Anterior
           </button>
           <button
             className="bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]"
-            onClick={handleNextPage}
+            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
             disabled={
               currentPage >= Math.ceil(filteredHotels.length / itemsPerPage)
             }
