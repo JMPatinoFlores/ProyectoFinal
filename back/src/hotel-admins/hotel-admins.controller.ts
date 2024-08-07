@@ -44,7 +44,7 @@ export class HotelAdminsController {
     description: 'Límite de elementos por página',
     example: '5',
   })
-  @ApiOperation({ summary: 'Ver todos los Hoteleros' })
+  @ApiOperation({ summary: 'Llamar a todos los Hoteleros' })
   getAllHotelAdmins(
     @Query('page') page: string,
     @Query('limit') limit: string,
@@ -69,6 +69,8 @@ export class HotelAdminsController {
   @Get(':id')
   @ApiBearerAuth()
   @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Llamar un hotelero por su ID' })
   getHotelAdminById(@Param('id') id: string) {
     return this.hotelAdminService.getHotelAdminById(id);
   }
@@ -76,6 +78,10 @@ export class HotelAdminsController {
   //* Actualizar/Modificar la información del usuario
 
   @Put(':id')
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Cambiar la información de un hotelero' })
   updateHotelAdminInfo(
     @Param('id') id: string,
     @Body() hotelAdmin: UpdateHotelAdminInfoDto,
@@ -86,6 +92,10 @@ export class HotelAdminsController {
   //* Borrado lógico de un admin de hotel
 
   @Delete(':id')
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Eliminado lógico de un hotelero' })
   logicalDeleteHotelAdmin(@Param('id') id: string) {
     return this.hotelAdminService.logicalDeleteHotelAdmin(id);
   }

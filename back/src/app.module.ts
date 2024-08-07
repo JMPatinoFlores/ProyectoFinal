@@ -28,6 +28,11 @@ import { AvailabilityModule } from './availabilities/availability.module';
 import { EmailNotifiModule } from './email-notify/email.module';
 import { MailService } from './email-notify/mail.service';
 import { PassportModule } from '@nestjs/passport';
+import { SuperAdminModule } from './super-admin/super-admin.module';
+import { SuperAdminRepository } from './super-admin/superAdmin.repository';
+import { SuperAdminController } from './super-admin/super-admin.controller';
+import { SuperAdminService } from './super-admin/super-admin.service';
+import { SuperAdmins } from './super-admin/superAdmin.entity';
 
 @Module({
   imports: [
@@ -46,6 +51,7 @@ import { PassportModule } from '@nestjs/passport';
     ReviewsModule,
     CustomersModule,
     HotelAdminsModule,
+    SuperAdminModule,
     AuthModule,
     BookingModule,
     BookingDetailModule,
@@ -55,18 +61,26 @@ import { PassportModule } from '@nestjs/passport';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '30m' },
     }),
-    TypeOrmModule.forFeature([Customers, HotelAdmins]),
+    TypeOrmModule.forFeature([Customers, HotelAdmins, SuperAdmins]),
     EmailNotifiModule,
-    PassportModule.register({ session: true })
+    PassportModule.register({ session: true }),
+    SuperAdminModule,
   ],
-  controllers: [AppController, HotelAdminsController, CustomersController],
+  controllers: [
+    AppController,
+    HotelAdminsController,
+    CustomersController,
+    SuperAdminController,
+  ],
   providers: [
     AppService,
     HotelAdminsService,
     CustomersService,
+    SuperAdminService,
     AuthService,
     CustomersRepository,
     HotelAdminRepository,
+    SuperAdminRepository,
     NaturalLanguageProcessor,
     MailService,
   ],
