@@ -135,7 +135,9 @@ export interface IRoomTypeRegister {
   capacity: number;
   totalBathrooms: number;
   totalBeds: number;
+  images: string[];
   price: number;
+  hotelId: string;
 }
 
 export interface IHotelRegister {
@@ -151,6 +153,18 @@ export interface IHotelRegister {
   rating: number;
   images: string[] | File[];
   hotel_admin_id: string;
+}
+
+export interface ICreateBooking {
+  customerId: string;
+  hotelId: string;
+  roomTypesIdsAndDates: [
+    {
+      roomTypeId: string;
+      checkInDate: string;
+      checkOutDate: string;
+    }
+  ]
 }
 
 export interface IHotelImage {

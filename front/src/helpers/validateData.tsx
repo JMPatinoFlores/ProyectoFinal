@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { IHotelRegister, ILogin, IRegisterValues } from "@/interfaces";
+import { ICreateBooking, IHotelRegister, ILogin, IRegisterValues } from "@/interfaces";
 
 export const validateRegisterForm = (values: IRegisterValues) => {
   const errors: Partial<IRegisterValues> = {};
@@ -105,3 +105,43 @@ export const validatePostHotel = (values: IHotelRegister) => {
 export const validationSchema = yup.object().shape({
   image: yup.mixed().required("La imagen es requerida"),
 });
+
+export const validateFormBooking = (values: ICreateBooking) => {
+  const errors: Partial<ICreateBooking> = {};
+
+  if (!values.hotelId) {
+    errors.hotelId = "Hotel ID requerido";
+  }
+
+  if (values.roomTypesIdsAndDates.length === 0) {
+    errors.roomTypesIdsAndDates = [
+      { roomTypeId: "", checkInDate: "", checkOutDate: "" },
+    ];
+  } else {
+    values.roomTypesIdsAndDates.forEach((item, index) => {
+      if (!item.roomTypeId) {
+        if (!errors.roomTypesIdsAndDates) errors.roomTypesIdsAndDates = [];
+        errors.roomTypesIdsAndDates[index] = {
+          ...(errors.roomTypesIdsAndDates[index] || {}),
+          roomTypeId: "Room Type ID requerido",
+        };
+      }
+      if (!item.checkInDate) {
+        if (!errors.roomTypesIdsAndDates) errors.roomTypesIdsAndDates = [];
+        errors.roomTypesIdsAndDates[index] = {
+          ...(errors.roomTypesIdsAndDates[index] || {}),
+          checkInDate: "Fecha de entrada requerida",
+        };
+      }
+      if (!item.checkOutDate) {
+        if (!errors.roomTypesIdsAndDates) errors.roomTypesIdsAndDates = [];
+        errors.roomTypesIdsAndDates[index] = {
+          ...(errors.roomTypesIdsAndDates[index] || {}),
+          checkOutDate: "Fecha de salida requerida",
+        };
+      }
+    });
+  }
+
+  return errors;
+};
