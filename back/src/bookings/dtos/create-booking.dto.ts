@@ -4,12 +4,7 @@ import {
   IsArray,
   IsISO8601,
   IsNotEmpty,
-  IsNumber,
-  IsObject,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MaxLength,
+  IsUUID
 } from 'class-validator';
 
 export class CreateBookingDto {
@@ -45,15 +40,30 @@ export class CreateBookingDto {
 }
 
 class RoomTypeIdAndDate {
-  @IsNotEmpty()
-  @IsUUID()
-  roomTypeId: string;
+    @ApiProperty({
+        name: 'roomTypeId',
+        description: 'UUID del room type que se quiere reservar.',
+        example: 'd55d2acf-23ad-4b47-9416-1fba79d2fb65'
+    })
+    @IsNotEmpty()
+    @IsUUID()
+    roomTypeId: string
 
-  @IsNotEmpty()
-  @IsISO8601()
-  checkInDate: string;
+    @ApiProperty({
+        name: 'checkInDate',
+        description: 'Fecha de check in en formato string ISO8601.',
+        example: '2024-08-06T14:23:00Z'
+    })
+    @IsNotEmpty()
+    @IsISO8601()
+    checkInDate: string
 
-  @IsNotEmpty()
-  @IsISO8601()
-  checkOutDate: string;
+    @ApiProperty({
+        name: 'checkOutDate',
+        description: 'Fecha de check out en formato string ISO8601.',
+        example: '2024-08-10T14:23:00Z'
+    })
+    @IsNotEmpty()
+    @IsISO8601()
+    checkOutDate: string
 }

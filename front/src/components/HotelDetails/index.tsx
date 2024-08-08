@@ -1,9 +1,12 @@
-import React from 'react';
+"use client";
+
+import useGoogleMapsData from "../../lib/googleMaps/googleMapsData";
+import React from "react";
 import useGoogleMapsDataLocation from "../../lib/googleMaps/googleMapsData";
 import { IHotelDetail, ILocationDetail } from "@/interfaces";
 import { GoogleMap, Marker } from "@react-google-maps/api";
-import Rating from '../rating';
-
+import Rating from "../rating";
+import { PostReview } from "../PostReview";
 
 interface Props {
   hotel: IHotelDetail | null;
@@ -14,17 +17,33 @@ interface MapProps {
   lng: number;
 }
 
+const HotelDetail: React.FC<Props> = ({ hotel }) => {
+  const { isLoaded, mapCenter, marker } = useGoogleMapsDataLocation(hotel);
+  const lat = hotel?.location[0];
+  const lng = hotel?.location[1];
 
-const HotelDetail: React.FC<Props> = ({ hotel} ) => {
-  const { isLoaded, mapCenter, marker } = useGoogleMapsDataLocation(hotel)
-  const lat = hotel?.location[0]
-  const lng = hotel?.location[1]
+  const rating = [1, 2, 3, 4, 5];
 
-  if (!hotel) return <div>Loading...</div>;
+  if (!hotel)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading...</p>
+      </div>
+    );
 
-  if (!isLoaded) return <p>Loading...</p>;
+  if (!isLoaded)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading...</p>
+      </div>
+    );
 
-  if (!mapCenter) return <p>Loading map...</p>;
+  if (!mapCenter)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading map...</p>
+      </div>
+    );
 
   return (
     <div className="flex flex-wrap">
