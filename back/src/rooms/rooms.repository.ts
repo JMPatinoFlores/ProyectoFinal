@@ -31,15 +31,26 @@ export class RoomsRepository{
         else return roomById;
     }
 
-    async createDbRoom(roomDto: CreateRoomDto):Promise<string> {
+    async createDbRoom(roomDto: CreateRoomDto):Promise<Room> {
         const { roomsTypeId, roomNumber } = roomDto;
-        const roomFound = await this.roomDbRepository.findOne({where:{roomNumber}});
-        if(roomFound) throw new BadRequestException("this room exists");
-        const roomtypeFound: RoomsType = await this.roomstypeDbRepository.findOne({where:{id:roomsTypeId}});
+        // const roomFound = await this.roomDbRepository.findOne({where:{roomNumber}});
+        // if(roomFound) throw new BadRequestException("this room exists");
+        const roomtypeFound: RoomsType = await this.roomstypeDbRepository.findOne({
+            where:{id:roomsTypeId},
+            relations: ['hotel']
+        });
+        console.log('RoomType Found:', roomtypeFound);
 
         if(!roomtypeFound){
-            throw new NotFoundException("Hotel with ID not found");
+            throw new NotFoundException("Roomtype with ID not found");
         } 
+        const roomFound = await this.roomDbRepository.createQueryBuilder('room')
+            .innerJoinAndSelect('room.roomtype', 'roomtype')
+            .where('room.roomNumber = :roomNumber', {roomNumber})
+            .andWhere('roomtype.hotelId = :hotelId', {hotelId: roomtypeFound.hotel.id})
+            .getOne();    
+        
+        if(roomFound) throw new BadRequestException("this room number already exists in this hotel");
         
         const newRoom = this.roomDbRepository.create({
             roomNumber,
@@ -47,7 +58,14 @@ export class RoomsRepository{
         });
 
         await this.roomDbRepository.save(newRoom);
-        return newRoom.id;
+
+        const saveRoom = await this.roomDbRepository.findOne({
+            where:{id:newRoom.id},
+            relations: ['roomtype', 'roomtype.hotel']
+        });
+        if(!saveRoom) throw new NotFoundException("Room not found after creation"); 
+
+        return saveRoom;
         
     }    
 
@@ -98,21 +116,29 @@ export class RoomsRepository{
         return id;
     }
 
-    async deleteDbRoom(id: string): Promise<string>{
-        const roomFound: Room = await this.roomDbRepository.findOne({where:{id}});
+    async deleteDbRoom(id: string): Promise<Room>{
+        const roomFound: Room = await this.roomDbRepository.findOne({where:{id}, relations: ['roomtype']});
+        
         if(!roomFound) throw new NotFoundException("Room not found");
         if(roomFound.isDeleted === true) throw new BadRequestException("Room was eliminated");
         await this.roomDbRepository.update(id, {isDeleted:true});
-        return id;
+        return this.roomDbRepository.findOne({
+            where: { id },
+            relations: ['roomtype']
+        });
     }
 
-    async restoreDbRoom(id: string): Promise<string>{
-        const roomFound: Room = await this.roomDbRepository.findOne({where:{id}});
+    async restoreDbRoom(id: string): Promise<Room>{
+        const roomFound: Room = await this.roomDbRepository.findOne({where:{id}, relations: ['roomtype']});
         if(!roomFound) throw new NotFoundException("Room not found");
         if(roomFound.isDeleted === false) throw new BadRequestException("Room is active");
 
         await this.roomDbRepository.update(id, {isDeleted:false});
-        return id;
+
+        return this.roomDbRepository.findOne({
+            where: { id },
+            relations: ['roomtype']
+        });
     }
 
     async getDbRoomDeleted(): Promise<Room[]>{

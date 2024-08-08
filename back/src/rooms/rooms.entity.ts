@@ -20,9 +20,6 @@ export class Room {
   @Column({ type: 'varchar', length: 10, nullable: false })
   roomNumber: string;
 
-  @Column({ type: 'boolean', default: true })
-  isAvailable: boolean;
-
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
 
@@ -36,3 +33,7 @@ export class Room {
   )
   availabilities: RoomAvailability[];
 }
+
+
+// @Column({ type: 'boolean', default: true })
+// isAvailable: boolean;

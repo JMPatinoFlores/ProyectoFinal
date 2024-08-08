@@ -39,10 +39,16 @@ export class RoomsTypeRepository {
 
     }
 
-    async createDbRoomtype(roomtypeDto: CreateRoomTypeDto): Promise<string> {
-        const { hotelId, price, ...roomtypeData } = roomtypeDto;
-        const hotelFound: Hotel = await this.hotelDbRepository.findOne({ where: { id: hotelId }, relations: { roomstype: true } });
-        if (!hotelFound) {
+    async createDbRoomtype(roomtypeDto: CreateRoomTypeDto): Promise<string>{
+        const {hotelId, name,price, ...roomtypeData} = roomtypeDto;
+        console.log('Received room type DTO:', roomtypeDto);
+
+        const nameRoomtypeFound = await this.roomstypeDbRepository.findOne({where:{name}});
+        console.log('Existing room type found:', nameRoomtypeFound);
+        if(nameRoomtypeFound) throw new BadRequestException("this roomtype already exists");
+
+        const hotelFound: Hotel = await this.hotelDbRepository.findOne({where:{id:hotelId}});
+        if(!hotelFound){
             throw new NotFoundException("Hotel with ID not found");
         }
         const arrayOfPrices = hotelFound.roomstype.map(roomtype => roomtype.price);
@@ -56,6 +62,7 @@ export class RoomsTypeRepository {
 
         const newRoomtype: RoomsType = this.roomstypeDbRepository.create({
             ...roomtypeData,
+            name:name,
             price: price,
             hotel: hotelFound
         });
