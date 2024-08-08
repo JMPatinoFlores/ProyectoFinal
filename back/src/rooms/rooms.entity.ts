@@ -23,6 +23,9 @@ export class Room {
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
 
+  @Column({ type: 'boolean', default: true })
+  isAvailable: boolean;
+
   @ManyToOne(() => RoomsType, (roomtype) => roomtype.rooms)
   @JoinColumn({ name: 'roomsTypeId' })
   roomtype: RoomsType;
@@ -35,5 +38,3 @@ export class Room {
 }
 
 
-// @Column({ type: 'boolean', default: true })
-// isAvailable: boolean;
