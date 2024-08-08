@@ -2,282 +2,497 @@
   {
     "name": "Hotel Aurora",
     "description": "Disfruta de la magia de Santiago de Compostela en el Hotel Aurora, donde la historia y la modernidad se unen en un ambiente acogedor. Nuestro hotel es el lugar perfecto para explorar la ciudad y descubrir sus secretos.",
-    "email": "hotelaurora@mail.com",    
+    "email": "hotelaurora@mail.com",
     "country": "España",
     "city": "Santiago de Compostela",
-    "address":"Rua Doutor Teixeiro, 15, 15701",
-    "location":[42.8751694,-8.5474774],
-    "totalRooms":10,
-    "services" :["Restaurante", "Bar", "Gimnasio", "Spa", "Wi-Fi gratuito"],
+    "address": "Rua Doutor Teixeiro, 15, 15701",
+    "location": [
+      42.8751694,
+      -8.5474774
+    ],
+    "totalRooms": 10,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Spa",
+      "Wi-Fi gratuito"
+    ],
     "rating": 5,
-    "images":[ "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg"],
-    "hotel_admin_id":"c6bf695a-efda-42d4-970d-aee3a4c2cc16"
+    "price": 450,
+    "images": [
+      "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg"
+    ],
+    "hotel_admin_id": "c6bf695a-efda-42d4-970d-aee3a4c2cc16"
   },
-  { 
+  {
     "name": "Hotel Bella Vista",
     "description": "Descubre la belleza de Lima en el Hotel Bella Vista, donde la arquitectura colonial se une con la modernidad. Nuestro hotel es el lugar perfecto para explorar la ciudad y disfrutar de su gastronomía.",
-    "email": "hotelbellavista@mail.com",    
+    "email": "hotelbellavista@mail.com",
     "country": "Perú",
     "city": "Lima",
-    "address":"Av.Pablo Carriquiry 298",    
-    "location":[-12.0943239,-77.0219072],   
-    "totalRooms":10,    
-    "services" :["Restaurante", "Bar", "Piscina", "Wi-Fi gratuito", "Servicio de habitaciones"],
-    "rating": 4,    
-    "images":[ "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg"],    
-    "hotel_admin_id":"1f029185-3c09-40bd-aa84-2dd59c96e5ae"
+    "address": "Av.Pablo Carriquiry 298",
+    "location": [
+      -12.0943239,
+      -77.0219072
+    ],
+    "totalRooms": 10,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Piscina",
+      "Wi-Fi gratuito",
+      "Servicio de habitaciones"
+    ],
+    "rating": 4,
+    "price": 300,
+    "images": [
+      "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg"
+    ],
+    "hotel_admin_id": "1f029185-3c09-40bd-aa84-2dd59c96e5ae"
   },
-  {    
+  {
     "name": "Hotel Sun Paradise",
     "description": "Disfruta del sol y la playa en el Hotel Sun Paradise, donde la relajación y la diversión se unen en un ambiente tropical. Nuestro hotel es el lugar perfecto para escapar de la rutina y disfrutar de la belleza de Cancún.",
-    "email": "hotelsunparadise@mail.com",    
+    "email": "hotelsunparadise@mail.com",
     "country": "México",
     "city": "Cancún",
-    "address":"Blvd. Kukulcan 9, Punta Cancun",    
-    "location":[21.1378937,-86.7541472],    
-    "totalRooms":20,    
-    "rating": 4,    
-    "services" :["Restaurante", "Bar", "Piscina", "Spa", "Wi-Fi gratuito", "Servicio de habitaciones"],
-    "images":[ "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg"],
-    "hotel_admin_id":"801f4df2-ef8c-4188-afac-2e049561b337"
+    "address": "Blvd. Kukulcan 9, Punta Cancun",
+    "location": [
+      21.1378937,
+      -86.7541472
+    ],
+    "totalRooms": 20,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Piscina",
+      "Spa",
+      "Wi-Fi gratuito",
+      "Servicio de habitaciones"
+    ],
+    "rating": 4,
+    "price": 300,
+    "images": [
+      "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg"
+    ],
+    "hotel_admin_id": "801f4df2-ef8c-4188-afac-2e049561b337"
   },
-  {    
+  {
     "name": "Hotel Mountain Retreat",
-    "description": "Descubre la belleza de Quito en el Hotel Mountain Retreat, donde la naturaleza y la historia se unen en un ambiente acogedor. Nuestro hotel es el lugar perfecto para explorar la ciudad y disfrutar de su patrimonio cultural.",    
-    "email": "hotelmountainretreat@mail.com",    
+    "description": "Descubre la belleza de Quito en el Hotel Mountain Retreat, donde la naturaleza y la historia se unen en un ambiente acogedor. Nuestro hotel es el lugar perfecto para explorar la ciudad y disfrutar de su patrimonio cultural.",
+    "email": "hotelmountainretreat@mail.com",
     "country": "Ecuador",
     "city": "Quito",
-    "address":"Avenida República de El Salvador N34-377 e Irlanda",
-    "location":[-0.1835228,-78.4833906],  
-    "totalRooms":30,      
-    "rating": 2,    
-    "services" :["Restaurante", "Bar", "Gimnasio", "Wi-Fi gratuito", "Servicio de habitaciones"],
-    "images":[ "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg"],
-    "hotel_admin_id":"5e85364b-9f6a-4379-90ac-d128d7528f7d"
+    "address": "Avenida República de El Salvador N34-377 e Irlanda",
+    "location": [
+      -0.1835228,
+      -78.4833906
+    ],
+    "totalRooms": 30,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Wi-Fi gratuito",
+      "Servicio de habitaciones"
+    ],
+    "rating": 2,
+    "price": 125,
+    "images": [
+      "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg"
+    ],
+    "hotel_admin_id": "5e85364b-9f6a-4379-90ac-d128d7528f7d"
   },
   {
     "name": "Hotel Las Oportunidades",
     "description": "Disfruta de la hospitalidad asturiana en el Hotel Las Oportunidades, donde la tradición y la modernidad se unen en un ambiente acogedor. Nuestro hotel es el lugar perfecto para explorar la ciudad y disfrutar de su gastronomía.",
-    "email": "hotellasoportunidades@mail.com",    
+    "email": "hotellasoportunidades@mail.com",
     "country": "España",
     "city": "Guijón",
-    "address":"Plaza Mayor, 11, Gijon, Asturias, 33201",    
-    "location":[43.5452748,-5.6649182], 
-    "totalRooms":20,       
-    "rating": 5,    
-    "services" :["Restaurante", "Bar", "Wi-Fi gratuito", "Servicio de habitaciones"],
-    "images":[ "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg"],
-    "hotel_admin_id":"c6bf695a-efda-42d4-970d-aee3a4c2cc16"
-  },
-   {    
-    "name": "Hotel Sirena Varada",
-    "description": "Disfruta de la hospitalidad peruana en el Hotel Sirena Varada, ubicado en el corazón de Lima. Nuestro hotel ofrece una experiencia única, con habitaciones cómodas y servicios de alta calidad. ¡Ven y descubre la riqueza cultural de nuestra ciudad!",
-    "email": "hotelsirenavarada@mail.com",    
-    "country": "Perú",
-    "city": "Lima",
-    "address":"Avenida 28 de Julio 151",    
-    "location":[-12.0943239,-77.0219072], 
-    "totalRooms":25,       
-    "rating": 5,    
-    "services" :["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
-    "images":[ "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg"],
-    "hotel_admin_id":"1f029185-3c09-40bd-aa84-2dd59c96e5ae"
-  },
-  {    
-    "name": "Hotel El Espíritu del Vino",
-    "description": "Ubicado en la paradisíaca ciudad de Cancún, el Hotel El Espíritu del Vino te ofrece una experiencia de lujo y relajación. Nuestras habitaciones están diseñadas para que te sientas como en casa, y nuestros servicios te harán sentir como un rey.",
-    "email": "hotelelespíritudelvino@mail.com",    
-    "country": "México",
-    "city": "Cancún",
-    "address":" Avenida Sayil SM4A, Lote 7, 77500",    
-    "location":[21.1504774,-86.8226286], 
-    "totalRooms":10,       
-    "rating": 4,    
-    "services" :["Restaurante", "Bar", "Piscina", "Servicio de habitaciones", "Spa"],
-    "images":[ "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg"],
-    "hotel_admin_id":"801f4df2-ef8c-4188-afac-2e049561b337"
-  },
-  {    
-    "name": "Hotel Camarón",
-    "description": "El Hotel Camarón es el lugar perfecto para descubrir la rica historia y cultura de Quito. Nuestras habitaciones están diseñadas para que te sientas cómodo y relajado, y nuestros servicios te harán sentir como en casa.",
-    "email": "hotelcamaron@mail.com",    
-    "country": "Ecuador",
-    "city": "Quito",
-    "address":"Calle Yasuni 304 y Ave. El Inca, 170124",    
-    "location":[-0.159417,-78.4839351],
-    "totalRooms":14,        
-    "rating": 5,    
-    "services" :["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
-    "images":[ "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg"],
-    "hotel_admin_id":"5e85364b-9f6a-4379-90ac-d128d7528f7d"
+    "address": "Plaza Mayor, 11, Gijon, Asturias, 33201",
+    "location": [
+      43.5452748,
+      -5.6649182
+    ],
+    "totalRooms": 20,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Wi-Fi gratuito",
+      "Servicio de habitaciones"
+    ],
+    "rating": 5,
+    "price": 450,
+    "images": [
+      "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg"
+    ],
+    "hotel_admin_id": "c6bf695a-efda-42d4-970d-aee3a4c2cc16"
   },
   {
-    "name": "Hotel Vientos",
-    "description": "El Hotel Vientos es el lugar perfecto para descubrir la rica historia y cultura de Santiago de Compostela. Nuestras habitaciones están diseñadas para que te sientas cómodo y relajado, y nuestros servicios te harán sentir como en casa.",
-    "email": "hotelvientos@mail.com",    
-    "country": "España",
-    "city": "Santiago de Compostela",
-    "address":"Avenida Burgo de las Naciones s/n, 15705",    
-    "location":[42.890487,-8.5465339], 
-    "totalRooms":17,       
-    "rating": 3,    
-    "services" :["Restaurante", "Bar", "Piscina", "Servicio de habitaciones", "Spa"],
-    "images":[ "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg"],
-    "hotel_admin_id":"c6bf695a-efda-42d4-970d-aee3a4c2cc16"
-  },
-  {    
-    "name": "Hotel Kumbala",
-    "description": "El Hotel Kumbala es el lugar perfecto para descubrir la rica historia y cultura de Lima. Nuestras habitaciones están diseñadas para que te sientas cómodo y relajado, y nuestros servicios te harán sentir como en casa.",
-    "email": "hotelkumbala@mail.com",    
+    "name": "Hotel Sirena Varada",
+    "description": "Disfruta de la hospitalidad peruana en el Hotel Sirena Varada, ubicado en el corazón de Lima. Nuestro hotel ofrece una experiencia única, con habitaciones cómodas y servicios de alta calidad. ¡Ven y descubre la riqueza cultural de nuestra ciudad!",
+    "email": "hotelsirenavarada@mail.com",
     "country": "Perú",
     "city": "Lima",
-    "address":"Los Eucaliptos 550, San Isidro",    
-    "location":[-12.0975675,-77.0508721],
-    "totalRooms":25,        
-    "rating": 2,    
-    "services" :["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
-    "images":[ "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg"],
-    "hotel_admin_id":"1f029185-3c09-40bd-aa84-2dd59c96e5ae"
+    "address": "Avenida 28 de Julio 151",
+    "location": [
+      -12.0943239,
+      -77.0219072
+    ],
+    "totalRooms": 25,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Servicio de habitaciones",
+      "Wi-Fi gratuito"
+    ],
+    "rating": 5,
+    "price": 450,
+    "images": [
+      "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg"
+    ],
+    "hotel_admin_id": "1f029185-3c09-40bd-aa84-2dd59c96e5ae"
   },
-  {    
-    "name": "Hotel Piedras",
-    "description": "Disfruta de la hospitalidad del Hotel Piedras en el corazón de Cancún, México. Nuestro hotel ofrece una experiencia única y acogedora, con habitaciones cómodas y servicios de alta calidad. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en esta hermosa ciudad!",
-    "email": "hotelpiedras@mail.com",    
+  {
+    "name": "Hotel El Espíritu del Vino",
+    "description": "Ubicado en la paradisíaca ciudad de Cancún, el Hotel El Espíritu del Vino te ofrece una experiencia de lujo y relajación. Nuestras habitaciones están diseñadas para que te sientas como en casa, y nuestros servicios te harán sentir como un rey.",
+    "email": "hotelelespíritudelvino@mail.com",
     "country": "México",
     "city": "Cancún",
-    "address":"Boulevard Kukulkan Km 16.5, 77500",    
-    "location":[21.0978173,-86.7878268],
-    "totalRooms":30,        
-    "rating": 5,    
-    "services" :["Restaurante", "Bar", "Gimnasio", "Spa", "Wi-Fi gratuito"],
-    "images":[ "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg"],
-    "hotel_admin_id":"801f4df2-ef8c-4188-afac-2e049561b337"
+    "address": "Avenida Sayil SM4A, Lote 7, 77500",
+    "location": [
+      21.1504774,
+      -86.8226286
+    ],
+    "totalRooms": 10,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Piscina",
+      "Servicio de habitaciones",
+      "Spa"
+    ],
+    "rating": 4,
+    "price": 300,
+    "images": [
+      "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg"
+    ],
+    "hotel_admin_id": "801f4df2-ef8c-4188-afac-2e049561b337"
   },
-  {    
-    "name": "Hotel Plaza Real",
-    "description": "Ubicado en el corazón de Quito, el Hotel Plaza real ofrece una experiencia única y auténtica. Nuestras habitaciones están diseñadas para proporcionar comodidad y tranquilidad, y nuestros servicios están pensados para hacer que tu estancia sea inolvidable. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en Ecuador!",
-    "email": "hotelplazareal@mail.com",    
+  {
+    "name": "Hotel Camarón",
+    "description": "El Hotel Camarón es el lugar perfecto para descubrir la rica historia y cultura de Quito. Nuestras habitaciones están diseñadas para que te sientas cómodo y relajado, y nuestros servicios te harán sentir como en casa.",
+    "email": "hotelcamaron@mail.com",
     "country": "Ecuador",
     "city": "Quito",
-    "address":"Calle Benalcazar N9-42 y Oriente",    
-    "location":[-0.2161021,-78.5128622],
-    "totalRooms":20,        
-    "rating": 5,    
-    "services" :["Restaurante", "Bar", "Salón de eventos", "Servicio de habitaciones", "Wi-Fi gratuito"],
-    "images":[ "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg"],
-    "hotel_admin_id":"5e85364b-9f6a-4379-90ac-d128d7528f7d"
+    "address": "Calle Yasuni 304 y Ave. El Inca, 170124",
+    "location": [
+      -0.159417,
+      -78.4839351
+    ],
+    "totalRooms": 14,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Servicio de habitaciones",
+      "Wi-Fi gratuito"
+    ],
+    "rating": 5,
+    "price": 450,
+    "images": [
+      "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg"
+    ],
+    "hotel_admin_id": "5e85364b-9f6a-4379-90ac-d128d7528f7d"
+  },
+  {
+    "name": "Hotel Kumbala",
+    "description": "El Hotel Kumbala es el lugar perfecto para descubrir la rica historia y cultura de Lima. Nuestras habitaciones están diseñadas para que te sientas cómodo y relajado, y nuestros servicios te harán sentir como en casa.",
+    "email": "hotelkumbala@mail.com",
+    "country": "Perú",
+    "city": "Lima",
+    "address": "Los Eucaliptos 550, San Isidro",
+    "location": [
+      -12.0975675,
+      -77.0508721
+    ],
+    "totalRooms": 25,
+    "rating": 2,
+    "price": 125,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Servicio de habitaciones",
+      "Wi-Fi gratuito"
+    ],
+    "images": [
+      "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg"
+    ],
+    "hotel_admin_id": "1f029185-3c09-40bd-aa84-2dd59c96e5ae"
+  },
+  {
+    "name": "Hotel Piedras",
+    "description": "Disfruta de la hospitalidad del Hotel Piedras en el corazón de Cancún, México. Nuestro hotel ofrece una experiencia única y acogedora, con habitaciones cómodas y servicios de alta calidad. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en esta hermosa ciudad!",
+    "email": "hotelpiedras@mail.com",
+    "country": "México",
+    "city": "Cancún",
+    "address": "Boulevard Kukulkan Km 16.5, 77500",
+    "location": [
+      21.0978173,
+      -86.7878268
+    ],
+    "totalRooms": 30,
+    "rating": 5,
+    "price": 450,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Spa",
+      "Wi-Fi gratuito"
+    ],
+    "images": [
+      "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg"
+    ],
+    "hotel_admin_id": "801f4df2-ef8c-4188-afac-2e049561b337"
+  },
+  {
+    "name": "Hotel Plaza Real",
+    "description": "Ubicado en el corazón de Quito, el Hotel Plaza real ofrece una experiencia única y auténtica. Nuestras habitaciones están diseñadas para proporcionar comodidad y tranquilidad, y nuestros servicios están pensados para hacer que tu estancia sea inolvidable. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en Ecuador!",
+    "email": "hotelplazareal@mail.com",
+    "country": "Ecuador",
+    "city": "Quito",
+    "address": "Calle Benalcazar N9-42 y Oriente",
+    "location": [
+      -0.2161021,
+      -78.5128622
+    ],
+    "totalRooms": 20,
+    "rating": 5,
+    "price": 450,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Salón de eventos",
+      "Servicio de habitaciones",
+      "Wi-Fi gratuito"
+    ],
+    "images": [
+      "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg"
+    ],
+    "hotel_admin_id": "5e85364b-9f6a-4379-90ac-d128d7528f7d"
   },
   {
     "name": "Hotel Plaza Mayor",
     "description": "El Hotel Plaza Mayor es un oasis de tranquilidad en el corazón de Santiago de Compostela. Nuestras habitaciones están diseñadas para proporcionar comodidad y relajación, y nuestros servicios están pensados para hacer que tu estancia sea inolvidable. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en España!",
-    "email": "hotelplazamayor@mail.com",    
+    "email": "hotelplazamayor@mail.com",
     "country": "España",
     "city": "Santiago de Compostela",
-    "address":"Alfredo Brañas, 5, 15701",
-    "location":[42.8753778,-8.549984],
-    "totalRooms":40,        
+    "address": "Alfredo Brañas, 5, 15701",
+    "location": [
+      42.8753778,
+      -8.549984
+    ],
+    "totalRooms": 40,
     "rating": 4,
-    "services" :["Restaurante", "Bar", "Gimnasio", "Spa", "Wi-Fi gratuito", "Servicio de habitaciones"],
-    "images":[ "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg"],
-    "hotel_admin_id":"c6bf695a-efda-42d4-970d-aee3a4c2cc16"
+    "price": 300,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Spa",
+      "Wi-Fi gratuito",
+      "Servicio de habitaciones"
+    ],
+    "images": [
+      "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg"
+    ],
+    "hotel_admin_id": "c6bf695a-efda-42d4-970d-aee3a4c2cc16"
   },
-  {    
+  {
     "name": "Hotel Detroit 454",
     "description": "El Hotel Detroit 454 es un lugar acogedor y moderno en el corazón de Lima. Nuestras habitaciones están diseñadas para proporcionar comodidad y tranquilidad, y nuestros servicios están pensados para hacer que tu estancia sea inolvidable. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en Perú!",
-    "email": "hoteldetroit454@mail.com",        
+    "email": "hoteldetroit454@mail.com",
     "country": "Perú",
     "city": "Lima",
-    "address":"Pasaje Schell 121 3º Piso Miraflores",    
-    "location":[-12.1232056,-77.0312806],
-    "totalRooms":10,        
-    "rating": 5,    
-    "services" :["Restaurante", "Bar", "Gimnasio", "Wi-Fi gratuito", "Servicio de habitaciones"],
-    "images":[ "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg"],
-    "hotel_admin_id":"1f029185-3c09-40bd-aa84-2dd59c96e5ae"
+    "address": "Pasaje Schell 121 3º Piso Miraflores",
+    "location": [
+      -12.1232056,
+      -77.0312806
+    ],
+    "totalRooms": 10,
+    "rating": 5,
+    "price": 450,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Wi-Fi gratuito",
+      "Servicio de habitaciones"
+    ],
+    "images": [
+      "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg"
+    ],
+    "hotel_admin_id": "1f029185-3c09-40bd-aa84-2dd59c96e5ae"
   },
   {
     "name": "Hotel Con Plaza",
     "description": "El Hotel Con Plaza es un lugar de ensueño en el corazón de Cancún. Nuestras habitaciones están diseñadas para proporcionar comodidad y relajación, y nuestros servicios están pensados para hacer que tu estancia sea inolvidable. ¡Ven y descubre por qué somos el lugar perfecto para tu estancia en México!",
-    "email": "hotelconplaza@mail.com",    
+    "email": "hotelconplaza@mail.com",
     "country": "México",
     "city": "Cancún",
-    "address":"Av. Sunyaxchen Lote 39 y 40, 77500",
-    "location":[21.1625701,-86.8327043],
-    "totalRooms":14,        
-    "rating": 4,    
-    "services" :["Restaurante", "Bar", "Gimnasio", "Spa", "Wi-Fi gratuito", "Servicio de habitaciones"],
-    "images":[ "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg"],
-    "hotel_admin_id":"801f4df2-ef8c-4188-afac-2e049561b337"
+    "address": "Av. Sunyaxchen Lote 39 y 40, 77500",
+    "location": [
+      21.1625701,
+      -86.8327043
+    ],
+    "totalRooms": 14,
+    "rating": 4,
+    "price": 300,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Spa",
+      "Wi-Fi gratuito",
+      "Servicio de habitaciones"
+    ],
+    "images": [
+      "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg"
+    ],
+    "hotel_admin_id": "801f4df2-ef8c-4188-afac-2e049561b337"
   },
   {
     "name": "Hotel Mountain Goats",
     "description": "Disfruta de la hospitalidad del Hotel Mountain Goats en Quito, Ecuador. Nuestro hotel ofrece una experiencia única en el corazón de la ciudad, con vistas impresionantes de la cordillera de los Andes.",
-    "email": "hotelmountaingoats@mail.com",    
+    "email": "hotelmountaingoats@mail.com",
     "country": "Ecuador",
     "city": "Quito",
-    "address": "Cordero E4375 & Av. Amazonas",    
-    "location":[-0.2009727,-78.4936736],
-    "totalRooms":20,        
-    "rating": 3,    
-    "services": ["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
-    "images":[ "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg"],
-    "hotel_admin_id":"5e85364b-9f6a-4379-90ac-d128d7528f7d"
+    "address": "Cordero E4375 & Av. Amazonas",
+    "location": [
+      -0.2009727,
+      -78.4936736
+    ],
+    "totalRooms": 20,
+    "rating": 3,
+    "price": 225,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Servicio de habitaciones",
+      "Wi-Fi gratuito"
+    ],
+    "images": [
+      "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg"
+    ],
+    "hotel_admin_id": "5e85364b-9f6a-4379-90ac-d128d7528f7d"
   },
   {
     "name": "Hotel Aurora Boreal",
     "description": "El Hotel Aurora Boreal es un oasis de tranquilidad en el corazón de Santiago de Compostela. Nuestro hotel ofrece una experiencia relajante y acogedora en una ciudad llena de historia y espiritualidad.",
-    "email": "hotelauroraboreal.com",    
+    "email": "hotelauroraboreal.com",
     "country": "España",
     "city": "Santiago de Compostela",
-    "address": "Hórreo, 1, 15701",    
-    "location":[42.8768564,-8.5464113],
-    "totalRooms":25,        
-    "rating": 5,    
-    "services": ["Restaurante", "Bar", "Piscina", "Servicio de habitaciones", "Wi-Fi gratuito"],
-    "images":[ "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg"],
-    "hotel_admin_id":"c6bf695a-efda-42d4-970d-aee3a4c2cc16"
+    "address": "Hórreo, 1, 15701",
+    "location": [
+      42.8768564,
+      -8.5464113
+    ],
+    "totalRooms": 25,
+    "rating": 5,
+    "price": 450,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Piscina",
+      "Servicio de habitaciones",
+      "Wi-Fi gratuito"
+    ],
+    "images": [
+      "https://cdn.forbes.co/2020/02/sofitel-legend-santa-clara-outdoor-pool.jpg"
+    ],
+    "hotel_admin_id": "c6bf695a-efda-42d4-970d-aee3a4c2cc16"
   },
   {
     "name": "Hotel Buena Vista",
-    "description": "El Hotel Buena Vista es un hotel moderno y acogedor en el corazón de Lima. Nuestro hotel ofrece una experiencia única en una ciudad llena de historia y cultura.",    
-    "email": "hotelbuenavista@mail.com",    
+    "description": "El Hotel Buena Vista es un hotel moderno y acogedor en el corazón de Lima. Nuestro hotel ofrece una experiencia única en una ciudad llena de historia y cultura.",
+    "email": "hotelbuenavista@mail.com",
     "country": "Perú",
     "city": "Lima",
-    "address": "Jiron Machu Picchu 128, Lima 32",    
-    "location":[-12.1085984,-76.9432316],
-    "totalRooms":33,        
-    "rating": 5,    
-    "services": ["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
-    "images":[ "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg"],
-    "hotel_admin_id":"1f029185-3c09-40bd-aa84-2dd59c96e5ae"
+    "address": "Jiron Machu Picchu 128, Lima 32",
+    "location": [
+      -12.1085984,
+      -76.9432316
+    ],
+    "totalRooms": 33,
+    "rating": 5,
+    "price": 450,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Servicio de habitaciones",
+      "Wi-Fi gratuito"
+    ],
+    "images": [
+      "https://imagenes.eltiempo.com/files/image_1200_600/uploads/2022/10/15/634af63a9c1ea.jpeg"
+    ],
+    "hotel_admin_id": "1f029185-3c09-40bd-aa84-2dd59c96e5ae"
   },
   {
     "name": "Hotel Sunset",
-    "description": "El Hotel Sunset es un hotel de lujo en el corazón de Cancún. Nuestro hotel ofrece una experiencia relajante y acogedora en una ciudad llena de playas y aventuras.",    
-    "email": "hotelsunset@mail.com",    
+    "description": "El Hotel Sunset es un hotel de lujo en el corazón de Cancún. Nuestro hotel ofrece una experiencia relajante y acogedora en una ciudad llena de playas y aventuras.",
+    "email": "hotelsunset@mail.com",
     "country": "México",
     "city": "Cancún",
-    "address": "Av Tulum Esquina Brisa SM 4 Colonia Centro",    
-    "location":[21.153239,-86.8276975],    
-    "totalRooms":77,    
+    "address": "Av Tulum Esquina Brisa SM 4 Colonia Centro",
+    "location": [
+      21.153239,
+      -86.8276975
+    ],
+    "totalRooms": 77,
     "rating": 4,
-    "services": ["Restaurante", "Bar", "Piscina", "Servicio de habitaciones", "Wi-Fi gratuito"],
-    "images":[ "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg"],
-    "hotel_admin_id":"801f4df2-ef8c-4188-afac-2e049561b337"
+    "price": 400,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Piscina",
+      "Servicio de habitaciones",
+      "Wi-Fi gratuito"
+    ],
+    "images": [
+      "https://content.r9cdn.net/rimg/himg/ca/92/12/ice-55339-73817713_3XL-651930.jpg"
+    ],
+    "hotel_admin_id": "801f4df2-ef8c-4188-afac-2e049561b337"
   },
   {
     "name": "Hotel El Centro Del Mundo",
-    "description": "El Hotel El Centro Del Mundo es un hotel moderno y acogedor en el corazón de Quito. Nuestro hotel ofrece una experiencia única en una ciudad llena de historia y cultura.",    
-    "email": "hotelelcentrodelmundo@mail.com",    
+    "description": "El Hotel El Centro Del Mundo es un hotel moderno y acogedor en el corazón de Quito. Nuestro hotel ofrece una experiencia única en una ciudad llena de historia y cultura.",
+    "email": "hotelelcentrodelmundo@mail.com",
     "country": "Ecuador",
     "city": "Quito",
-    "address": "Leonidas Plaza 19-50 y 18 de Septiembre",    
-    "location":[-0.208942,-78.497429],
-    "totalRooms":55,        
-    "rating": 2,    
-    "services": ["Restaurante", "Bar", "Gimnasio", "Servicio de habitaciones", "Wi-Fi gratuito"],
-    "images":[ "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg"],
-    "hotel_admin_id":"5e85364b-9f6a-4379-90ac-d128d7528f7d"
+    "address": "Leonidas Plaza 19-50 y 18 de Septiembre",
+    "location": [
+      -0.208942,
+      -78.497429
+    ],
+    "totalRooms": 55,
+    "rating": 2,
+    "price": 225,
+    "services": [
+      "Restaurante",
+      "Bar",
+      "Gimnasio",
+      "Servicio de habitaciones",
+      "Wi-Fi gratuito"
+    ],
+    "images": [
+      "https://content.r9cdn.net/himg/9a/22/37/leonardo-1103824-0004_CR-Veracruz-1-Aereas_0296_O-816247.jpg"
+    ],
+    "hotel_admin_id": "5e85364b-9f6a-4379-90ac-d128d7528f7d"
   }
 ]
-
