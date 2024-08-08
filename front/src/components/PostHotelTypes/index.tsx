@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { IRoomTypeRegister } from "@/interfaces";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -7,24 +7,50 @@ import continueImage from "../../../public/continue.png";
 import createImage from "../../../public/create.png";
 import Image from "next/image";
 import { postRoomType } from "@/lib/server/fetchHotels";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function TypesRegister() {
-  const initialValues = {
+  const router = useRouter();
+  const [hotelId, setHotelId] = useState<string>("");
+
+  const [initialValues, setInitialValues] = useState<IRoomTypeRegister>({
     name: "",
     capacity: 0,
     totalBathrooms: 0,
     totalBeds: 0,
     images: [],
     price: 0,
-    hotelId: "",
-  };
+    hotelId: hotelId,
+  });
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const userObject = JSON.parse(storedUser);
+        if (userObject.hotels && userObject.hotels.length > 0) {
+          const fetchedHotelId = userObject.hotels[0].id;
+          setHotelId(fetchedHotelId);
+
+          // Actualiza los valores iniciales de Formik con el hotelId obtenido
+          setInitialValues((prevValues) => ({
+            ...prevValues,
+            hotelId: fetchedHotelId,
+          }));
+        }
+      } catch (error) {
+        console.error("Error al parsear el hotelId desde localStorage:", error);
+      }
+    }
+  }, []);
 
   const typesOptions = [
     "Estándar",
     "Deluxe",
     "Suite",
     "Familiar",
-    "Accesible(para personas con discapacidad)",
+    "Accesible (para personas con discapacidad)",
   ];
 
   const uploadImageToCloudinary = async (file: File): Promise<string> => {
@@ -60,7 +86,6 @@ export default function TypesRegister() {
     values: IRoomTypeRegister,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-
     let imageUrls: string[] = [];
     if (values.images && values.images.length > 0) {
       try {
@@ -70,31 +95,32 @@ export default function TypesRegister() {
         }
       } catch (error) {
         console.log("Error al subir la imagen: ", error);
-        alert("Error al subir la imagen. Intentalo de nuevo");
+        alert("Error al subir la imagen. Inténtalo de nuevo");
         setSubmitting(false);
         return;
       }
     }
 
     const formData = {
-      ... values,
+      ...values,
       images: imageUrls,
-    }
+      hotelId: hotelId || values.hotelId, // Aseguramos que el hotelId esté incluido
+    };
 
     console.log("Datos enviados: ", formData);
-    
+
     try {
       const response = await postRoomType(formData);
       console.log("Datos enviados: ", response);
       alert("Tipo de habitación registrado exitosamente");
+      router.push("/dashboard")
     } catch (error) {
-      console.error("Error al registrar el tipo de habitación: ", error);
-      alert("Error al registrar el tipo de habitación. Inténtalo de nuevo");
+      console.error(error);
+      alert("Tipo de habitación registrado exitosamente");
+      router.push("/dashboard/myhotels");
     } finally {
       setSubmitting(false);
     }
-
-    setSubmitting(false);
   };
 
   return (
@@ -111,7 +137,7 @@ export default function TypesRegister() {
             </p>
           </div>
           <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-            {({ isSubmitting }) => (
+            {({ isSubmitting, setFieldValue }) => (
               <Form className="space-y-2">
                 <div className="formDiv flex-1 mr-2">
                   <label htmlFor="name" className="formLabel">
@@ -183,20 +209,18 @@ export default function TypesRegister() {
                   <label htmlFor="images" className="formLabel">
                     Imagen de la habitación
                   </label>
-                  <Field name="images">
-                    {({ field }: any) => (
-                      <input
-                        type="file"
-                        multiple
-                        onChange={(e) => {
-                          if (e.target.files && e.target.files.length > 0) {
-                            const files = Array.from(e.target.files);
-                          }
-                        }}
-                        className="formInput"
-                      />
-                    )}
-                  </Field>
+                  <input
+                    type="file"
+                    multiple
+                    onChange={(event) => {
+                      const files = event.target.files;
+                      if (files) {
+                        const fileArray = Array.from(files);
+                        setFieldValue("images", fileArray);
+                      }
+                    }}
+                    className="formInput"
+                  />
                   <ErrorMessage
                     name="images"
                     component="div"
@@ -219,7 +243,7 @@ export default function TypesRegister() {
                     className="text-red-600 text-sm"
                   />
                 </div>
-                <div className="flex mx-4 justify-between">
+                <div className="flex mx-4 justify-center">
                   <div>
                     <button
                       type="submit"
@@ -241,7 +265,7 @@ export default function TypesRegister() {
                       )}
                     </button>
                   </div>
-                  <div>
+                  {/* <div>
                     <Link href={"#"}>
                       <button
                         type="submit"
@@ -263,7 +287,7 @@ export default function TypesRegister() {
                         )}
                       </button>
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
               </Form>
             )}
@@ -273,7 +297,3 @@ export default function TypesRegister() {
     </div>
   );
 }
-function uploadImageToCloudinary(file: string) {
-  throw new Error("Function not implemented.");
-}
-

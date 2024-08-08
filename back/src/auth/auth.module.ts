@@ -9,20 +9,23 @@ import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 import { CustomersModule } from 'src/customers/customers.module';
 import { HotelAdminsModule } from 'src/hotel-admins/hotel-admins.module';
 import { MailService } from 'src/email-notify/mail.service';
-import { PassportModule } from '@nestjs/passport';
 import { SessionSerializer } from './Serializer';
 import { CustomerGoogleStrategy } from './strategies/register.customer.google.strategy';
 import { HotelAdminGoogleStrategy } from './strategies/register.hotelAdmin.google.strategy';
 import { CustomerGoogleAuthGuard } from './guards/customer.google.authguard';
 import { HotelAdminGoogleAuthGuard } from './guards/hotelAdmin.google.authguard';
+import { SuperAdmins } from 'src/super-admin/superAdmin.entity';
+import { SuperAdminModule } from 'src/super-admin/super-admin.module';
+import { SuperAdminRepository } from 'src/super-admin/superAdmin.repository';
 import { LoginGoogleStrategy } from './strategies/login.google.strategy';
 import { LoginGoogleAuthGuard } from './guards/login.google.authguard copy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Customers, HotelAdmins]),
+    TypeOrmModule.forFeature([Customers, HotelAdmins, SuperAdmins]),
     CustomersModule,
     HotelAdminsModule,
+    SuperAdminModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -35,6 +38,7 @@ import { LoginGoogleAuthGuard } from './guards/login.google.authguard copy';
     AuthService,
     CustomersRepository,
     HotelAdminRepository,
+    SuperAdminRepository,
     MailService,
     SessionSerializer,
   ],

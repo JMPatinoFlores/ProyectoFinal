@@ -5,7 +5,7 @@ import ProductsList from "@/components/ProductsList";
 import SearchBar from "@/components/SearchBar";
 
 function Home() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (searchQuery: string) => {
     setSearchQuery(searchQuery);
@@ -13,7 +13,7 @@ function Home() {
 
   return (
     <div>
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
       <ProductsList searchQuery={searchQuery} />
     </div>
   );

@@ -1,48 +1,72 @@
-"use client"
+"use client";
 
-// import { useState, useEffect } from "react";
-// import { useParams } from "next/navigation";
 import useGoogleMapsData from "../../lib/googleMaps/googleMapsData";
+import React from "react";
+import useGoogleMapsDataLocation from "../../lib/googleMaps/googleMapsData";
 import { IHotelDetail, ILocationDetail } from "@/interfaces";
 import { GoogleMap, Marker } from "@react-google-maps/api";
+import Rating from "../rating";
+import { PostReview } from "../PostReview";
 
 interface Props {
   hotel: IHotelDetail | null;
-  hotelLocation: ILocationDetail | null;
 }
 
-const HotelDetail: React.FC<Props> = ({ hotel, hotelLocation }) => {
-  const { isLoaded, mapCenter, marker } = useGoogleMapsData(hotelLocation);
+interface MapProps {
+  lat: number;
+  lng: number;
+}
 
-  if (!hotel) return <div>Loading...</div>;
+const HotelDetail: React.FC<Props> = ({ hotel }) => {
+  const { isLoaded, mapCenter, marker } = useGoogleMapsDataLocation(hotel);
+  const lat = hotel?.location[0];
+  const lng = hotel?.location[1];
 
-  if (!isLoaded) return <p>Loading...</p>;
+  const rating = [1, 2, 3, 4, 5];
 
-  if (!mapCenter) return <p>Loading map...</p>;
+  if (!hotel)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading...</p>
+      </div>
+    );
+
+  if (!isLoaded)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading...</p>
+      </div>
+    );
+
+  if (!mapCenter)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading map...</p>
+      </div>
+    );
 
   return (
     <div className="flex flex-wrap">
       <div className="w-full mb-4 px-4">
         <h2 className="text-2xl font-bold">{hotel.name}</h2>
+        <Rating rating={hotel.rating} />
       </div>
       <div className="w-1/2 px-4">
         <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden">
-          <img src={hotel.image} alt="Hotel Image" />
+          <img src={hotel.images[0]} alt="Hotel Image" />
         </div>
         <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden">
-          <GoogleMap
-            options={{
-              disableDefaultUI: true,
-              clickableIcons: true,
-              scrollwheel: false,
-            }}
-            zoom={14}
-            center={mapCenter}
-            mapTypeId={google.maps.MapTypeId.ROADMAP}
-            mapContainerStyle={{ width: "100%", height: "100%" }}
-          >
-            {marker && <Marker position={mapCenter} />}
-          </GoogleMap>
+          <div>
+            {isLoaded && (
+              <GoogleMap
+                mapContainerStyle={{ height: "400px", width: "1000px" }}
+                center={mapCenter}
+                zoom={12}
+              >
+                {marker && <Marker position={marker.getPosition()} />}
+              </GoogleMap>
+            )}
+          </div>
         </div>
       </div>
       <div className="w-1/2 px-4">
@@ -58,7 +82,7 @@ const HotelDetail: React.FC<Props> = ({ hotel, hotelLocation }) => {
             ))}
           </ul>
         </div>
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <h2 className="text-2xl font-bold">Precio</h2>
           <p>
             $
@@ -67,11 +91,11 @@ const HotelDetail: React.FC<Props> = ({ hotel, hotelLocation }) => {
             </span>{" "}
             USD/noche
           </p>
-        </div>
-        <div className="mb-4">
+        </div> */}
+        {/* <div className="mb-4">
           <h2 className="text-2xl font-bold">Recomendaciones</h2>
           <p>{hotel.recommendations}</p>
-        </div>
+        </div> */}
         <div className="flex justify-center mb-4">
           <button className="bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]">
             Reservar

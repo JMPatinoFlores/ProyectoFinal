@@ -1,18 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ProductCard from "../ProductCard";
 import { IHotelDetail, IProductsListProps } from "@/interfaces";
+import { HotelContext } from "@/context/hotelContext";
 
 function ProductsList({ searchQuery }: IProductsListProps) {
   const [hotels, setHotels] = useState<IHotelDetail[]>([]);
   const [filteredHotels, setFilteredHotels] = useState<IHotelDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
-
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
+  const { fetchHotels, fetchHotelsBySearch } = useContext(HotelContext);
 
   const handleNextPage = () => {
     setCurrentPage(currentPage + 1);
@@ -23,31 +21,37 @@ function ProductsList({ searchQuery }: IProductsListProps) {
   };
 
   useEffect(() => {
-    fetch("/hotels.json")
-      .then((response) => response.json())
-      .then((data) => setHotels(data));
-  }, []);
+    fetchHotels().then((data) => {
+      if (Array.isArray(data)) {
+        setHotels(data);
+      } else {
+        console.error("fetchHotels did not return an array.");
+        setHotels([]);
+      }
+    });
+  }, [fetchHotels]);
 
   useEffect(() => {
     if (searchQuery) {
-      const filteredHotels = hotels.filter((hotel) => {
-        return (
-          hotel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          hotel.country.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          hotel.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          hotel.description.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+      fetchHotelsBySearch(searchQuery).then((data) => {
+        if (Array.isArray(data)) {
+          setFilteredHotels(data);
+        } else {
+          console.error("fetchHotelsBySearch did not return an array.");
+          setFilteredHotels([]);
+        }
       });
-      setFilteredHotels(filteredHotels);
     } else {
       setFilteredHotels(hotels);
     }
-  }, [searchQuery, hotels]);
+  }, [searchQuery, hotels, fetchHotelsBySearch]);
 
-  const paginatedHotels = filteredHotels.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedHotels = Array.isArray(filteredHotels)
+    ? filteredHotels.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+    : [];
 
   return (
     <div className="p-4">

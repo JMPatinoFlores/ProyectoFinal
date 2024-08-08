@@ -17,23 +17,23 @@ export class AvailabilityRepository {
     ) { }
 
     async getAllAvailabilities() {
-        const availabilities = await this.roomAvailabilityDBRepository.find()
-        const availabilitiesToReturn: RoomAvailability[] = []
-        for (const availability of availabilities) {
-            if (!availability.isDeleted) availabilitiesToReturn.push(availability)
-        }
-        if (availabilitiesToReturn.length === 0) throw new NotFoundException('No se encontraron availabilities.')
-        return availabilitiesToReturn
+        const availabilities = await this.roomAvailabilityDBRepository.find({ where: { isDeleted: false } })
+        if (availabilities.length === 0) throw new NotFoundException('No se encontraron availabilities.')
+        return availabilities
+    }
+
+    async getIsDeletedAvailabilities() {
+        const availabilities = await this.roomAvailabilityDBRepository.find({ where: { isDeleted: true } })
+        if (availabilities.length === 0) throw new NotFoundException('No se encontraron availabilities.')
+        return availabilities
     }
 
     async getAvailabilitiesByRoomTypeId(roomTypeId: string) {
-        const allNonAvailabilityPeriods = await this.roomAvailabilityDBRepository.find({ where: { room: { roomtype: { id: roomTypeId } } } })
-        const nonAvailabilityPeriodsToReturn: RoomAvailability[] = []
-        for (const availability of allNonAvailabilityPeriods) {
-            if (!availability.isDeleted) nonAvailabilityPeriodsToReturn.push(availability)
-        }
-        if (nonAvailabilityPeriodsToReturn.length === 0) throw new NotFoundException('El roomtype no contiene availabilities.')
-        return nonAvailabilityPeriodsToReturn
+        const roomType = await this.roomTypeDBRepository.findOneBy({ id: roomTypeId })
+        if (!roomType || roomType.isDeleted) throw new NotFoundException('Room type con id enviado no encontrado.')
+        const nonAvailabilityPeriods = await this.roomAvailabilityDBRepository.find({ where: { isDeleted: false, room: { roomtype: { id: roomTypeId } } } })
+        if (nonAvailabilityPeriods.length === 0) throw new NotFoundException('El roomtype no contiene availabilities.')
+        return nonAvailabilityPeriods
     }
 
     async createRoomAvailability(roomId: string, startDate: string, endDate: string) {
@@ -53,5 +53,10 @@ export class AvailabilityRepository {
     async deleteRoomAvailability(id: string) {
         await this.roomAvailabilityDBRepository.delete({ id })
         return "Availability eliminada."
+    }
+
+    async softDeleteRoomAvailability(id: string) {
+        await this.roomAvailabilityDBRepository.update({ id }, {isDeleted: true})
+        return "Availability borrada con un borrado lógico."
     }
 }

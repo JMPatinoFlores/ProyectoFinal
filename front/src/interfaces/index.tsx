@@ -5,12 +5,17 @@ export interface IUser {
   name: string;
   lastName: string;
   email: string;
-  password: string;
+  password?: string;
   phone: string;
   country: string;
   city: string;
   address: string;
   birthDate: string;
+}
+
+export interface IUserResponse extends IUser {
+  isAdmin: boolean;
+  hotels?: IHotel[];
 }
 
 export interface ILogin {
@@ -59,28 +64,50 @@ export interface IHotelierRegisterValues {
 }
 
 export interface IUserContextType {
-  user: Partial<IUser> | null;
-  setUser: React.Dispatch<React.SetStateAction<Partial<IUser> | null>>;
+  user: IUserResponse | null;
+  setUser: React.Dispatch<React.SetStateAction<IUserResponse | null>>;
   isLogged: boolean;
   setIsLogged: (isLogged: boolean) => void;
   isAdmin: boolean;
-  setIsAdmin: (isLogged: boolean) => void;
+  setIsAdmin: (isAdmin: boolean) => void;
   login: (credentials: ILogin) => Promise<boolean>;
   googleLogin: (token: string, user: IUserResponse) => Promise<boolean>;
   customerRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   hotelierRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
+  postReview: (review: ICreateReview) => Promise<boolean>;
+  getReviews: () => void;
+  reviews: IReviewResponse[];
   logOut: () => void;
+}
+
+export interface ICreateReview {
+  userId: number;
+  hotelId: number;
+  rating: number;
+  comment: string;
+}
+
+export interface IReview {
+  rating: number;
+  comment: string;
+}
+
+export interface IReviewResponse {
+  id: string;
+  userId: string;
+  hotelId: string;
+  comment: string;
+  date: string;
+  rating: number;
+}
+
+export interface IReviewProps {
+  review: IReviewResponse;
 }
 
 export interface IDecodeToken extends JwtPayload {
   id: number;
   name: string;
-  email: string;
-  isAdmin: boolean;
-}
-
-export interface IUserResponse {
-  id: number;
   email: string;
   isAdmin: boolean;
 }
@@ -128,12 +155,24 @@ export interface IHotelRegister {
   hotel_admin_id: string;
 }
 
+export interface ICreateBooking {
+  customerId: string;
+  hotelId: string;
+  roomTypesIdsAndDates: [
+    {
+      roomTypeId: string;
+      checkInDate: string;
+      checkOutDate: string;
+    }
+  ]
+}
+
 export interface IHotelImage {
   image: File[];
 }
 
 export interface IHotel {
-  hotelId: string;
+  id: string;
   name: string;
   description: string;
   email: string;
@@ -153,11 +192,12 @@ export interface IHotelContextType {
   hotels: IHotel[] | null;
   setHotels: React.Dispatch<React.SetStateAction<IHotel[] | null>>;
   addHotel: (hotel: IHotelRegister) => Promise<boolean>;
-  fetchHotels: () => Promise<void>;
+  fetchHotels: () => Promise<IHotelDetail[]>;
   fetchBookingsByHotel: (hotelId: string) => Promise<IBooking[]>;
   fetchRoomsByHotel: (hotelId: string) => Promise<IRoom[]>;
   fetchHotelById: (hotelId: string) => Promise<IHotelDetail | null>;
-  postBooking: (booking: ICreateBooking) => Promise<any>;
+  fetchHotelsBySearch: (searchQuery: string) => Promise<IHotelDetail[]>;
+  fetchHotelsByAdmin: (adminId: string) => Promise<IHotel[]>;
 }
 
 export interface IHotelResponse {
@@ -193,18 +233,6 @@ export interface IReview {
   rating: number;
 }
 
-export interface ICreateBooking {
-  customerId: string;
-  hotelId: string;
-  roomTypesIdsAndDates: [
-    {
-      roomTypeId: string;
-      checkInDate: string;
-      checkOutDate: string;
-    }
-  ];
-}
-
 export interface IBooking {
   bookingId: string;
   date: string;
@@ -230,15 +258,19 @@ export interface IBookingForm {
 export interface IHotelDetail {
   id: string;
   name: string;
+  description: string;
+  email: string;
   price: number;
   country: string;
   city: string;
-  distance: number;
-  image: string;
   address: string;
-  description: string;
+  location: number[];
+  totalRooms: number;
   services: string[];
-  recommendations: string;
+  rating: string;
+  images: string[];
+  isDeleted: boolean;
+  roomstype: [];
 }
 
 export interface IHotelLocation {
