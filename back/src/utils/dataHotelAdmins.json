@@ -8,7 +8,7 @@
   "city": "Santiago de Compostela",
   "address": "Praza de Camilo Díaz Baliño, 17, 1570",
   "email": "admin@mail.es", 
-  "phone": "+34 619 20 92 61",
+  "phone": "+34 619 20 92 61"
 },
 { 
   "name": "Administrador",
@@ -19,7 +19,7 @@
   "city": "Quito",
   "address": "Mallorca N24-275 y Coruña (La Floresta)",
   "birthDate": "01/01/1990",
-  "phone": "0997977072",  
+  "phone": "0997977072"  
 },
 { 
   "name": "Administrador",
@@ -30,7 +30,7 @@
   "city": "Cancún",
   "address": "Blvd. Kukulcan 9, Punta Cancun",
   "birthDate": "01/01/1990",
-  "phone": "+52 656 257 1700",  
+  "phone": "+52 656 257 1700"  
 },
 { 
   "name": "Administrador",
@@ -41,7 +41,7 @@
   "city": "Lima",
   "address": "Av Giuseppe Garibaldi 396, Jesús María 15072",
   "birthDate": "01/01/1990",
-  "phone": "(511) 219-1600",  
+  "phone": "(511) 219-1600"  
 }
 ]
 

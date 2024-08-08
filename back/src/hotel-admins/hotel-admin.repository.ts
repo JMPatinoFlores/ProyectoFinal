@@ -35,7 +35,8 @@ export class HotelAdminRepository {
       skip: skip,
     });
     return hotelAdmins.map(
-      ({ password, ...hotelAdminNoPassword }) => hotelAdminNoPassword,
+      ({ password, numberOfHotels, ...hotelAdminNoPassword }) =>
+        hotelAdminNoPassword,
     );
   }
 

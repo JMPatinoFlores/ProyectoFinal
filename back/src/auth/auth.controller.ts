@@ -31,8 +31,7 @@ import { Role } from './guards/roles.enum';
 import { CreateSuperAdmin } from 'src/super-admin/superAdmin.dto';
 import { LoginGoogleAuthGuard } from './guards/login.google.authguard copy';
 import { JwtService } from '@nestjs/jwt';
-import { Customers } from 'src/customers/customers.entity';
-import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
+
 @ApiTags('Autenticación y recuperación de contraseñas')
 @Controller('auth')
 export class AuthController {
@@ -125,7 +124,7 @@ export class AuthController {
 
   @Put('changePassword')
   @ApiBearerAuth()
-  @Roles(Role.Admin, Role.User)
+  @Roles(Role.Admin, Role.User, Role.SuperAdmin)
   @UseGuards(RolesGuard, AuthGuard)
   @ApiOperation({ summary: 'Cambio de contraseña' })
   changePassword(
