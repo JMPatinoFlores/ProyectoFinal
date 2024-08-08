@@ -47,26 +47,12 @@ export class RoomsTypeRepository {
         }
         const arrayOfPrices = hotelFound.roomstype.map(roomtype => roomtype.price);
         arrayOfPrices.push(price)
-        const fixedMin = 0
-        const fixedMax = 300
-        const minNew = 1;
-        const maxNew = 4;
 
-        // console.log(arrayOfPrices);
+        const total = arrayOfPrices.reduce((acc, curr) => acc + curr, 0)
 
+        const averagePrice = Math.round((total / arrayOfPrices.length) * 10) / 10
 
-        const transformedPrices = arrayOfPrices.map(num => {
-            return minNew + ((num - fixedMin) * (maxNew - minNew)) / (fixedMax - fixedMin);
-        });
-        console.log(transformedPrices);
-
-        const total = transformedPrices.reduce((acc, curr) => acc + curr, 0)
-        // console.log(total);
-
-        const averagePriceInNewScale = Math.round((total / transformedPrices.length) * 10) / 10
-        // console.log(averagePriceInNewScale);
-
-        await this.hotelDbRepository.update({ id: hotelFound.id }, { price: averagePriceInNewScale })
+        await this.hotelDbRepository.update({ id: hotelFound.id }, { price: averagePrice })
 
         const newRoomtype: RoomsType = this.roomstypeDbRepository.create({
             ...roomtypeData,

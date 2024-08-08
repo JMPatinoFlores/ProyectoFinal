@@ -5,12 +5,12 @@ import ProductCard from "../ProductCard";
 import { IHotelDetail, IProductsListProps } from "@/interfaces";
 import { HotelContext } from "@/context/hotelContext";
 
-function ProductsList({ searchQuery }: IProductsListProps) {
+function ProductsList({ searchQuery, queryParams }: IProductsListProps) {
   const [hotels, setHotels] = useState<IHotelDetail[]>([]);
   const [filteredHotels, setFilteredHotels] = useState<IHotelDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
-  const { fetchHotels, fetchHotelsBySearch } = useContext(HotelContext);
+  const { fetchHotels, fetchHotelsBySearch, fetchHotelsByFilters } = useContext(HotelContext);
 
   const handleNextPage = () => {
     setCurrentPage(currentPage + 1);
@@ -45,6 +45,21 @@ function ProductsList({ searchQuery }: IProductsListProps) {
       setFilteredHotels(hotels);
     }
   }, [searchQuery, hotels, fetchHotelsBySearch]);
+
+  useEffect(() => {
+    if (queryParams) {
+      fetchHotelsByFilters(queryParams).then((data) => {
+        if (Array.isArray(data)) {
+          setFilteredHotels(data);
+        } else {
+          console.error("fetchHotelsByFilters did not return an array.");
+          setFilteredHotels([]);
+        }
+      })
+    } else {
+      setFilteredHotels(hotels);
+    }
+  }, [queryParams, fetchHotelsByFilters])
 
   const paginatedHotels = Array.isArray(filteredHotels)
     ? filteredHotels.slice(

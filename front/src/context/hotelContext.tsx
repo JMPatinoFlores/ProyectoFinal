@@ -26,6 +26,7 @@ export const HotelContext = createContext<IHotelContextType>({
   fetchRoomsByHotel: async () => [],
   fetchHotelById: async () => null,
   fetchHotelsBySearch: async () => [],
+  fetchHotelsByFilters: async () => [],
   fetchHotelsByAdmin: async () => [],
 });
 
@@ -95,6 +96,30 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     []
   );
 
+  const fetchHotelsByFilters = useCallback(
+    async (queryParams: string): Promise<IHotelDetail[]> => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/hotels/filters?${queryParams}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          return data;
+        } else {
+          console.error("fetchHotelsByFilters did not return an array.");
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching hotels by filters:", error);
+        return [];
+      }
+    },
+    []
+  );
+
   const fetchHotelsByAdmin = useCallback(async (adminId: string) => {
     try {
       const data = await getHotelsByAdminId(adminId);
@@ -151,6 +176,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         fetchRoomsByHotel,
         fetchHotelById,
         fetchHotelsBySearch,
+        fetchHotelsByFilters,
         fetchHotelsByAdmin,
       }}
     >
