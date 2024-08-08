@@ -28,7 +28,7 @@ export class LoginGoogleStrategy extends PassportStrategy(Strategy, 'google-logi
     done: VerifyCallback,
   ) {
 
-    const user: Customers | HotelAdmins = await this.authService.googleLogin({email: profile.emails[0].value})
+    const user: Customers | HotelAdmins | string = await this.authService.googleLogin({ email: profile.emails[0].value })
     return user || null;
     // done(null, user);
   }
