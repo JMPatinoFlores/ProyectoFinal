@@ -139,8 +139,8 @@ export class AuthService {
           city: customer.city,
           address: customer.address,
           birthDate: customer.birthDate,
+          bookings: customer.bookings,
         },
-        bookings: customer.bookings,
         token,
       };
     }
@@ -163,15 +163,13 @@ export class AuthService {
       return {
         message: 'Hotelero logueado',
         user: {
-          user: {
-            phone: adminHotel.phone,
-            country: adminHotel.country,
-            city: adminHotel.city,
-            address: adminHotel.address,
-            birthDate: adminHotel.birthDate,
-          },
+          phone: adminHotel.phone,
+          country: adminHotel.country,
+          city: adminHotel.city,
+          address: adminHotel.address,
+          birthDate: adminHotel.birthDate,
+          hotels: adminHotel.hotels,
         },
-        hotels: adminHotel.hotels,
         token,
       };
     }
