@@ -3,6 +3,7 @@
 import { useState } from "react";
 import ProductsList from "@/components/ProductsList";
 import SearchBar from "@/components/SearchBar";
+import HotelsFilter from "@/components/HotelsFilter";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,6 +16,7 @@ function Home() {
     <div>
       <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
       <ProductsList searchQuery={searchQuery} />
+      <HotelsFilter />
     </div>
   );
 }
