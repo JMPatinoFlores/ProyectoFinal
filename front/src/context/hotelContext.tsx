@@ -1,8 +1,21 @@
 "use client";
 
-import { IHotel, IHotelContextType, IHotelDetail, IHotelRegister } from "@/interfaces"
-import { getBookingByHotel, getHotelById, getHotels, getHotelsByAdminId, getRoomsByHotel, postHotel } from "@/lib/server/fetchHotels"
-import { createContext, useCallback, useEffect, useState } from "react"
+import {
+  IHotel,
+  IHotelContextType,
+  IHotelDetail,
+  IHotelRegister,
+} from "@/interfaces";
+import {
+  getBookingByHotel,
+  getHotelById,
+  getHotels,
+  getHotelsByAdminId,
+  getRoomsByHotel,
+  postHotel,
+  getHotelsBySearch,
+} from "@/lib/server/fetchHotels";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 export const HotelContext = createContext<IHotelContextType>({
   hotels: null,
@@ -13,6 +26,7 @@ export const HotelContext = createContext<IHotelContextType>({
   fetchRoomsByHotel: async () => [],
   fetchHotelById: async () => null,
   fetchHotelsBySearch: async () => [],
+  fetchHotelsByFilters: async () => [],
   fetchHotelsByAdmin: async () => [],
 });
 
@@ -82,6 +96,30 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     []
   );
 
+  const fetchHotelsByFilters = useCallback(
+    async (queryParams: string): Promise<IHotelDetail[]> => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/hotels/filters?${queryParams}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          return data;
+        } else {
+          console.error("fetchHotelsByFilters did not return an array.");
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching hotels by filters:", error);
+        return [];
+      }
+    },
+    []
+  );
+
   const fetchHotelsByAdmin = useCallback(async (adminId: string) => {
     try {
       const data = await getHotelsByAdminId(adminId);
@@ -116,7 +154,6 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
       return null;
     }
   };
-    
 
   useEffect(() => {
     const hotels =
@@ -128,21 +165,22 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-    return (
-      <HotelContext.Provider
-        value={{
-          hotels,
-          setHotels,
-          addHotel,
-          fetchHotels,
-          fetchBookingsByHotel,
-          fetchRoomsByHotel,
-          fetchHotelById,
-          fetchHotelsBySearch,
-          fetchHotelsByAdmin,
-        }}
-      >
-        {children}
-      </HotelContext.Provider>
-    );
-}
+  return (
+    <HotelContext.Provider
+      value={{
+        hotels,
+        setHotels,
+        addHotel,
+        fetchHotels,
+        fetchBookingsByHotel,
+        fetchRoomsByHotel,
+        fetchHotelById,
+        fetchHotelsBySearch,
+        fetchHotelsByFilters,
+        fetchHotelsByAdmin,
+      }}
+    >
+      {children}
+    </HotelContext.Provider>
+  );
+};

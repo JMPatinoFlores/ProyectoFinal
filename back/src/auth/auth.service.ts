@@ -139,8 +139,8 @@ export class AuthService {
           city: customer.city,
           address: customer.address,
           birthDate: customer.birthDate,
+          bookings: customer.bookings,
         },
-        bookings: customer.bookings,
         token,
       };
     }
@@ -163,15 +163,33 @@ export class AuthService {
       return {
         message: 'Hotelero logueado',
         user: {
-          user: {
-            phone: adminHotel.phone,
-            country: adminHotel.country,
-            city: adminHotel.city,
-            address: adminHotel.address,
-            birthDate: adminHotel.birthDate,
-          },
+          phone: adminHotel.phone,
+          country: adminHotel.country,
+          city: adminHotel.city,
+          address: adminHotel.address,
+          birthDate: adminHotel.birthDate,
+          hotels: adminHotel.hotels,
         },
-        hotels: adminHotel.hotels,
+        token,
+      };
+    }
+    if (superAdmin) {
+      const validPassword = await bcrypt.compare(password, superAdmin.password);
+      if (!validPassword)
+        throw new BadRequestException('Credenciales incorrectas');
+
+      //*Firmar el Token
+
+      const payload = {
+        id: superAdmin.id,
+        name: superAdmin.name,
+        email: superAdmin.email,
+        superAdmin: superAdmin.superAdmin,
+      };
+      const token = this.jwtService.sign(payload);
+
+      return {
+        message: 'Super Admin logueado',
         token,
       };
     }
@@ -324,26 +342,18 @@ export class AuthService {
     const foundCustomer = await this.customersRepository.getCustomerByEmail(
       details.email,
     );
-    if (foundCustomer)
-      throw new BadRequestException('Cuenta de Google ya registrada.');
+    if (foundCustomer) return "googleRegisterError=userExists"
     const newCustomer = await this.customersDBRepository.save(details);
-    if (!newCustomer)
-      throw new InternalServerErrorException(
-        'Error del servidor al hacer el registro.',
-      );
+    if (!newCustomer) return "googleRegisterError=internalError"
     return newCustomer;
   }
 
   async googleRegisterHotelAdmin(details: GoogleRegisterUserDetails) {
     const foundHotelAdmin =
       await this.hotelAdminRepository.getHotelAdminByEmail(details.email);
-    if (foundHotelAdmin)
-      throw new BadRequestException('Cuenta de Google ya registrada.');
+    if (foundHotelAdmin) return "googleRegisterError=userExists"
     const newHotelAdmin = await this.hotelAdminsDBRepository.save(details);
-    if (!newHotelAdmin)
-      throw new InternalServerErrorException(
-        'Error del servidor al hacer el registro.',
-      );
+    if (!newHotelAdmin) return "googleRegisterError=internalError"
     return newHotelAdmin;
   }
 
@@ -355,8 +365,7 @@ export class AuthService {
       details.email,
     );
 
-    if (!customer && !adminHotel)
-      throw new BadRequestException('Cuenta de Google no registrada aún.');
+    if (!customer && !adminHotel) return 'googleLoginError'
 
     if (customer) {
       return customer;

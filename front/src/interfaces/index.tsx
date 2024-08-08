@@ -197,6 +197,7 @@ export interface IHotelContextType {
   fetchRoomsByHotel: (hotelId: string) => Promise<IRoom[]>;
   fetchHotelById: (hotelId: string) => Promise<IHotelDetail | null>;
   fetchHotelsBySearch: (searchQuery: string) => Promise<IHotelDetail[]>;
+  fetchHotelsByFilters: (queryParams: string) => Promise<IHotelDetail[]>;
   fetchHotelsByAdmin: (adminId: string) => Promise<IHotel[]>;
 }
 
@@ -222,15 +223,6 @@ export interface IHotelAdmin {
   hotelsNumber: number;
   isAdmin: boolean;
   userId: string;
-}
-
-export interface IReview {
-  reviewId: string;
-  userId: string;
-  hotelId: string;
-  comment: string;
-  date: string;
-  rating: number;
 }
 
 export interface IBooking {
@@ -281,6 +273,15 @@ export interface IHotelLocation {
 
 export interface IProductsListProps {
   searchQuery: string;
+  queryParams: string;
+}
+
+export interface QueryParams {
+  rating?: number;
+  country?: string;
+  city?: string;
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 export interface ILocationDetail {
@@ -292,4 +293,8 @@ export interface ILocationDetail {
 export interface ISearchBarProps {
   searchQuery: string;
   onSearch: (query: string) => void;
+}
+
+export interface IHotelsFilterProps {
+  onFilter: (params: QueryParams) => void;
 }
