@@ -48,7 +48,7 @@ export class RoomsController {
   @ApiResponse({ status: 404, description: 'Room not created :('})
   @ApiBearerAuth()
   @Post()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   createDbRoom(@Body() roomDto: CreateRoomDto) {
     return this.roomsDbService.createDbRoom(roomDto);
@@ -73,7 +73,7 @@ export class RoomsController {
   @ApiResponse({ status: 404, description: 'Rooms were not created :('})
   @ApiBearerAuth()
   @Post('load')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   loadRooms(@Body() loadroomDto: LoadRoomsDto) {
     return this.roomsDbService.loadRooms(loadroomDto);
@@ -84,7 +84,7 @@ export class RoomsController {
   @ApiResponse({ status: 404, description: 'There are not rooms deleted :('})
   @ApiBearerAuth()
   @Get('deleted')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   getDbRoomDeleted() {
     return this.roomsDbService.getDbRoomDeleted();
@@ -106,7 +106,7 @@ export class RoomsController {
   @ApiResponse({ status: 404, description: 'Room not was updated :('})
   @ApiBearerAuth()
   @Put('restore/:id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   restoreDbRoom(@Param('id', ParseUUIDPipe) id: string) {
     return this.roomsDbService.restoreDbRoom(id);
@@ -129,7 +129,7 @@ export class RoomsController {
   @ApiResponse({ status: 404, description: 'Room not was updated :('})
   @ApiBearerAuth()
   @Put(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   updateDbRoom(
     @Param('id', ParseUUIDPipe) id: string,
@@ -144,7 +144,7 @@ export class RoomsController {
   @ApiResponse({ status: 404, description: 'Room not was eliminated  :('})
   @ApiBearerAuth()
   @Delete(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   deleteDbRoom(@Param('id', ParseUUIDPipe) id: string) {
     return this.roomsDbService.deleteDbRoom(id);

@@ -5,7 +5,7 @@ export interface IUser {
   name: string;
   lastName: string;
   email: string;
-  password: string;
+  password?: string;
   phone: string;
   country: string;
   city: string;
@@ -158,7 +158,7 @@ export interface IHotelImage {
 }
 
 export interface IHotel {
-  hotelId: string;
+  id: string;
   name: string;
   description: string;
   email: string;
@@ -183,6 +183,7 @@ export interface IHotelContextType {
   fetchRoomsByHotel: (hotelId: string) => Promise<IRoom[]>;
   fetchHotelById: (hotelId: string) => Promise<IHotelDetail | null>;
   fetchHotelsBySearch: (searchQuery: string) => Promise<IHotelDetail[]>;
+  fetchHotelsByFilters: (queryParams: string) => Promise<IHotelDetail[]>;
   fetchHotelsByAdmin: (adminId: string) => Promise<IHotel[]>;
 }
 
@@ -258,6 +259,15 @@ export interface IHotelLocation {
 
 export interface IProductsListProps {
   searchQuery: string;
+  queryParams: string;
+}
+
+export interface QueryParams {
+  rating?: number;
+  country?: string;
+  city?: string;
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 export interface ILocationDetail {
@@ -269,4 +279,8 @@ export interface ILocationDetail {
 export interface ISearchBarProps {
   searchQuery: string;
   onSearch: (query: string) => void;
+}
+
+export interface IHotelsFilterProps {
+  onFilter: (params: QueryParams) => void;
 }

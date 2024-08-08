@@ -106,15 +106,16 @@ export class HotelsRepository {
       .getMany();
   }
 
-  async getFilteredHotels(rating: number, country: string, city: string, maxPrice: number) {
+  async getFilteredHotels(rating: number, country: string, city: string, minPrice: number, maxPrice: number) {
     const query = this.hotelDbRepository.createQueryBuilder('hotel')
 
     if (rating) query.andWhere('hotel.rating >= :rating', { rating })
     if (country) query.andWhere('hotel.country = :country', { country })
     if (city) query.andWhere('hotel.city = :city', { city })
+    if (minPrice) query.andWhere('hotel.price >= :minPrice', { minPrice });
     if (maxPrice) query.andWhere('hotel.price <= :maxPrice', { maxPrice })
     const hotels = await query.getMany()
-    if (!hotels) throw new NotFoundException('No se encontró ningún hotel con esas características.')
+    if (hotels.length === 0) throw new NotFoundException('No se encontró ningún hotel con esas características.')
     return hotels
   }
 
@@ -172,16 +173,18 @@ export class HotelsRepository {
   }
 
   async addHotels() {
+    const hotelAdmins = await this.hotelAdminRepository.find()
+    if (hotelAdmins.length === 0) throw new BadRequestException('Es necesario que haya al menos 1 hotel admin en la BBDD.')
     data?.map(async (e, index) => {
-      const hotelAdminExists = await this.hotelAdminRepository.exists({
-        where: { id: e.hotel_admin_id },
-      });
+      // const hotelAdminExists = await this.hotelAdminRepository.exists({
+      //   where: { id: e.hotel_admin_id },
+      // });
 
-      if (!hotelAdminExists) {
-        throw new NotFoundException(
-          `Hotel Admin not found with id ${e.hotel_admin_id}`,
-        );
-      }
+      // if (!hotelAdminExists) {
+      //   throw new NotFoundException(
+      //     `Hotel Admin not found with id ${e.hotel_admin_id}`,
+      //   );
+      // }
       const hotels = new Hotel();
       hotels.name = e.name;
       hotels.description = e.description;
@@ -194,7 +197,8 @@ export class HotelsRepository {
       hotels.services = e.services;
       hotels.rating = e.rating;
       hotels.images = e.images;
-      (hotels as any).__hotelAdminId = e.hotel_admin_id;
+      hotels.price = e.price;
+      (hotels as any).__hotelAdminId = hotelAdmins[0].id;
 
       await this.hotelDbRepository
         .createQueryBuilder()

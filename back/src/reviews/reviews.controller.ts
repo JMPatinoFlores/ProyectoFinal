@@ -36,7 +36,7 @@ export class ReviewsController {
   @ApiResponse({ status: 404, description: 'There are not reviews deleted :('})
   @ApiBearerAuth()
   @Get('deleted')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   getDbReviewDeleted(){
     return this.reviewService.getDbReviewDeleted();

@@ -59,7 +59,7 @@ export class HotelsController {
   @ApiResponse({ status: 404, description: 'Hotel not created :('})
   @ApiBearerAuth()
   @Post()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   createDbHotel(@Body() hotelDto: CreateHotelDto) {
     return this.hotelDbService.createDbHotel(hotelDto);
@@ -80,7 +80,7 @@ export class HotelsController {
   @ApiResponse({ status: 404, description: 'There are not hotels deleted :('})
   @ApiBearerAuth()
   @Get('deleted')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   getDbHotelsDeleted() {
     return this.hotelDbService.getDbHotelsDeleted();
@@ -97,18 +97,17 @@ export class HotelsController {
     return this.hotelDbService.addHotels();
   }
 
-
-  @Get('filter')
+  @Get('filters')
   async getFilteredHotels(
     @Query('rating') rating: string,
     @Query('country') country: string,
     @Query('city') city: string,
+    @Query('minPrice') minPrice: string,
     @Query('maxPrice') maxPrice: string,
   ) {
-    if (!rating && !country && !city && !maxPrice) throw new BadRequestException('Es necesario enviar el valor de al menos un filtro por query.')
-    if (Number(maxPrice) < 1 || Number(maxPrice) > 4) throw new BadRequestException('El maxPrice enviado por query debe ser un string de un número del 1 al 4.')
+    if (Number(maxPrice) < 0 || Number(maxPrice) > 500) throw new BadRequestException('El maxPrice enviado por query debe ser un string de un número del 0 al 500.')
     if (Number(rating) < 1 || Number(rating) > 5) throw new BadRequestException('El rating enviado por query debe ser un string de un número del 1 al 5.')
-    return await this.hotelDbService.getFilteredHotels(Number(rating), country, city, Number(maxPrice))
+    return await this.hotelDbService.getFilteredHotels(Number(rating), country, city, Number(minPrice), Number(maxPrice))
   }
 
   @ApiOperation({summary: 'List only one hotel by ID'})
@@ -128,7 +127,7 @@ export class HotelsController {
   @ApiResponse({ status: 404, description: 'Hotel not was updated :('})
   @ApiBearerAuth()
   @Put('restore/:id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   restoreHotel(@Param('id', ParseUUIDPipe) id: string) {
     return this.hotelDbService.restoreHotel(id);
@@ -160,7 +159,7 @@ export class HotelsController {
   @ApiResponse({ status: 404, description: 'Hotel not was updated :('})
   @ApiBearerAuth()
   @Put(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   updateDbHotel(
     @Param('id', ParseUUIDPipe) id: string,
@@ -175,7 +174,7 @@ export class HotelsController {
   @ApiResponse({ status: 404, description: 'Hotel not was eliminated  :('})
   @ApiBearerAuth()
   @Delete(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   deleteDbHotel(@Param('id', ParseUUIDPipe) id: string) {
     return this.hotelDbService.deleteDbHotel(id);

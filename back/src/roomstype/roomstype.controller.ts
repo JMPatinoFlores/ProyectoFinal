@@ -52,7 +52,7 @@ export class RoomsTypeController {
   @ApiResponse({ status: 404, description: 'Roomtype not created :('})
   @ApiBearerAuth()
   @Post()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   createDbRoomtype(@Body() roomtypeDto: CreateRoomTypeDto) {
     return this.roomstypeDbService.createDbRoomtype(roomtypeDto);
@@ -63,7 +63,7 @@ export class RoomsTypeController {
   @ApiResponse({ status: 404, description: 'There are not typerooms deleted :('})
   @ApiBearerAuth()
   @Get('deleted')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   getDbRoomstypeDeleted() {
     return this.roomstypeDbService.getDbRoomstypeDeleted();
@@ -85,7 +85,7 @@ export class RoomsTypeController {
   @ApiResponse({ status: 404, description: 'Roomtype not was updated :('})
   @ApiBearerAuth()
   @Put('restore/:id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   restoreRoomstype(@Param('id', ParseUUIDPipe) id: string) {
     return this.roomstypeDbService.restoreRoomstype(id);
@@ -114,7 +114,7 @@ export class RoomsTypeController {
   @ApiResponse({ status: 404, description: 'Roomtype not was updated :('})
   @ApiBearerAuth()
   @Put(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   updateDbRoomstype(
     @Param('id', ParseUUIDPipe) id: string,
@@ -129,7 +129,7 @@ export class RoomsTypeController {
   @ApiResponse({ status: 404, description: 'Roomtype not was eliminated  :('})
   @ApiBearerAuth()
   @Delete(':id')
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   deleteDbRoomtype(@Param('id', ParseUUIDPipe) id: string) {
     return this.roomstypeDbService.deleteDbRoomtype(id);
