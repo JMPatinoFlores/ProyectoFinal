@@ -20,7 +20,7 @@ export class SuperAdminController {
 
   @Get('all-super-admins')
   @ApiBearerAuth()
-  @Roles(Role.SuperAdmin)
+  @Roles(Role.User, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiQuery({
     name: 'page',
@@ -47,7 +47,7 @@ export class SuperAdminController {
         Number(limit),
       );
   }
-
+  @Get('superadmin-by')
   @ApiBearerAuth()
   @Roles(Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)

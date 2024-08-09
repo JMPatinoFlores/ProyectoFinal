@@ -20,11 +20,11 @@ export class Room {
   @Column({ type: 'varchar', length: 10, nullable: false })
   roomNumber: string;
 
-  @Column({ type: 'boolean', default: true })
-  isAvailable: boolean;
-
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  isAvailable: boolean;
 
   @ManyToOne(() => RoomsType, (roomtype) => roomtype.rooms)
   @JoinColumn({ name: 'roomsTypeId' })
@@ -36,3 +36,5 @@ export class Room {
   )
   availabilities: RoomAvailability[];
 }
+
+

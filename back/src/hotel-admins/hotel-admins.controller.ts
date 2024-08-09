@@ -31,7 +31,7 @@ export class HotelAdminsController {
 
   @Get('AllHotelAdmins')
   @ApiBearerAuth()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiQuery({
     name: 'page',
@@ -60,6 +60,7 @@ export class HotelAdminsController {
   }
 
   //* Cargar un seeder
+
   @Get('seeder')
   addHotelsAdmins() {
     return this.hotelAdminService.addHotelsAdmins();
@@ -74,7 +75,7 @@ export class HotelAdminsController {
 
   @Get(':id')
   @ApiBearerAuth()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Llamar un hotelero por su ID' })
   getHotelAdminById(@Param('id') id: string) {
@@ -99,7 +100,7 @@ export class HotelAdminsController {
 
   @Delete(':id')
   @ApiBearerAuth()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Eliminado lógico de un hotelero' })
   logicalDeleteHotelAdmin(@Param('id') id: string) {

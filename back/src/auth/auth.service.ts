@@ -193,6 +193,26 @@ export class AuthService {
         token,
       };
     }
+    if (superAdmin) {
+      const validPassword = await bcrypt.compare(password, superAdmin.password);
+      if (!validPassword)
+        throw new BadRequestException('Credenciales incorrectas');
+
+      //*Firmar el Token
+
+      const payload = {
+        id: superAdmin.id,
+        name: superAdmin.name,
+        email: superAdmin.email,
+        superAdmin: superAdmin.superAdmin,
+      };
+      const token = this.jwtService.sign(payload);
+
+      return {
+        message: 'Super Admin logueado',
+        token,
+      };
+    }
   }
 
   //! Recuperación de contraseña

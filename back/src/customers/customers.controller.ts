@@ -31,7 +31,7 @@ export class CustomersController {
 
   @Get('allCustomers')
   @ApiBearerAuth()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiQuery({
     name: 'page',
@@ -62,7 +62,7 @@ export class CustomersController {
 
   @Get(':id')
   @ApiBearerAuth()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Obtener un cliente por su ID' })
   getCustomerById(@Param('id') id: string) {
@@ -74,7 +74,7 @@ export class CustomersController {
 
   @Put(':id')
   @ApiBearerAuth()
-  @Roles(Role.User)
+  @Roles(Role.User, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Modificar/Actualizar un cliente' })
   updateCustomerInfo(
@@ -88,7 +88,7 @@ export class CustomersController {
 
   @Delete(':id')
   @ApiBearerAuth()
-  @Roles(Role.User)
+  @Roles(Role.User, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Eliminado lógico de un cliente' })
   logicalDeleteCustomer(@Param('id') id: string) {
