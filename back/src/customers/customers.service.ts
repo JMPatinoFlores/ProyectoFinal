@@ -14,6 +14,10 @@ export class CustomersService {
     return this.costumersRepository.getCustomerById(id);
   }
 
+  async searchCustomers(query: string) {
+    return await this.costumersRepository.searchCustomers(query);
+  }
+
   updateCustomerInfo(id: string, customer: UpdateCustomerInfoDto) {
     return this.costumersRepository.updateCustomerInfo(id, customer);
   }

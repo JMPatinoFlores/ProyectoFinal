@@ -10,6 +10,10 @@ export class HotelAdminsService {
     return this.hotelAdminRepository.getAllHotelAdmins(page, limit);
   }
 
+  async searchHotelAdmins(query: string) {
+    return await this.hotelAdminRepository.searchHotelAdmins(query);
+  }
+
   getHotelAdminById(id: string) {
     return this.hotelAdminRepository.getHotelAdminById(id);
   }
