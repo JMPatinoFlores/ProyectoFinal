@@ -54,6 +54,27 @@ export class HotelAdminRepository {
     });
   }
 
+  async searchHotelAdmins(query?: string): Promise<HotelAdmins[]> {
+    if (!query) {
+      return [];
+    }
+    const searchTerm = `%${query.toLowerCase()}%`;
+
+    // Consulta SQL con la función unaccent
+    return await this.hotelAdminsRepository
+      .createQueryBuilder('hotel-admin')
+      .where('unaccent(LOWER(hotel-admin.name)) ILIKE unaccent(:searchTerm)', {
+        searchTerm,
+      })
+      .orWhere('unaccent(LOWER(hotel-admin.lastName)) ILIKE unaccent(:searchTerm)', {
+        searchTerm,
+      })
+      .orWhere('unaccent(LOWER(hotel-admin.email)) ILIKE unaccent(:searchTerm)', {
+        searchTerm,
+      })
+      .getMany();
+  }
+
   //! Obtener un admin de Hotel por su ID
 
   async getHotelAdminById(id: string) {
