@@ -1,14 +1,25 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { UserContext } from "@/context/userContext";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/free-mode";
+import { FreeMode, Pagination } from "swiper/modules";
+import { HotelContext } from "@/context/hotelContext";
 
 function MyHotels() {
   const { user } = useContext(UserContext);
+  const { hotels, fetchHotelsByAdmin } = useContext(HotelContext);
 
-  const hotels = user?.hotels || null;
+  useEffect(() => {
+    if (user?.id) {
+      fetchHotelsByAdmin(user.id);
+    }
+  }, [user, fetchHotelsByAdmin]);
 
   return (
     <div>
@@ -17,19 +28,9 @@ function MyHotels() {
           <h1 className="text-4xl font-semibold">Mis hoteles</h1>
         </div>
         <div className="flex justify-end">
-          <button className="flex px-4 py-3 text-red-600 hover:text-red-700 focus:text-red-700 hover:bg-red-100 focus:bg-red-100 border border-red-600 rounded-md mr-2">
-            <Image
-              src={"/edit.png"}
-              alt="Editar"
-              width={24}
-              height={24}
-              className="invert mr-2"
-            />
-            Editar perfil
-          </button>
           <Link
             href={"/post-hotel"}
-            className="flex px-4 py-3 text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 rounded-md"
+            className="flex px-4 py-3 text-white bg-red-500 hover:bg-red-600 focus:bg-red-700 rounded-md"
           >
             <Image
               src={"/create2.png"}
@@ -42,73 +43,86 @@ function MyHotels() {
           </Link>
         </div>
       </div>
-
-      <div className="relative overflow-x-auto mt-5">
-        <h1 className="text-2xl font-bold">Mis Habitaciones</h1>
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Nombre
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Total de Habitaciones
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Ver Habitacion
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Editar Habitacion
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {Array.isArray(hotels) && hotels.length > 0 ? (
-              hotels.map((hotel) => (
-                <tr
-                  key={hotel.hotelId}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    {hotel.name}
-                  </th>
-                  <td className="px-6 py-4">{hotel.totalRooms}</td>
-                  <td className="px-6 py-4">
-                    <Link href="#">
-                      <button className="p-1 bg-blue-500 rounded text-white hover:bg-blue-600">
-                        Ver
-                      </button>
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4">
-                    <Link href="#">
-                      <button className="p-1 bg-sky-500 rounded text-white hover:bg-sky-600">
+      <div className="p-8">
+        <Swiper
+          spaceBetween={16}
+          slidesPerView={1}
+          breakpoints={{
+            340: { slidesPerView: 1, spaceBetween: 15 },
+            700: { slidesPerView: 2, spaceBetween: 15 },
+            1024: { slidesPerView: 3, spaceBetween: 15 },
+          }}
+          freeMode={true}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[FreeMode, Pagination]}
+          className="max-w-[90%] lg:max-w-[80%]"
+        >
+          {hotels && hotels.length > 0 ? (
+            hotels.map((hotel) => (
+              <SwiperSlide key={hotel.id} className="w-full max-w-xs">
+                <div className="overflow-hidden rounded-lg shadow-lg mb-4">
+                  <div>
+                    {hotel.images && hotel.images.length > 0 ? (
+                      <div className="">
+                        <Image
+                          unoptimized
+                          src={hotel.images[0]}
+                          alt={hotel.name}
+                          width={500}
+                          height={100}
+                          className="w-full rounded-t-lg aspect-square object-cover group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex justify-center items-center">
+                        <p className="">No hay imágenes disponibles.</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-2 md:p-4 flex flex-col space-y-1">
+                    <div>
+                      <h2 className="font-bold text-xl text-center mb-2">
+                        {hotel.name}
+                      </h2>
+                      <hr className="hr-text mb-3" data-content="" />
+                      <p className="line-clamp-2 overflow-hidden">
+                        {hotel.description}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        E-mail: {hotel.email}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Dirección: {hotel.address}, {hotel.city},{" "}
+                        {hotel.country}
+                      </p>
+                      <p className="line-clamp-1 overflow-hidden text-sm text-gray-600">
+                        Servicios: {hotel.services.join(", ")}
+                      </p>
+                    </div>
+                    <div className="flex justify-end">
+                      <button className="flex text-white items-center px-3 py-2 mt-2 rounded-md border-2 border-gray-500 hover:bg-gray-500 invert hover:invert-0 duration-200 focus:scale-95">
+                        <Image
+                          src={"/edit2.png"}
+                          alt="Edit"
+                          width={20}
+                          height={20}
+                          className="mr-2"
+                        />
                         Editar
                       </button>
-                    </Link>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="text-center py-4">
-                  No tienes hoteles registrados.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <div className="flex justify-around">
-        <button className="mt-5 px-2 py-1 text-white rounded bg-gray-500 hover:bg-gray-600">
-          Editar Hotel
-        </button>
-        <button className="mt-5 px-2 py-1 text-white rounded bg-red-500 hover:bg-red-600">
-          Eliminar Hotel
-        </button>
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))
+          ) : (
+            <div className="text-center py-4">
+              No tienes hoteles registrados.
+            </div>
+          )}
+        </Swiper>
       </div>
     </div>
   );

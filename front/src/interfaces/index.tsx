@@ -1,7 +1,7 @@
 import { JwtPayload } from "jwt-decode";
 
 export interface IUser {
-  id: number;
+  id: string;
   name: string;
   lastName: string;
   email: string;
@@ -158,7 +158,7 @@ export interface IHotelImage {
 }
 
 export interface IHotel {
-  hotelId: string;
+  id: string;
   name: string;
   description: string;
   email: string;
@@ -169,7 +169,7 @@ export interface IHotel {
   totalRooms: number;
   availableRooms: IRoom[];
   services: string[];
-  image: string[];
+  images: string[];
   rating: number;
   hotelAdminId: string;
 }
@@ -187,7 +187,7 @@ export interface IHotelContextType {
 }
 
 export interface IHotelResponse {
-  hotelId: string;
+  id: string;
   name: string;
   description: string;
   email: string;
@@ -198,7 +198,7 @@ export interface IHotelResponse {
   totalRooms: number;
   avaliableRooms: IRoom[];
   services: string[];
-  image: string[];
+  images: string[];
   rating: number;
   hotelAdminId: string;
 }
