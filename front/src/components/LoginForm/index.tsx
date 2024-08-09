@@ -10,9 +10,11 @@ import { UserContext } from "@/context/userContext";
 import { useRouter } from "next/navigation";
 import ForgotPassword from "../ForgotPassword";
 import GoogleLoginButton from "../GoogleLoginButton";
+import { SuperAdminContext } from "@/context/superAdminContext";
 
 export default function LoginForm() {
   const { login } = useContext(UserContext);
+  const {signIn} = useContext(SuperAdminContext)
   const router = useRouter();
 
   const initialValues: ILogin = {
@@ -24,15 +26,28 @@ export default function LoginForm() {
     values: ILogin,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    const success = await login(values);
-
-    if (success) {
-      alert("Iniciaste sesión correctamente");
-      router.push("/home");
-    } else {
-      alert("Error al iniciar sesión");
+    try {
+      const success = await login(values)
+      if (success) {
+        alert("Iniciaste sesión correctamente");
+        router.push("/home");
+      } else {
+        alert("Error al iniciar sesión");
+      }
+      if (!success) {
+        const access = await signIn(values)
+        if (access) {
+          alert('Iniciaste sesión correctamente')
+          router.push("/superAdmin")
+        } else {
+          alert("Error al iniciar sesión")
+        }
+      }
+      setSubmitting(false);
+    } catch (error) {
+      
     }
-    setSubmitting(false);
+
   };
 
   return (
