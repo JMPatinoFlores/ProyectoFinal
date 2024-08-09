@@ -72,8 +72,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("Token decodificado", decodedToken);
 
         const user: IUserResponse = {
-          id: decodedToken.id,
-          name: data.user.name,
+          id: decodedToken.id.toString(),
+          name: decodedToken.name,
           lastName: data.user.lastName,
           email: decodedToken.email,
           phone: data.user.phone,
