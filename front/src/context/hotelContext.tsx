@@ -120,18 +120,16 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     []
   );
 
-  const fetchHotelsByAdmin = useCallback(async (adminId: string) => {
+  const fetchHotelsByAdmin = async (adminId: string): Promise<IHotel[]> => {
     try {
       const data = await getHotelsByAdminId(adminId);
       setHotels(data);
-      if (typeof window !== "undefined")
-        localStorage.setItem("adminHotels", JSON.stringify(data));
       return data;
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching hotels by admin:", error);
       return [];
     }
-  }, []);
+  };
 
   const fetchRoomsByHotel = async (hotelId: string) => {
     try {

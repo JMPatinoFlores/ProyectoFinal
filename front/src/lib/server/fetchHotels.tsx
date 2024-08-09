@@ -44,7 +44,29 @@ export const getHotelById = async (hotelId: string) => {
 };
 
 export const getHotelsByAdminId = async (adminId: string) => {
-  const response = await fetch(`http://localhost:3000/hotels-admin/${adminId}`);
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("No se encontró el token de autenticación.");
+  }
+
+  const response = await fetch(
+    `http://localhost:3000/hotels-admin/${adminId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Error en la solicitud: ${response.status} - ${response.statusText}`
+    );
+  }
+
   const data = await response.json();
   return data;
 };

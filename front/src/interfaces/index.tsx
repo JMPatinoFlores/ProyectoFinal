@@ -2,7 +2,7 @@ import { JwtPayload } from "jwt-decode";
 import React from "react";
 
 export interface IUser {
-  id: number;
+  id: string;
   name: string;
   lastName: string;
   email: string;
@@ -107,7 +107,7 @@ export interface IReviewProps {
 }
 
 export interface IDecodeToken extends JwtPayload {
-  id: number;
+  id: string;
   name: string;
   email: string;
   isAdmin: boolean;
@@ -165,7 +165,7 @@ export interface ICreateBooking {
       checkInDate: string;
       checkOutDate: string;
     }
-  ]
+  ];
 }
 
 export interface IHotelImage {
@@ -184,7 +184,7 @@ export interface IHotel {
   totalRooms: number;
   availableRooms: IRoom[];
   services: string[];
-  image: string[];
+  images: string[];
   rating: number;
   hotelAdminId: string;
 }
@@ -214,7 +214,7 @@ export interface IHotelResponse {
   totalRooms: number;
   avaliableRooms: IRoom[];
   services: string[];
-  image: string[];
+  images: string[];
   rating: number;
   hotelAdminId: string;
 }
@@ -307,16 +307,16 @@ export interface ISuperAdminDashboardProps {
 }
 
 export interface ISuperAdminContextType {
-  superAdmin: ISuperAdmin | null,
-  setSuperAdmin: React.Dispatch<React.SetStateAction<ISuperAdmin | null>>,
-  isLogged: boolean,
-  setIsLogged: (isLogged: boolean) => void,
-  isSuperAdmin: boolean,
-  setIsSuperAdmin: (isSuperAdmin: boolean) => void,
-  signIn: (credentials: ILogin) => Promise<boolean>,
-  fetchCustomers: () => Promise<ICustomerDetails[]>,
-  fetchBookings: () => Promise<IBookingOfSuperAdmin[]>,
-  fetchHotelAdmins: () => Promise<IHotelAdminDetails[]>,
+  superAdmin: ISuperAdmin | null;
+  setSuperAdmin: React.Dispatch<React.SetStateAction<ISuperAdmin | null>>;
+  isLogged: boolean;
+  setIsLogged: (isLogged: boolean) => void;
+  isSuperAdmin: boolean;
+  setIsSuperAdmin: (isSuperAdmin: boolean) => void;
+  signIn: (credentials: ILogin) => Promise<boolean>;
+  fetchCustomers: () => Promise<ICustomerDetails[]>;
+  fetchBookings: () => Promise<IBookingOfSuperAdmin[]>;
+  fetchHotelAdmins: () => Promise<IHotelAdminDetails[]>;
 }
 
 export interface IHotelAdminDetails {
@@ -348,83 +348,79 @@ export interface ICustomerDetails {
 }
 
 export interface IBookingOfSuperAdmin {
-  id: string,
-  date: string,
-  isDeleted: boolean,
-  bookingDetails: IBookingDetailsOfSuperAdmin,
-  customer: ICustomerOfSuperAdmin,
+  id: string;
+  date: string;
+  isDeleted: boolean;
+  bookingDetails: IBookingDetailsOfSuperAdmin;
+  customer: ICustomerOfSuperAdmin;
 }
 
 export interface IBookingDetailsOfSuperAdmin {
-  id: string,
-  total: number,
-  isDeleted: boolean,
-  status: string,
-  hotel: IHotelOfSuperAdmin,
-  availabilities: IAvailabilityOfSuperAdmin[],
-
+  id: string;
+  total: number;
+  isDeleted: boolean;
+  status: string;
+  hotel: IHotelOfSuperAdmin;
+  availabilities: IAvailabilityOfSuperAdmin[];
 }
 
 export interface IHotelOfSuperAdmin {
-  id: string,
-  name: string,
-  description: string,
-  email: string,
-  country: string,
-  city: string,
-  price: number,
-  address: string,
-  location: number[],
-  totalRooms: number,
-  services: string[],
-  rating: number,
-  images: string[],
-  isDeleted: boolean,
-
+  id: string;
+  name: string;
+  description: string;
+  email: string;
+  country: string;
+  city: string;
+  price: number;
+  address: string;
+  location: number[];
+  totalRooms: number;
+  services: string[];
+  rating: number;
+  images: string[];
+  isDeleted: boolean;
 }
 
 export interface IRoomTypeOfSuperAdmin {
-  id: string,
-  name: string,
-  capacity: number,
-  totalBathrooms: number,
-  totalBeds: number,
-  price: number,
-  images: string[],
-  isDeleted: boolean
+  id: string;
+  name: string;
+  capacity: number;
+  totalBathrooms: number;
+  totalBeds: number;
+  price: number;
+  images: string[];
+  isDeleted: boolean;
 }
 
 export interface IRoomOfSuperAdmin {
-  id: string,
-  roomNumber: string,
-  isDeleted: boolean,
-  isAvailable: boolean,
-  roomtype: IRoomTypeOfSuperAdmin,
+  id: string;
+  roomNumber: string;
+  isDeleted: boolean;
+  isAvailable: boolean;
+  roomtype: IRoomTypeOfSuperAdmin;
 }
 
 export interface IAvailabilityOfSuperAdmin {
-  id: string,
-  startDate: string,
-  endDate: string,
-  isAvailable: boolean,
-  isDeleted: boolean,
-  room: IRoomOfSuperAdmin,
+  id: string;
+  startDate: string;
+  endDate: string;
+  isAvailable: boolean;
+  isDeleted: boolean;
+  room: IRoomOfSuperAdmin;
 }
 
-export interface ICustomerOfSuperAdmin {
-
-}
+export interface ICustomerOfSuperAdmin {}
 
 export interface IDecodedTokenSuperAdmin extends JwtPayload {
-  id: string,
-  name: string,
-  email: string,
-  superAdmin: boolean,
+  id: string;
+  name: string;
+  email: string;
+  superAdmin: boolean;
 }
 
 export interface ISuperAdmin {
-  id: string,
-  name: string,
-  email: string,
-  superAdmin: boolean,
+  id: string;
+  name: string;
+  email: string;
+  superAdmin: boolean;
 }
