@@ -39,7 +39,7 @@ export class BookingController {
   })
   @ApiOperation({ summary: 'Trae todos los bookings.' })
   @ApiBearerAuth()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @HttpCode(200)
   @Get()
