@@ -29,11 +29,7 @@ export class HotelAdminRepository {
   //! Obtener todos los admins de Hotel
 
   async getAllHotelAdmins(page: number, limit: number) {
-    const skip = (page - 1) * limit;
-    const hotelAdmins = await this.hotelAdminsRepository.find({
-      take: limit,
-      skip: skip,
-    });
+    const hotelAdmins = await this.hotelAdminsRepository.find();
     return hotelAdmins.map(
       ({ password, numberOfHotels, ...hotelAdminNoPassword }) =>
         hotelAdminNoPassword,

@@ -175,16 +175,8 @@ export class HotelsRepository {
   async addHotels() {
     const hotelAdmins = await this.hotelAdminRepository.find()
     if (hotelAdmins.length === 0) throw new BadRequestException('Es necesario que haya al menos 1 hotel admin en la BBDD.')
-    data?.map(async (e, index) => {
-      // const hotelAdminExists = await this.hotelAdminRepository.exists({
-      //   where: { id: e.hotel_admin_id },
-      // });
 
-      // if (!hotelAdminExists) {
-      //   throw new NotFoundException(
-      //     `Hotel Admin not found with id ${e.hotel_admin_id}`,
-      //   );
-      // }
+    await Promise.all(data?.map(async (e, index) => {
       const hotels = new Hotel();
       hotels.name = e.name;
       hotels.description = e.description;
@@ -198,15 +190,16 @@ export class HotelsRepository {
       hotels.rating = e.rating;
       hotels.images = e.images;
       hotels.price = e.price;
-      (hotels as any).__hotelAdminId = hotelAdmins[0].id;
-
+      const i = Math.floor(Math.random() * hotelAdmins.length);
+      hotels.hotelAdmin = hotelAdmins[i]
       await this.hotelDbRepository
         .createQueryBuilder()
         .insert()
         .into(Hotel)
         .values(hotels)
         .execute();
-    });
+    }))
+
     return 'Added Hotels';
   }
 }
