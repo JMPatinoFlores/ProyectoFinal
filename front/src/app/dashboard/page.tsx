@@ -1,9 +1,10 @@
 import Dashboard from "@/components/Dashboard";
+import Profile from "@/components/Profile";
 
 function DashboardPage() {
   return (
     <div>
-      <Dashboard />
+      <Profile />
     </div>
   );
 }

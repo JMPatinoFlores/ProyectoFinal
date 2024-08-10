@@ -17,6 +17,7 @@ export interface IUser {
 export interface IUserResponse extends IUser {
   isAdmin: boolean;
   hotels?: IHotel[];
+  reviews?: IReview[];
 }
 
 export interface ILogin {
@@ -75,35 +76,35 @@ export interface IUserContextType {
   googleLogin: (token: string, user: IUserResponse) => Promise<boolean>;
   customerRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   hotelierRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
-  postReview: (review: ICreateReview) => Promise<boolean>;
   getReviews: () => void;
-  reviews: IReviewResponse[];
+  reviews: IReview[];
   logOut: () => void;
 }
 
-export interface ICreateReview {
-  userId: number;
-  hotelId: number;
+export interface IPostReview {
   rating: number;
   comment: string;
+}
+
+export interface ICreateReview extends IPostReview {
+  clienteId: string;
+  hotelId: string;
 }
 
 export interface IReview {
-  rating: number;
-  comment: string;
-}
-
-export interface IReviewResponse {
   id: string;
-  userId: string;
-  hotelId: string;
   comment: string;
   date: string;
   rating: number;
 }
 
+export interface IReviewResponse extends IReview {
+  isDeleted: boolean;
+  customer: IUser;
+}
+
 export interface IReviewProps {
-  review: IReviewResponse;
+  review: IReview;
 }
 
 export interface IDecodeToken extends JwtPayload {
@@ -186,6 +187,7 @@ export interface IHotel {
   services: string[];
   images: string[];
   rating: number;
+  reviews?: IReview[];
   hotelAdminId: string;
 }
 
@@ -216,6 +218,7 @@ export interface IHotelResponse {
   services: string[];
   images: string[];
   rating: number;
+  reviews?: IReview[];
   hotelAdminId: string;
 }
 
@@ -261,6 +264,7 @@ export interface IHotelDetail {
   totalRooms: number;
   services: string[];
   rating: string;
+  reviews: IReviewResponse[];
   images: string[];
   isDeleted: boolean;
   roomstype: [];
