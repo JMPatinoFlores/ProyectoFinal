@@ -1,6 +1,6 @@
 "use client";
 
-import { IBookingDetails, IBookingOfSuperAdmin, ICustomerDetails, IDecodedTokenSuperAdmin, IHotelAdminDetails, ILoginUser, ISuperAdmin, ISuperAdminContextType } from "@/interfaces";
+import { IBookingDetails, IBookingOfSuperAdmin, ICustomerDetails, IDecodedTokenSuperAdmin, IHotelAdminDetails, IHotelAdminsProps, ILoginUser, ISuperAdmin, ISuperAdminContextType } from "@/interfaces";
 import { getAllBookings, getAllCustomers, getAllHotelAdmins } from "@/lib/server/fetchSuperAdmins";
 import { postLogin } from "@/lib/server/fetchUsers";
 import { jwtDecode } from "jwt-decode";
@@ -17,6 +17,7 @@ export const SuperAdminContext = createContext<ISuperAdminContextType>({
     fetchCustomers: async () => Promise.resolve([] as ICustomerDetails[]),
     fetchBookings: async () => Promise.resolve([] as IBookingOfSuperAdmin[]),
     fetchHotelAdmins: async () => Promise.resolve([] as IHotelAdminDetails[]),
+    fetchHotelAdminsBySearch: async (searchQuery: string) => Promise.resolve([] as IHotelAdminDetails[])
 });
 
 export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) => {
@@ -54,12 +55,12 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             console.error('Error en el inicio de sesión: ', error)
             return false
         }
-    } 
+    }
 
     const fetchCustomers = useCallback(async (): Promise<ICustomerDetails[]> => {
         try {
             console.log('fetchCustomers');
-            
+
             const data = await getAllCustomers();
             setCustomers(data);
             typeof window !== "undefined" &&
@@ -96,6 +97,30 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             return [];
         }
     }, []);
+
+    const fetchHotelAdminsBySearch = useCallback(
+        async (searchQuery: string): Promise<IHotelAdminDetails[]> => {
+            try {
+                const response = await fetch(
+                    `http://localhost:3000/hotel-admins/search?search=${searchQuery}`
+                );
+                if (!response.ok) {
+                    throw new Error(`HTTP error status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    return data;
+                } else {
+                    console.error("fetchHotelAdminsBySearch did not return an array.");
+                    return [];
+                }
+            } catch (error) {
+                console.error("Error fetching hotel admins by search:", error);
+                return [];
+            }
+        },
+        []
+    );
 
     useEffect(() => {
         const customers =
@@ -157,6 +182,7 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             fetchBookings,
             fetchCustomers,
             fetchHotelAdmins,
+            fetchHotelAdminsBySearch,
         }} >{children}</SuperAdminContext.Provider>
     )
 }

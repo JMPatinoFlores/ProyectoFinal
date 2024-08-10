@@ -6,13 +6,11 @@ import Link from "next/link";
 import { SetStateAction, useContext, useEffect, useState } from "react";
 
 export default function SuperAdmin() {
-    const { fetchCustomers, fetchHotelAdmins, fetchBookings } = useContext(SuperAdminContext);
+    const { fetchBookings } = useContext(SuperAdminContext);
 
     const [totalCustomers, setTotalCustomers] = useState<number>(0)
     const [totalBookings, setTotalBookings] = useState<number>(0)
     const [totalEarnings, setTotalEarnings] = useState<number>(0)
-    const [hotelAdmins, setHotelAdmins] = useState<IHotelAdminDetails[]>([])
-    const [bookings, setBookings] = useState<IBookingOfSuperAdmin[]>([])
 
     useEffect(() => {
         fetchBookings().then((data) => {
@@ -88,7 +86,7 @@ export default function SuperAdmin() {
             <div className="p-6 border border-gray-300 rounded-lg">
                 <div className="flex justify-between">
                     <div className="flex-1 mx-2 text-center">
-                        <Link href="/clientes" className="block p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
+                        <Link href="/clientesSuperAdmin" className="block p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
                             <h4 className="text-md font-semibold">Clientes</h4>
                             <p className="text-sm text-gray-600">
                                 Haz click para crear, editar y eliminar clientes, y mirar los datos de sus reservas.
@@ -96,7 +94,7 @@ export default function SuperAdmin() {
                         </Link>
                     </div>
                     <div className="flex-1 mx-2 text-center">
-                        <Link href="/administradores-de-hoteles" className="block p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
+                        <Link href="/hotelAdminsSuperAdmin" className="block p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
                             <h4 className="text-md font-semibold">Administradores de Hoteles</h4>
                             <p className="text-sm text-gray-600">
                                 Haz click para ver, crear, editar y eliminar administradores de hoteles, junto con sus hoteles y las reseñas de estos.
@@ -104,7 +102,7 @@ export default function SuperAdmin() {
                         </Link>
                     </div>
                     <div className="flex-1 mx-2 text-center">
-                        <Link href="/super-admins" className="block p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
+                        <Link href="/superAdminsSuperAdmin" className="block p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
                             <h4 className="text-md font-semibold">Super Admins</h4>
                             <p className="text-sm text-gray-600">Haz click para crear super admins.</p>
                         </Link>

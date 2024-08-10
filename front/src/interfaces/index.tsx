@@ -317,6 +317,7 @@ export interface ISuperAdminContextType {
   fetchCustomers: () => Promise<ICustomerDetails[]>,
   fetchBookings: () => Promise<IBookingOfSuperAdmin[]>,
   fetchHotelAdmins: () => Promise<IHotelAdminDetails[]>,
+  fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>,
 }
 
 export interface IHotelAdminDetails {
@@ -427,4 +428,8 @@ export interface ISuperAdmin {
   name: string,
   email: string,
   superAdmin: boolean,
+}
+
+export interface IHotelAdminsProps {
+  searchQuery: string
 }
