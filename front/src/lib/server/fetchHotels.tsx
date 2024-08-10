@@ -37,10 +37,17 @@ export const postRoom = async () => {
   return data;
 };
 
-export const getHotelById = async (hotelId: string) => {
-  const response = await fetch(`http://localhost:3000/hotels/${hotelId}`);
-  const data = await response.json();
-  return data;
+export const getHotelById = async (id: string) => {
+  try {
+    const response = await fetch(`http://localhost:3000/hotels/${id}`, {
+      cache: "no-cache",
+    });
+    const hotel = await response.json();
+    return hotel;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 };
 
 export const getHotelsByAdminId = async (adminId: string) => {
