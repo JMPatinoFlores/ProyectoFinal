@@ -83,6 +83,27 @@ export class CustomersRepository {
     return customerNoPassword;
   }
 
+  async searchCustomers(query?: string): Promise<Customers[]> {
+    if (!query) {
+      return [];
+    }
+    const searchTerm = `%${query.toLowerCase()}%`;
+
+    // Consulta SQL con la función unaccent
+    return await this.customersRepository
+      .createQueryBuilder('customer')
+      .where('unaccent(LOWER(customer.name)) ILIKE unaccent(:searchTerm)', {
+        searchTerm,
+      })
+      .orWhere('unaccent(LOWER(customer.lastName)) ILIKE unaccent(:searchTerm)', {
+        searchTerm,
+      })
+      .orWhere('unaccent(LOWER(customer.email)) ILIKE unaccent(:searchTerm)', {
+        searchTerm,
+      })
+      .getMany();
+  }
+
   //! Modificar un cliente
 
   async updateCustomerInfo(id: string, customer: any) {

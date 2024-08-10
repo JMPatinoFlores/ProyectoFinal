@@ -47,7 +47,7 @@ export class RoomsTypeRepository {
         console.log('Existing room type found:', nameRoomtypeFound);
         if(nameRoomtypeFound) throw new BadRequestException("this roomtype already exists");
 
-        const hotelFound: Hotel = await this.hotelDbRepository.findOne({where:{id:hotelId}});
+        const hotelFound: Hotel = await this.hotelDbRepository.findOne({where:{id:hotelId}, relations: {roomstype: true}});
         if(!hotelFound){
             throw new NotFoundException("Hotel with ID not found");
         }

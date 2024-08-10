@@ -21,6 +21,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/auth/guards/roles.enum';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Customers } from './customers.entity';
 @ApiTags('Clientes')
 @Controller('customers')
 export class CustomersController {
@@ -51,6 +52,11 @@ export class CustomersController {
     if (page && limit)
       return this.customersService.getAllCostumers(Number(page), Number(limit));
   }
+  
+  @Get('search')
+  async searchCustomers(@Query('search') query?: string): Promise<Customers[]> {
+    return await this.customersService.searchCustomers(query);
+  }
 
   //* Obtener un Cliente por su ID
 
@@ -62,6 +68,7 @@ export class CustomersController {
   getCustomerById(@Param('id') id: string) {
     return this.customersService.getCustomerById(id);
   }
+
 
   //* Actualizar/modificar la información de un usuario
 
