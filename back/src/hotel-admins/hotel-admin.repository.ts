@@ -9,12 +9,14 @@ import {
 import { IdDto } from 'src/dto/id.dto';
 import { validate } from 'class-validator';
 import * as data from '../utils/dataHotelAdmins.json';
+import { MailService } from 'src/email-notify/mail.service';
 
 @Injectable()
 export class HotelAdminRepository {
   constructor(
     @InjectRepository(HotelAdmins)
     private hotelAdminsRepository: Repository<HotelAdmins>,
+    private readonly mailService: MailService,
   ) {}
 
   //! Validar ID
@@ -84,6 +86,7 @@ export class HotelAdminRepository {
     });
 
     const { password, ...hotelAdminNoPassword } = dbHotelAdmin;
+    await this.mailService.sendWelcomeEmailForHotelAdmin(hotelAdmin);
 
     return hotelAdminNoPassword;
   }

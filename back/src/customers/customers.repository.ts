@@ -78,7 +78,7 @@ export class CustomersRepository {
     });
 
     const { password, ...customerNoPassword } = dbCustomer;
-    await this.mailService.sendWelcomeEmail(customer);
+    await this.mailService.sendWelcomeEmailforCustomer(customer);
 
     return customerNoPassword;
   }
