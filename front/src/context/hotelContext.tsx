@@ -13,7 +13,6 @@ import {
   getHotelsByAdminId,
   getRoomsByHotel,
   postHotel,
-  getHotelsBySearch,
 } from "@/lib/server/fetchHotels";
 import { createContext, useCallback, useEffect, useState } from "react";
 
