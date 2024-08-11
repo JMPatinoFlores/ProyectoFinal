@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Post,
@@ -65,6 +66,16 @@ export class HotelsController {
     return this.hotelDbService.createDbHotel(hotelDto);
   }
 
+  @ApiOperation({ summary: 'Lista de hoteles del hotel admin cuyo id es enviado.' })
+  @ApiBearerAuth()
+  @Roles(Role.Admin, Role.SuperAdmin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @HttpCode(200)
+  @Get('hotelAdmin/:id')
+  async getHotelsByHotelAdminId(@Param('id', ParseUUIDPipe) hotelAdminId: string) {
+    return await this.hotelDbService.getHotelsByHotelAdminId(hotelAdminId)
+  }
+    
   @ApiOperation({summary: 'List all Hotels matches for the requested word'})
   @ApiQuery({ name: 'search', required: true, description: 'buscar...', example: 'Peru' })
   @ApiResponse({ status: 206, description: 'List of Hotels matches :)'})
