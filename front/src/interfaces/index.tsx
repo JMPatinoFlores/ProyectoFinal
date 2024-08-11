@@ -307,18 +307,22 @@ export interface ISuperAdminDashboardProps {
 }
 
 export interface ISuperAdminContextType {
-  superAdmin: ISuperAdmin | null,
-  setSuperAdmin: React.Dispatch<React.SetStateAction<ISuperAdmin | null>>,
-  isLogged: boolean,
-  setIsLogged: (isLogged: boolean) => void,
-  isSuperAdmin: boolean,
-  setIsSuperAdmin: (isSuperAdmin: boolean) => void,
-  signIn: (credentials: ILogin) => Promise<boolean>,
-  fetchCustomers: () => Promise<ICustomerDetails[]>,
-  fetchBookings: () => Promise<IBookingOfSuperAdmin[]>,
-  fetchHotelAdmins: () => Promise<IHotelAdminDetails[]>,
-  fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>,
+  superAdmin: ISuperAdmin | null;
+  setSuperAdmin: (superAdmin: ISuperAdmin | null) => void;
+  isLogged: boolean;
+  setIsLogged: (isLogged: boolean) => void;
+  isSuperAdmin: boolean;
+  setIsSuperAdmin: (isSuperAdmin: boolean) => void;
+  signIn: (credentials: ILoginUser) => Promise<boolean>;
+  fetchCustomers: () => Promise<ICustomerDetails[]>;
+  fetchBookings: () => Promise<IBookingOfSuperAdmin[]>;
+  fetchHotelAdmins: () => Promise<IHotelAdminDetails[]>;
+  fetchDeleteHotelAdmin: (hotelAdminId: string) => Promise<boolean>;
+  fetchHotelAdminById: (hotelAdminId: string) => Promise<IHotelAdminDetails | undefined>;
+  fetchDeleteHotelOfHotelAdmin: (hotelId: string, hotelAdminId: string) => Promise<boolean>;
+  fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>;
 }
+
 
 export interface IHotelAdminDetails {
   id: string;
@@ -377,7 +381,7 @@ export interface IHotelOfSuperAdmin {
   location: number[];
   totalRooms: number;
   services: string[];
-  rating: number;
+  rating: string;
   images: string[];
   isDeleted: boolean;
 }

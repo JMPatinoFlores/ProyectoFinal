@@ -26,6 +26,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
         fetchHotelAdmins().then((data) => {
             if (Array.isArray(data)) {
                 setHotelAdmins(data);
+                console.log(hotelAdmins);
             } else {
                 console.error("fetchHotelAdmins did not return an array.");
                 setHotelAdmins([]);
@@ -60,20 +61,14 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
             {/* <Sidebar /> */}
             <div className="flex-1 p-6">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-                    <h1 className="text-2xl md:text-3xl font-bold flex-grow mb-4 md:mb-0">
+                    <h1 className="text-2xl text-center md:text-3xl font-bold flex-grow mb-4 md:mb-0">
                         Administradores de Hoteles
                     </h1>
-                    <Link
-                        href={`/hotelAdmins/crear`}
-                        className="bg-[#f83f3a] text-white rounded-md p-2 px-4 hover:bg-[#e63946] text-lg"
-                    >
-                        Crear Administrador de Hotel
-                    </Link>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                     {paginatedHotelAdmins.length > 0 ? (
                         paginatedHotelAdmins.map((hotelAdmin, index) => (
-                            <HotelAdmin key={index} hotelAdmin={hotelAdmin} />
+                            <HotelAdmin key={index} setFilteredHotelAdmins={setFilteredHotelAdmins} hotelAdmin={hotelAdmin} />
                         ))
                     ) : (
                         <p>No hay resultados que coincidan con su búsqueda.</p>
