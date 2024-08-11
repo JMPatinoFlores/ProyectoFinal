@@ -1,4 +1,10 @@
-import { ILogin, INewPassword, IReview, IUser } from "@/interfaces";
+import {
+  ICreateReview,
+  ILogin,
+  INewPassword,
+  IReview,
+  IUser,
+} from "@/interfaces";
 
 export const postCustomerRegister = async (user: Omit<IUser, "id">) => {
   const response = await fetch("http://localhost:3000/auth/cxSignUp", {
@@ -55,14 +61,26 @@ export const tokenVerified = async (
   return response;
 };
 
-export const postReview = async (review: IReview) => {
+export const postReview = async (review: ICreateReview) => {
+  const token = typeof window !== "undefined" && localStorage.getItem("token");
+  console.log("Token:", token);
   const response = await fetch("http://localhost:3000/reviews", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify(review),
   });
-  const data = await response.json();
-  return data;
+
+  if (response.ok) {
+    const data = await response.text();
+    return data;
+  } else {
+    const errorData = await response.json();
+    console.error("Detalles del error:", errorData);
+    throw new Error("Error al enviar la reseña.");
+  }
 };
 
 export const getAllReviews = async () => {

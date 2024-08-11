@@ -29,7 +29,6 @@ export const UserContext = createContext<IUserContextType>({
   googleLogin: async () => false,
   customerRegister: async () => false,
   hotelierRegister: async () => false,
-  postReview: async () => false,
   getReviews: async () => {},
   reviews: [],
   logOut: () => {},
@@ -72,8 +71,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("Token decodificado", decodedToken);
 
         const user: IUserResponse = {
-          id: decodedToken.id,
-          name: data.user.name,
+          id: decodedToken.id.toString(),
+          name: decodedToken.name,
           lastName: data.user.lastName,
           email: decodedToken.email,
           phone: data.user.phone,
@@ -170,7 +169,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         googleLogin,
         hotelierRegister,
         customerRegister,
-        postReview,
         getReviews,
         reviews,
         logOut,

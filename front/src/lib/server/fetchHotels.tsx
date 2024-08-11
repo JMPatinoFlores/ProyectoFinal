@@ -25,7 +25,7 @@ export const postRoomType = async (roomType: IRoomType) => {
     body: JSON.stringify(roomType),
   });
 
-  const data = await response.json();
+  const data = await response.text();
   return data;
 };
 
@@ -37,14 +37,43 @@ export const postRoom = async (room: ICreateNumberOfRoom) => {
   return data;
 };
 
-export const getHotelById = async (hotelId: string) => {
-  const response = await fetch(`http://localhost:3000/hotels/${hotelId}`);
-  const data = await response.json();
-  return data;
+export const getHotelById = async (id: string) => {
+  try {
+    const response = await fetch(`http://localhost:3000/hotels/${id}`, {
+      cache: "no-cache",
+    });
+    const hotel = await response.json();
+    return hotel;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 };
 
 export const getHotelsByAdminId = async (adminId: string) => {
-  const response = await fetch(`http://localhost:3000/hotels-admin/${adminId}`);
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("No se encontró el token de autenticación.");
+  }
+
+  const response = await fetch(
+    `http://localhost:3000/hotels-admin/${adminId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Error en la solicitud: ${response.status} - ${response.statusText}`
+    );
+  }
+
   const data = await response.json();
   return data;
 };

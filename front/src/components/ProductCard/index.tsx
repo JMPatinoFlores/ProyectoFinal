@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Rating from "../Rating";
+import Rating from '../Rating';
 
 interface Hotel {
   id: string;

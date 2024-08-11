@@ -1,7 +1,8 @@
 import { JwtPayload } from "jwt-decode";
+import React from "react";
 
 export interface IUser {
-  id: number;
+  id: string;
   name: string;
   lastName: string;
   email: string;
@@ -16,6 +17,7 @@ export interface IUser {
 export interface IUserResponse extends IUser {
   isAdmin: boolean;
   hotels?: IHotel[];
+  reviews?: IReview[];
 }
 
 export interface ILogin {
@@ -74,39 +76,39 @@ export interface IUserContextType {
   googleLogin: (token: string, user: IUserResponse) => Promise<boolean>;
   customerRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   hotelierRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
-  postReview: (review: ICreateReview) => Promise<boolean>;
   getReviews: () => void;
-  reviews: IReviewResponse[];
+  reviews: IReview[];
   logOut: () => void;
 }
 
-export interface ICreateReview {
-  userId: number;
-  hotelId: number;
+export interface IPostReview {
   rating: number;
   comment: string;
+}
+
+export interface ICreateReview extends IPostReview {
+  clienteId: string;
+  hotelId: string;
 }
 
 export interface IReview {
-  rating: number;
-  comment: string;
-}
-
-export interface IReviewResponse {
   id: string;
-  userId: string;
-  hotelId: string;
   comment: string;
   date: string;
   rating: number;
 }
 
+export interface IReviewResponse extends IReview {
+  isDeleted: boolean;
+  customer: IUser;
+}
+
 export interface IReviewProps {
-  review: IReviewResponse;
+  review: IReview;
 }
 
 export interface IDecodeToken extends JwtPayload {
-  id: number;
+  id: string;
   name: string;
   email: string;
   isAdmin: boolean;
@@ -168,7 +170,7 @@ export interface ICreateBooking {
       checkInDate: string;
       checkOutDate: string;
     }
-  ]
+  ];
 }
 
 export interface IHotelImage {
@@ -187,8 +189,9 @@ export interface IHotel {
   totalRooms: number;
   availableRooms: IRoom[];
   services: string[];
-  image: string[];
+  images: string[];
   rating: number;
+  reviews?: IReview[];
   hotelAdminId: string;
 }
 
@@ -217,8 +220,9 @@ export interface IHotelResponse {
   totalRooms: number;
   avaliableRooms: IRoom[];
   services: string[];
-  image: string[];
+  images: string[];
   rating: number;
+  reviews?: IReview[];
   hotelAdminId: string;
 }
 
@@ -264,6 +268,7 @@ export interface IHotelDetail {
   totalRooms: number;
   services: string[];
   rating: string;
+  reviews: IReviewResponse[];
   images: string[];
   isDeleted: boolean;
   roomstype: [];
@@ -301,4 +306,138 @@ export interface ISearchBarProps {
 
 export interface IHotelsFilterProps {
   onFilter: (params: QueryParams) => void;
+}
+
+export interface ISuperAdminDashboardProps {
+  totalCustomers: number;
+  totalBookings: number;
+  totalEarnings: number;
+}
+
+export interface ISuperAdminContextType {
+  superAdmin: ISuperAdmin | null;
+  setSuperAdmin: (superAdmin: ISuperAdmin | null) => void;
+  isLogged: boolean;
+  setIsLogged: (isLogged: boolean) => void;
+  isSuperAdmin: boolean;
+  setIsSuperAdmin: (isSuperAdmin: boolean) => void;
+  signIn: (credentials: ILoginUser) => Promise<boolean>;
+  fetchCustomers: () => Promise<ICustomerDetails[]>;
+  fetchBookings: () => Promise<IBookingOfSuperAdmin[]>;
+  fetchHotelAdmins: () => Promise<IHotelAdminDetails[]>;
+  fetchDeleteHotelAdmin: (hotelAdminId: string) => Promise<boolean>;
+  fetchHotelAdminById: (hotelAdminId: string) => Promise<IHotelAdminDetails | undefined>;
+  fetchDeleteHotelOfHotelAdmin: (hotelId: string, hotelAdminId: string) => Promise<boolean>;
+  fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>;
+}
+
+
+export interface IHotelAdminDetails {
+  id: string;
+  name: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  country: string;
+  city: string;
+  address: string;
+  birthDate: string;
+  numberOfHotels: number;
+  isAdmin: boolean;
+  hotels: IHotelDetail[];
+}
+
+export interface ICustomerDetails {
+  id: string;
+  name: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  country: string;
+  city: string;
+  address: string;
+  birthDate: string;
+  isAdmin: boolean;
+}
+
+export interface IBookingOfSuperAdmin {
+  id: string;
+  date: string;
+  isDeleted: boolean;
+  bookingDetails: IBookingDetailsOfSuperAdmin;
+  customer: ICustomerOfSuperAdmin;
+}
+
+export interface IBookingDetailsOfSuperAdmin {
+  id: string;
+  total: number;
+  isDeleted: boolean;
+  status: string;
+  hotel: IHotelOfSuperAdmin;
+  availabilities: IAvailabilityOfSuperAdmin[];
+}
+
+export interface IHotelOfSuperAdmin {
+  id: string;
+  name: string;
+  description: string;
+  email: string;
+  country: string;
+  city: string;
+  price: number;
+  address: string;
+  location: number[];
+  totalRooms: number;
+  services: string[];
+  rating: string;
+  images: string[];
+  isDeleted: boolean;
+}
+
+export interface IRoomTypeOfSuperAdmin {
+  id: string;
+  name: string;
+  capacity: number;
+  totalBathrooms: number;
+  totalBeds: number;
+  price: number;
+  images: string[];
+  isDeleted: boolean;
+}
+
+export interface IRoomOfSuperAdmin {
+  id: string;
+  roomNumber: string;
+  isDeleted: boolean;
+  isAvailable: boolean;
+  roomtype: IRoomTypeOfSuperAdmin;
+}
+
+export interface IAvailabilityOfSuperAdmin {
+  id: string;
+  startDate: string;
+  endDate: string;
+  isAvailable: boolean;
+  isDeleted: boolean;
+  room: IRoomOfSuperAdmin;
+}
+
+export interface ICustomerOfSuperAdmin {}
+
+export interface IDecodedTokenSuperAdmin extends JwtPayload {
+  id: string;
+  name: string;
+  email: string;
+  superAdmin: boolean;
+}
+
+export interface ISuperAdmin {
+  id: string,
+  name: string,
+  email: string,
+  superAdmin: boolean,
+}
+
+export interface IHotelAdminsProps {
+  searchQuery: string
 }

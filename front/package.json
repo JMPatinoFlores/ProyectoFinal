@@ -16,6 +16,7 @@
     "@paypal/react-paypal-js": "^8.5.0",
     "@react-google-maps/api": "^2.19.3",
     "@types/paypal__checkout-server-sdk": "^1.0.8",
+    "@vis.gl/react-google-maps": "^1.1.0",
     "axios": "^1.7.2",
     "cloudinary": "^2.4.0",
     "cloudinary-react": "^1.8.1",
@@ -30,6 +31,7 @@
     "next-cloudinary": "^6.6.2",
     "react": "^18",
     "react-dom": "^18",
+    "swiper": "^11.1.9",
     "yup": "^1.4.0"
   },
   "devDependencies": {

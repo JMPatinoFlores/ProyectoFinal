@@ -20,6 +20,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/auth/guards/roles.enum';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { HotelAdmins } from './hotelAdmins.entity';
 
 @ApiTags('Hoteleros')
 @Controller('hotel-admins')
@@ -63,6 +64,11 @@ export class HotelAdminsController {
   @Get('seeder')
   addHotelsAdmins() {
     return this.hotelAdminService.addHotelsAdmins();
+  }
+
+  @Get('search')
+  async searchHotelAdmins(@Query('search') query?: string): Promise<HotelAdmins[]> {
+    return await this.hotelAdminService.searchHotelAdmins(query);
   }
 
   //* Obtener un admin de hotel por su ID
