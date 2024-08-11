@@ -11,6 +11,10 @@ export class HotelsService {
     return await this.hotelsDbRepository.getDbHotels();
   }
 
+  async getHotelsByHotelAdminId(hotelAdminId: string) {
+    return await this.hotelsDbRepository.getHotelsByHotelAdminId(hotelAdminId)
+  }
+
   async getDbHotelById(id: string) {
     return await this.hotelsDbRepository.getDbHotelById(id);
   }
