@@ -1,4 +1,4 @@
-import { ICreateBooking, IHotelRegister, IRoomType } from "@/interfaces";
+import { ICreateBooking, ICreateNumberOfRoom, IHotelRegister, IRoomType } from "@/interfaces";
 
 export const postHotel = async (hotel: IHotelRegister) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
@@ -29,7 +29,7 @@ export const postRoomType = async (roomType: IRoomType) => {
   return data;
 };
 
-export const postRoom = async () => {
+export const postRoom = async (room: ICreateNumberOfRoom) => {
   const response = await fetch("http://localhost:3000/rooms", {
     method: "POST",
   });

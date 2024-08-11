@@ -1,12 +1,12 @@
 import Link from "next/link";
-import Rating from '../rating';
+import Rating from "../Rating";
 
 interface Hotel {
-  id: string; 
+  id: string;
   name: string;
   country: string;
   city: string;
-  rating:string;
+  rating: string;
   images: string[];
 }
 
@@ -15,10 +15,10 @@ interface ProductCardProps {
 }
 
 function ProductCard({ hotel }: ProductCardProps) {
-  console.log(hotel)  
+  console.log(hotel);
   return (
     <div className="w-full max-w-xs">
-       <Link href={`/hotel-detail/${hotel.id}`} className="group block">
+      <Link href={`/hotel-detail/${hotel.id}`} className="group block">
         <div className="overflow-hidden rounded-lg transition-shadow shadow-none group-hover:shadow-lg">
           <img
             src={hotel.images}
@@ -31,7 +31,9 @@ function ProductCard({ hotel }: ProductCardProps) {
             <div className="flex items-center justify-between">
               <div className="text-lg font-medium">{hotel.name}</div>
               {/* <div className="text-primary font-medium">${100}</div> */}
-              <Rating rating={hotel.rating} />
+              <div className="w-[80px]">
+                <Rating rating={hotel.rating} />
+              </div>
             </div>
             <div className="flex items-center text-muted-foreground">
               <span>

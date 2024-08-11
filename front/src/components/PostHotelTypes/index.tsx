@@ -104,7 +104,7 @@ export default function TypesRegister() {
     const formData = {
       ...values,
       images: imageUrls,
-      hotelId: hotelId || values.hotelId, // Aseguramos que el hotelId esté incluido
+      hotelId: hotelId || values.hotelId,
     };
 
     console.log("Datos enviados: ", formData);
@@ -113,11 +113,11 @@ export default function TypesRegister() {
       const response = await postRoomType(formData);
       console.log("Datos enviados: ", response);
       alert("Tipo de habitación registrado exitosamente");
-      router.push("/dashboard")
+      router.push("/rooms-number")
     } catch (error) {
       console.error(error);
-      alert("Tipo de habitación registrado exitosamente");
-      router.push("/dashboard/myhotels");
+      alert("Error");
+      // router.push("/dashboard/myhotels");
     } finally {
       setSubmitting(false);
     }

@@ -82,7 +82,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           address: data.user.address,
           birthDate: data.user.birthDate,
           isAdmin: decodedToken.isAdmin,
-          hotels: data.hotels,
+          hotels: data.user.hotels,
         };
 
         setUser(user);
