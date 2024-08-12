@@ -207,6 +207,10 @@ export interface IHotelContextType {
   fetchHotelsBySearch: (searchQuery: string) => Promise<IHotelDetail[]>;
   fetchHotelsByFilters: (queryParams: string) => Promise<IHotelDetail[]>;
   fetchHotelsByAdmin: (adminId: string) => Promise<IHotel[]>;
+  updateHotelDetails: (
+    hotelId: string,
+    hotelDetails: Partial<IAdminHotel>
+  ) => Promise<boolean>;
 }
 
 export interface IHotelResponse {
@@ -225,6 +229,19 @@ export interface IHotelResponse {
   rating: number;
   reviews?: IReview[];
   hotelAdminId: string;
+}
+
+export interface IAdminHotel {
+  id: string;
+  name: string;
+  description: string;
+  email: string;
+  country: string;
+  city: string;
+  address: string;
+  totalRooms: number;
+  services: string[];
+  images: string[];
 }
 
 export interface IHotelAdmin {
@@ -301,7 +318,6 @@ export interface ILocationDetail {
 }
 
 export interface ISearchBarProps {
-  searchQuery: string;
   onSearch: (query: string) => void;
 }
 
@@ -339,7 +355,6 @@ export interface ISuperAdminContextType {
   fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>;
   fetchCustomersBySearch: (searchQuery: string) => Promise<ICustomerDetails[]>;
 }
-
 
 export interface IHotelAdminDetails {
   id: string;
@@ -455,14 +470,14 @@ export interface IDecodedTokenSuperAdmin extends JwtPayload {
 }
 
 export interface ISuperAdmin {
-  id: string,
-  name: string,
-  email: string,
-  superAdmin: boolean,
+  id: string;
+  name: string;
+  email: string;
+  superAdmin: boolean;
 }
 
 export interface IHotelAdminsProps {
-  searchQuery: string
+  searchQuery: string;
 }
 
 export interface ICustomersProps {

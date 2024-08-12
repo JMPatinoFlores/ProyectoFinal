@@ -10,10 +10,15 @@ import "swiper/css/pagination";
 import "swiper/css/free-mode";
 import { FreeMode, Pagination } from "swiper/modules";
 import { HotelContext } from "@/context/hotelContext";
+import EditHotelModal from "../EditHotelModal";
+import { IAdminHotel } from "@/interfaces";
+import { updateHotel } from "@/lib/server/fetchHotels";
 
 function MyHotels() {
   const { user } = useContext(UserContext);
   const { hotels, fetchHotelsByAdmin } = useContext(HotelContext);
+  const [selectedHotel, setSelectedHotel] = useState<IAdminHotel | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (user?.id) {
@@ -21,8 +26,38 @@ function MyHotels() {
     }
   }, [user, fetchHotelsByAdmin]);
 
+  const handleEditClick = (hotel: IAdminHotel) => {
+    setSelectedHotel(hotel);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedHotel(null);
+  };
+
+  const handleSaveChanges = async (updatedHotel: Partial<IAdminHotel>) => {
+    if (selectedHotel) {
+      try {
+        const hotelId = selectedHotel.id;
+        const updatedData = await updateHotel(hotelId, updatedHotel);
+        console.log("Hotel actualizado", updatedData);
+      } catch (error) {
+        console.error("Error al actualizar el hotel:", error);
+      }
+    }
+    handleCloseModal();
+  };
+
   return (
     <div>
+      {isModalOpen && (
+        <EditHotelModal
+          hotel={selectedHotel}
+          onClose={handleCloseModal}
+          onSave={handleSaveChanges}
+        />
+      )}
       <div className="flex justify-between items-center mx-4 my-6">
         <div className="flex-1">
           <h1 className="text-4xl font-semibold">Mis hoteles</h1>
@@ -105,6 +140,7 @@ function MyHotels() {
                       <button
                         className="flex text-white items-center px-3
                       py-2 mt-2 rounded-md border-2 border-gray-500 hover:bg-gray-500 invert hover:invert-0 duration-200 focus:scale-95"
+                        onClick={() => handleEditClick(hotel)}
                       >
                         <Image
                           src={"/edit2.png"}

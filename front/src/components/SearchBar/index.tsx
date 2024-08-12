@@ -7,6 +7,7 @@ function SearchBar({ onSearch }: ISearchBarProps) {
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("Búsqueda activada con query:", searchQuery);
     onSearch(searchQuery);
   };
 
