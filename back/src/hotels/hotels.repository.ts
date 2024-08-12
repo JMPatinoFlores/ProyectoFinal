@@ -33,6 +33,12 @@ export class HotelsRepository {
     } else throw new NotFoundException('there are not hotels');
   }
 
+  async getHotelsByHotelAdminId(hotelAdminId: string): Promise<Hotel[]> {
+    const hotels = await this.hotelDbRepository.find({ where: { hotelAdmin: { id: hotelAdminId } } })
+    if (hotels.length === 0) throw new NotFoundException('No se encontraron hoteles para ese hotel admin.')
+    return hotels
+  }
+
   async getDbHotelById(id: string): Promise<Hotel> {
     const hotelFound: Hotel = await this.hotelDbRepository
       .createQueryBuilder('hotel')

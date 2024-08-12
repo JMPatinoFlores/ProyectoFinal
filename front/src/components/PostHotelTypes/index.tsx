@@ -50,7 +50,7 @@ export default function TypesRegister() {
     "Deluxe",
     "Suite",
     "Familiar",
-    "Accesible (para personas con discapacidad)",
+    "Accesible",
   ];
 
   const uploadImageToCloudinary = async (file: File): Promise<string> => {
