@@ -21,6 +21,8 @@ const Customer = ({ customer, handleViewDetails, setFilteredCustomers }: Custome
             if (response) {
                 const customers = await fetchCustomers();
                 setFilteredCustomers(customers);
+            } else {
+                alert('Hubo un error al eliminar al cliente.')
             }
         } catch (error) {
             console.log("Error deleting customer: ", error);

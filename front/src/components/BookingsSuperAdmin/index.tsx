@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useContext } from "react";
 import { SuperAdminContext } from "../../context/superAdminContext";
-import { IBookingOfSuperAdmin } from "@/interfaces";
+import { IAvailabilityOfSuperAdmin, IBookingOfSuperAdmin } from "@/interfaces";
 
 interface BookingsSuperAdminProps {
     customerId: string;
@@ -18,7 +18,7 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(9);
-    const { fetchCustomerById, fetchBookings, fetchDeleteBookingOfCustomer } = useContext(SuperAdminContext);
+    const { fetchCustomerById, fetchBookingsByCustomerId, fetchDeleteBookingOfCustomer } = useContext(SuperAdminContext);
 
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -31,7 +31,7 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
     useEffect(() => {
         if (customerId) {
             const fetchData = async () => {
-                const bookings = await fetchBookings();
+                const bookings = await fetchBookingsByCustomerId(customerId);
                 const customer = await fetchCustomerById(customerId)
                 if (bookings && customer) {
                     setBookings(bookings);
@@ -49,7 +49,49 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
     }, [bookings]);
 
     const handleViewDetails = (booking: IBookingOfSuperAdmin) => {
-        setSelectedBooking(booking);
+        const bookingDateArray = new Date(booking.date).toISOString().split('T')[0].split('-')
+        let toSumToIndex = 1
+        bookingDateArray.forEach((data, index) => {
+            bookingDateArray.unshift(bookingDateArray[index + toSumToIndex])
+            toSumToIndex += 1
+        })
+        bookingDateArray.pop()
+        bookingDateArray.pop()
+        bookingDateArray.shift()
+        
+        const bookingDate = bookingDateArray.join('/')
+        const availabilities: Partial<IAvailabilityOfSuperAdmin>[] = []
+        booking.bookingDetails.availabilities.forEach(availability => {
+            if (availability.startDate && availability.endDate) {
+                const bookingAvailabilityStartDateArray = new Date(availability.startDate).toISOString().split('T')[0].split('-')
+                let toSumToIndexStartDate = 1
+                bookingAvailabilityStartDateArray.forEach((data, index) => {
+                    bookingAvailabilityStartDateArray.unshift(bookingAvailabilityStartDateArray[index + toSumToIndexStartDate])
+                    toSumToIndexStartDate += 1
+                })
+                
+                bookingAvailabilityStartDateArray.pop()
+                bookingAvailabilityStartDateArray.pop()
+                bookingAvailabilityStartDateArray.shift()
+
+                const bookingAvailabilityEndDateArray = new Date(availability.endDate).toISOString().split('T')[0].split('-')
+                let toSumToIndexEndDate = 1
+                bookingAvailabilityEndDateArray.forEach((data, index) => {
+                    bookingAvailabilityEndDateArray.unshift(bookingAvailabilityEndDateArray[index + toSumToIndexEndDate])
+                    toSumToIndexEndDate += 1
+                })
+                bookingAvailabilityEndDateArray.pop()
+                bookingAvailabilityEndDateArray.pop()
+                bookingAvailabilityEndDateArray.shift()
+                const newAvailability = {
+                    startDate: bookingAvailabilityStartDateArray.join('/'),
+                    endDate: bookingAvailabilityEndDateArray.join('/')
+                }
+                availabilities.push(newAvailability)
+            }
+            
+        })
+        setSelectedBooking({...booking, date: bookingDate, bookingDetails: {...booking.bookingDetails, availabilities}});
         setIsModalOpen(true);
     };
 
@@ -64,6 +106,8 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
             currentPage * itemsPerPage
         )
         : [];
+    console.log(paginatedBookings);
+    
 
     return (
         <div className="flex-1 p-6">
@@ -90,13 +134,15 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
                             <button
                                 className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]"
                                 onClick={async () => {
-                                    const confirmed = window.confirm("¿Estás seguro que quieres eliminar esta reserva?");
+                                    const confirmed = window.confirm("¿Estás seguro que quieres eliminar esta reserva? Se cancelará y eliminará al mismo tiempo.");
                                     if (!confirmed) return;
                                     try {
                                         const response = await fetchDeleteBookingOfCustomer(booking.id, customerId);
                                         if (response) {
-                                            const customer = await fetchCustomerById(customerId);
-                                            if (customer) setBookings(customer.bookings);
+                                            const bookings = await fetchBookingsByCustomerId(customerId);
+                                            if (bookings) setBookings(bookings);
+                                        } else {
+                                            alert('Hubo un error al eliminar la reserva.')
                                         }
                                     } catch (error) {
                                         console.log("Error deleting booking: ", error);
@@ -105,9 +151,6 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
                             >
                                 Eliminar
                             </button>
-                            <Link href={`/reviews/${booking.id}`} className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]">
-                                Ver Reseñas
-                            </Link>
                         </div>
                     </div>
                 )) : (<p>No hay resultados que coincidan con su búsqueda.</p>)}
@@ -118,6 +161,8 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
                             <h2 className="text-xl text-center font-bold mb-4">Detalles de Reserva</h2>
                             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-10">
                                 <div className="w-full md:w-1/2 max-w-[600px]">
+                                    <div className="h-6"></div>
+
                                     <div className="mb-2 flex items-center">
                                         <label className="w-1/3 font-semibold">Fecha:</label>
                                         <p className="w-2/3 p-2 border rounded bg-gray-100">{selectedBooking.date}</p>
@@ -132,21 +177,26 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
                                     </div>
                                 </div>
                                 <div className="w-full md:w-1/2 max-w-[600px]">
-                                    <div className="mb-2">
+                                    <div className="flex flex-col items-center mb-2">
                                         <label className="font-semibold">Períodos Reservados:</label>
-                                        <ul className="list-disc pl-5">
-                                            {selectedBooking.bookingDetails.availabilities.map((period, index) => (
-                                                <li key={index} className="mb-1">
-                                                    <div>
-                                                        <strong>Check In:</strong> {period.startDate}
-                                                    </div>
-                                                    <div>
-                                                        <strong>Check Out:</strong> {period.endDate}
-                                                    </div>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        <table className="table-auto border-collapse w-full">
+                                            <thead>
+                                                <tr>
+                                                    <th className="border px-4 py-2">Check In</th>
+                                                    <th className="border px-4 py-2">Check Out</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {selectedBooking.bookingDetails.availabilities.map((period, index) => (
+                                                    <tr key={index}>
+                                                        <td className="border px-4 py-2">{period.startDate}</td>
+                                                        <td className="border px-4 py-2">{period.endDate}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
                                     </div>
+
                                 </div>
                             </div>
                             <div className="flex justify-center mt-4">

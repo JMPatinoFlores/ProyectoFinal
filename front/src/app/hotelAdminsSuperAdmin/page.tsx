@@ -13,7 +13,7 @@ function HotelAdminsSuperAdmin() {
 
     return (
         <div>
-            <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
+            <SearchBar onSearch={handleSearch} />
             <HotelAdmins searchQuery={searchQuery} />
         </div>
     )

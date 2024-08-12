@@ -19,6 +19,7 @@ import {
   getAllBookings,
   getAllCustomers,
   getAllHotelAdmins,
+  getBookingsByCustomerId,
   getCustomerById,
   getHotelAdminById,
   updateBookingDetails,
@@ -40,6 +41,7 @@ export const SuperAdminContext = createContext<ISuperAdminContextType>({
   signIn: async () => false,
   fetchCustomers: async () => Promise.resolve([] as ICustomerDetails[]),
   fetchBookings: async () => Promise.resolve([] as IBookingOfSuperAdmin[]),
+  fetchBookingsByCustomerId: async (customerId: string) => Promise.resolve([] as IBookingOfSuperAdmin[]),
   fetchHotelAdmins: async () => Promise.resolve([] as IHotelAdminDetails[]),
   fetchDeleteHotelAdmin: async (hotelAdminId: string) => Promise.resolve(false),
   fetchDeleteCustomer: async (customerId: string) => Promise.resolve(false),
@@ -208,7 +210,7 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
 
   const fetchUpdateHotelDetails = async (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin> | null, hotelAdminId: string): Promise<boolean> => {
     try {
-      const success = await updateHotelDetails(hotelId, selectedHotel, hotelAdminId);
+      const success = await updateHotelDetails(hotelId, selectedHotel);
       if (success) {
         setHotels(prev => prev.map(hotel => hotel.id === hotelId ? { ...hotel, ...selectedHotel } : hotel));
       }
@@ -222,9 +224,11 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
   const fetchDeleteBookingOfCustomer = useCallback(async (bookingId: string, customerId: string): Promise<boolean> => {
     try {
       const deleted = await deleteBookingOfCustomer(bookingId);
+      console.log(deleted);
+      
       if (deleted) {
         const data = await getCustomerById(customerId);
-        setBookings(data?.bookings ?? []);
+        setBookings(data.bookings);
         typeof window !== "undefined" && localStorage.setItem("bookingsCustomerSuperAdmin", JSON.stringify(data?.bookings ?? []));
         return true;
       }
@@ -251,6 +255,8 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
   const fetchUpdateHotelAdminDetails = useCallback(async (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null): Promise<boolean> => {
     try {
       const success = await updateHotelAdminDetails(hotelAdminId, selectedHotelAdmin);
+      console.log(success);
+      
       if (success) {
         setHotelAdmins(prev => prev.map(admin => admin.id === hotelAdminId ? { ...admin, ...selectedHotelAdmin } : admin));
       }
@@ -276,11 +282,13 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
 
   const fetchHotelAdminsBySearch = useCallback(async (searchQuery: string): Promise<IHotelAdminDetails[]> => {
     try {
-      const response = await fetch(`http://localhost:3000/hotelAdmins/search?search=${searchQuery}`);
+      const response = await fetch(`http://localhost:3000/hotel-admins/search?search=${searchQuery}`);
       if (!response.ok) {
         throw new Error(`HTTP error status: ${response.status}`);
       }
       const data = await response.json();
+      console.log(data);
+      
       if (Array.isArray(data)) {
         return data;
       } else {
@@ -289,6 +297,18 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
       }
     } catch (error) {
       console.error("Error fetching hotel admins by search:", error);
+      return [];
+    }
+  }, []);
+
+  const fetchBookingsByCustomerId = useCallback(async (customerId: string): Promise<IBookingOfSuperAdmin[]> => {
+    try {
+      const data = await getBookingsByCustomerId(customerId);
+      setBookings(data);
+      localStorage.setItem("bookings", JSON.stringify(data));
+      return data;
+    } catch (error) {
+      console.error("Error fetching bookings of customer:", error);
       return [];
     }
   }, []);
@@ -305,6 +325,7 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
         signIn,
         fetchCustomers,
         fetchBookings,
+        fetchBookingsByCustomerId,
         fetchHotelAdmins,
         fetchDeleteHotelAdmin,
         fetchDeleteCustomer,

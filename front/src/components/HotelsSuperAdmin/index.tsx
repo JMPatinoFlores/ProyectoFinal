@@ -99,6 +99,8 @@ const HotelsSuperAdmin = ({ hotelAdminId }: HotelsSuperAdminProps) => {
                     );
                     setHotels(updatedHotels);
                     handleCloseModal();
+                } else {
+                    alert('Hubo un error al actualizar el hotel.')
                 }
             } catch (error) {
                 console.log("Error updating hotel details: ", error);
@@ -148,6 +150,8 @@ const HotelsSuperAdmin = ({ hotelAdminId }: HotelsSuperAdminProps) => {
                                         if (response) {
                                             const hotelAdmin = await fetchHotelAdminById(hotelAdminId);
                                             if (hotelAdmin) setHotels(hotelAdmin?.hotels);
+                                        } else {
+                                            alert('Hubo un error al eliminar el hotel.')
                                         }
                                     } catch (error) {
                                         console.log("Error deleting hotel admin: ", error);

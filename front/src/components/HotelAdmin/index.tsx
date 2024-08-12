@@ -21,6 +21,8 @@ const HotelAdmin = ({ hotelAdmin, handleViewDetails, setFilteredHotelAdmins }: H
             if (response) {
                 const hotelAdmins = await fetchHotelAdmins();
                 setFilteredHotelAdmins(hotelAdmins);
+            } else {
+                alert('Hubo un error al eliminar el administrador de hotel.')
             }
         } catch (error) {
             console.log("Error deleting hotel admin: ", error);

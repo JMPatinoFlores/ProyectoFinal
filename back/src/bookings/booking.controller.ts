@@ -95,7 +95,7 @@ export class BookingController {
   })
   @ApiOperation({ summary: 'Trae todos los bookings de un customer.' })
   @ApiBearerAuth()
-  @Roles(Role.User)
+  @Roles(Role.User, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @Get('customer/:id')
   @HttpCode(200)
@@ -179,7 +179,7 @@ export class BookingController {
 
   @ApiOperation({ summary: 'Hace el borrado lógico de un booking por id.' })
   @ApiBearerAuth()
-  @Roles(Role.Admin, Role.User)
+  @Roles(Role.Admin, Role.User, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @Delete('softDelete/:id')
   @HttpCode(200)

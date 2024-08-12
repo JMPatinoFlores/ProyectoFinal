@@ -17,6 +17,8 @@ export const getAllCustomers = async () => {
         },
       }
     );
+    console.log(response);
+    
     if (!response.ok) {
       throw new Error("Error en la solicitud.");
     }
@@ -162,9 +164,7 @@ export const deleteHotelOfHotelAdmin = async (hotelId: string) => {
 
 export const updateHotelDetails = async (
   hotelId: string,
-  selectedHotel: Partial<IHotelOfSuperAdmin> | null,
-  hotelAdminId: string
-) => {
+  selectedHotel: Partial<IHotelOfSuperAdmin> | null) => {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("No estás autorizado.");
 
@@ -175,6 +175,7 @@ export const updateHotelDetails = async (
         "Content-Type": "application/json",
         Authorization: `Bearer: ${token}`,
       },
+      body: JSON.stringify(selectedHotel)
     });
     console.log(response);
     
@@ -189,7 +190,7 @@ export const updateHotelDetails = async (
 export const deleteBookingOfCustomer = async (bookingId: string) => {
     const token = localStorage.getItem("token")
     if (!token) throw new Error('No estás autorizado.')
-    const response = await fetch(`http://localhost:3000/bookings/${bookingId}`, {
+    const response = await fetch(`http://localhost:3000/bookings/softDelete/${bookingId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -278,3 +279,29 @@ export const getAllBookings = async () => {
     throw error;
   }
 };
+
+export const getBookingsByCustomerId = async (customerId: string) => {
+  const token = localStorage.getItem("token");
+  console.log(token);
+  if (!token) {
+    throw new Error("No estás autorizado.");
+  }
+
+  try {
+    const response = await fetch(`http://localhost:3000/bookings/customer/${customerId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Error en la solicitud.");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en la operación:", error);
+    throw error;
+  }
+}

@@ -52,6 +52,8 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                     );
                     setHotelAdmins(updatedHotelAdmins);
                     handleCloseModal();
+                } else {
+                    alert('Hubo un error al actualizar el administrador de hotel.')
                 }
             } catch (error) {
                 console.log("Error updating hotel admin details: ", error);
@@ -104,11 +106,14 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
             }
 
             if (name === "birthDate") {
-                const date = new Date(value).toISOString();
-                setSelectedHotelAdminToSend({
-                    ...selectedHotelAdmin,
-                    [name]: date
-                });
+                const validDate = (Number(value.split('-')[0]) > 1900) && (Number(value.split('-')[0])) < 2025
+                if (validDate) {
+                    const date = new Date(value).toISOString();
+                    setSelectedHotelAdminToSend({
+                        ...selectedHotelAdmin,
+                        [name]: date
+                    });
+                }
             } else {
                 setSelectedHotelAdminToSend({
                     ...selectedHotelAdmin,

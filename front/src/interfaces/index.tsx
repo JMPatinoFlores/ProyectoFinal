@@ -341,6 +341,7 @@ export interface ISuperAdminContextType {
   signIn: (credentials: ILoginUser) => Promise<boolean>;
   fetchCustomers: () => Promise<ICustomerDetails[]>;
   fetchBookings: () => Promise<IBookingOfSuperAdmin[]>;
+  fetchBookingsByCustomerId: (customerId: string) => Promise<IBookingOfSuperAdmin[]>;
   fetchHotelAdmins: () => Promise<IHotelAdminDetails[]>;
   fetchDeleteHotelAdmin: (hotelAdminId: string) => Promise<boolean>;
   fetchDeleteCustomer: (customerId: string) => Promise<boolean>;
@@ -391,6 +392,7 @@ export interface IBookingOfSuperAdmin {
   isDeleted: boolean;
   bookingDetails: IBookingDetailsOfSuperAdmin;
   customer: ICustomerOfSuperAdmin;
+  availabilities: Partial<IAvailabilityOfSuperAdmin>[]
 }
 
 export interface IBookingDetailsOfSuperAdmin {
@@ -399,7 +401,7 @@ export interface IBookingDetailsOfSuperAdmin {
   isDeleted: boolean;
   status: string;
   hotel: IHotelOfSuperAdmin;
-  availabilities: IAvailabilityOfSuperAdmin[];
+  availabilities: Partial<IAvailabilityOfSuperAdmin>[];
 }
 
 export interface IHotelOfSuperAdmin {

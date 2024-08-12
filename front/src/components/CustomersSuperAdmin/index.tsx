@@ -51,6 +51,8 @@ const Customers = ({ searchQuery }: ICustomersProps) => {
                     );
                     setCustomers(updatedCustomers);
                     handleCloseModal();
+                } else {
+                    alert('Hubo un error al actualizar el cliente.')
                 }
             } catch (error) {
                 console.log("Error updating customer details: ", error);
@@ -94,6 +96,7 @@ const Customers = ({ searchQuery }: ICustomersProps) => {
             const { name, value } = e.target;
 
             if (name === "email") {
+                // Validate email
                 if (!validateEmail(value)) {
                     setEmailError("El correo electrónico no es válido.");
                 } else {
@@ -102,11 +105,14 @@ const Customers = ({ searchQuery }: ICustomersProps) => {
             }
 
             if (name === "birthDate") {
-                const date = new Date(value).toISOString();
-                setSelectedCustomerToSend({
-                    ...selectedCustomer,
-                    [name]: date
-                });
+                const validDate = (Number(value.split('-')[0]) > 1900) && (Number(value.split('-')[0])) < 2025
+                if (validDate) {
+                    const date = new Date(value).toISOString();
+                    setSelectedCustomerToSend({
+                        ...selectedCustomer,
+                        [name]: date
+                    });
+                }
             } else {
                 setSelectedCustomerToSend({
                     ...selectedCustomer,
