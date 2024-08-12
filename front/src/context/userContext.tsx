@@ -26,7 +26,7 @@ export const UserContext = createContext<IUserContextType>({
   isAdmin: false,
   setIsAdmin: () => {},
   login: async () => false,
-  googleLogin: async () => false,
+  // googleLogin: async () => false,
   customerRegister: async () => false,
   hotelierRegister: async () => false,
   getReviews: async () => {},
@@ -98,26 +98,26 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const googleLogin = async (token: string, user: IUserResponse) => {
-    try {
-      if (token) {
-        const decodedToken = jwtDecode<IDecodeToken>(token);
-        console.log("Token decodificado", decodedToken);
+  // const googleLogin = async (token: string, user: IUserResponse) => {
+  //   try {
+  //     if (token) {
+  //       const decodedToken = jwtDecode<IDecodeToken>(token);
+  //       console.log("Token decodificado", decodedToken);
 
-        setUser(user);
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", token);
+  //       setUser(user);
+  //       localStorage.setItem("user", JSON.stringify(user));
+  //       localStorage.setItem("token", token);
 
-        setIsLogged(true);
-        setIsAdmin(decodedToken.isAdmin);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error("Error en el inicio de sesión con Google:", error);
-      return false;
-    }
-  };
+  //       setIsLogged(true);
+  //       setIsAdmin(decodedToken.isAdmin);
+  //       return true;
+  //     }
+  //     return false;
+  //   } catch (error) {
+  //     console.error("Error en el inicio de sesión con Google:", error);
+  //     return false;
+  //   }
+  // };
 
   const getReviews = useCallback(async () => {
     const data = await getAllReviews();
@@ -166,7 +166,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         isAdmin,
         setIsAdmin,
         login,
-        googleLogin,
+        // googleLogin,
         hotelierRegister,
         customerRegister,
         getReviews,

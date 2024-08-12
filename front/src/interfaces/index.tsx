@@ -73,7 +73,7 @@ export interface IUserContextType {
   isAdmin: boolean;
   setIsAdmin: (isAdmin: boolean) => void;
   login: (credentials: ILogin) => Promise<boolean>;
-  googleLogin: (token: string, user: IUserResponse) => Promise<boolean>;
+  // googleLogin: (token: string, user: IUserResponse) => Promise<boolean>;
   customerRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   hotelierRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   getReviews: () => void;
