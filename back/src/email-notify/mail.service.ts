@@ -43,7 +43,7 @@ export class MailService {
   async sendWelcomeEmailforCustomer(customer: CreateCustomerDto) {
     const emailTemplatePath = path.join(
       __dirname,
-      '../correos-nodemailer/registerUser/index.html',
+      '../../correos-nodemailer/registerUser/index.html',
     );
 
     let htmlTemplate = fs.readFileSync(emailTemplatePath, 'utf-8');
@@ -60,7 +60,7 @@ export class MailService {
   async sendWelcomeEmailForHotelAdmin(hotelAdmin: CreateHotelAdminDto) {
     const emailTemplatePath = path.join(
       __dirname,
-      '../correos-nodemailer/registerHotelier/index.html',
+      '../../correos-nodemailer/registerHotelier/index.html',
     );
 
     let htmlTemplate = fs.readFileSync(emailTemplatePath, 'utf-8');

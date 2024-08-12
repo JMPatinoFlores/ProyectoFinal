@@ -21,7 +21,7 @@ export class HotelsRepository {
     private readonly hotelDbRepository: Repository<Hotel>,
     @InjectRepository(HotelAdmins)
     private readonly hotelAdminRepository: Repository<HotelAdmins>,
-  ) { }
+  ) {}
 
   async getDbHotels(): Promise<Hotel[]> {
     let hotelsList: Hotel[] = await this.hotelDbRepository.find({
@@ -38,12 +38,13 @@ export class HotelsRepository {
       .createQueryBuilder('hotel')
       .leftJoinAndSelect('hotel.roomstype', 'roomstype')
       .leftJoinAndSelect('roomstype.rooms', 'room')
+      .leftJoinAndSelect('hotel.reviews', 'reviews')
       .where('hotel.id = :id', { id })
       .andWhere('hotel.isDeleted = false')
       .getOne();
 
     if (!hotelFound) {
-      throw new NotFoundException('This hotel is not available11111111');
+      throw new NotFoundException('This hotel is not available');
     }
 
     hotelFound.roomstype = hotelFound.roomstype.filter(
@@ -106,17 +107,26 @@ export class HotelsRepository {
       .getMany();
   }
 
-  async getFilteredHotels(rating: number, country: string, city: string, minPrice: number, maxPrice: number) {
-    const query = this.hotelDbRepository.createQueryBuilder('hotel')
+  async getFilteredHotels(
+    rating: number,
+    country: string,
+    city: string,
+    minPrice: number,
+    maxPrice: number,
+  ) {
+    const query = this.hotelDbRepository.createQueryBuilder('hotel');
 
-    if (rating) query.andWhere('hotel.rating >= :rating', { rating })
-    if (country) query.andWhere('hotel.country = :country', { country })
-    if (city) query.andWhere('hotel.city = :city', { city })
+    if (rating) query.andWhere('hotel.rating >= :rating', { rating });
+    if (country) query.andWhere('hotel.country = :country', { country });
+    if (city) query.andWhere('hotel.city = :city', { city });
     if (minPrice) query.andWhere('hotel.price >= :minPrice', { minPrice });
-    if (maxPrice) query.andWhere('hotel.price <= :maxPrice', { maxPrice })
-    const hotels = await query.getMany()
-    if (hotels.length === 0) throw new NotFoundException('No se encontró ningún hotel con esas características.')
-    return hotels
+    if (maxPrice) query.andWhere('hotel.price <= :maxPrice', { maxPrice });
+    const hotels = await query.getMany();
+    if (hotels.length === 0)
+      throw new NotFoundException(
+        'No se encontró ningún hotel con esas características.',
+      );
+    return hotels;
   }
 
   async updateDbHotel(
@@ -173,8 +183,11 @@ export class HotelsRepository {
   }
 
   async addHotels() {
-    const hotelAdmins = await this.hotelAdminRepository.find()
-    if (hotelAdmins.length === 0) throw new BadRequestException('Es necesario que haya al menos 1 hotel admin en la BBDD.')
+    const hotelAdmins = await this.hotelAdminRepository.find();
+    if (hotelAdmins.length === 0)
+      throw new BadRequestException(
+        'Es necesario que haya al menos 1 hotel admin en la BBDD.',
+      );
     data?.map(async (e, index) => {
       // const hotelAdminExists = await this.hotelAdminRepository.exists({
       //   where: { id: e.hotel_admin_id },
@@ -210,32 +223,6 @@ export class HotelsRepository {
     return 'Added Hotels';
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // async searchHotels(name: string) {
 //     const hotels = await this.hotelDbRepository

@@ -67,7 +67,9 @@ export class HotelAdminsController {
   }
 
   @Get('search')
-  async searchHotelAdmins(@Query('search') query?: string): Promise<HotelAdmins[]> {
+  async searchHotelAdmins(
+    @Query('search') query?: string,
+  ): Promise<HotelAdmins[]> {
     return await this.hotelAdminService.searchHotelAdmins(query);
   }
 

@@ -69,12 +69,18 @@ export class HotelAdminRepository {
       .where('unaccent(LOWER(hotel-admin.name)) ILIKE unaccent(:searchTerm)', {
         searchTerm,
       })
-      .orWhere('unaccent(LOWER(hotel-admin.lastName)) ILIKE unaccent(:searchTerm)', {
-        searchTerm,
-      })
-      .orWhere('unaccent(LOWER(hotel-admin.email)) ILIKE unaccent(:searchTerm)', {
-        searchTerm,
-      })
+      .orWhere(
+        'unaccent(LOWER(hotel-admin.lastName)) ILIKE unaccent(:searchTerm)',
+        {
+          searchTerm,
+        },
+      )
+      .orWhere(
+        'unaccent(LOWER(hotel-admin.email)) ILIKE unaccent(:searchTerm)',
+        {
+          searchTerm,
+        },
+      )
       .getMany();
   }
 
