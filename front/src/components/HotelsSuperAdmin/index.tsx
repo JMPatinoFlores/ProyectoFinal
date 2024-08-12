@@ -15,7 +15,7 @@ const HotelsSuperAdmin = ({ hotelAdminId }: HotelsSuperAdminProps) => {
     const [hotels, setHotels] = useState<IHotelOfSuperAdmin[]>([]);
     const [selectedHotel, setSelectedHotel] = useState<IHotelOfSuperAdmin | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { fetchHotelAdminById, fetchDeleteHotelOfHotelAdmin } = useContext(SuperAdminContext);
+    const { fetchHotelAdminById, fetchDeleteHotelOfHotelAdmin, fetchUpdateHotelDetails } = useContext(SuperAdminContext);
 
     useEffect(() => {
         if (hotelAdminId) {
@@ -26,13 +26,11 @@ const HotelsSuperAdmin = ({ hotelAdminId }: HotelsSuperAdminProps) => {
                     setHotelAdminName(`${data.name} ${data.lastName}`)
                 } else {
                     console.warn('No data found for the given hotelAdminId');
-                    // Handle the case where no data is returned if needed
                 }
             };
             fetchData();
         }
     }, [hotelAdminId]);
-
 
     const handleViewDetails = (hotel: IHotelOfSuperAdmin) => {
         setSelectedHotel(hotel);
@@ -42,6 +40,36 @@ const HotelsSuperAdmin = ({ hotelAdminId }: HotelsSuperAdminProps) => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setSelectedHotel(null);
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (selectedHotel) {
+            setSelectedHotel({
+                ...selectedHotel,
+                [e.target.name]: e.target.value,
+            });
+        }
+    };
+
+    const handleUpdateHotel = async () => {
+        if (selectedHotel) {
+            try {
+                console.log(selectedHotel);
+                
+                const response = await fetchUpdateHotelDetails(selectedHotel.id, selectedHotel, hotelAdminId);
+                if (response) {
+                    const updatedHotels = hotels.map(hotel =>
+                        hotel.id === selectedHotel.id ? selectedHotel : hotel
+                    );
+                    console.log(updatedHotels);
+                    
+                    setHotels(updatedHotels);
+                    handleCloseModal();
+                }
+            } catch (error) {
+                console.log("Error updating hotel details: ", error);
+            }
+        }
     };
 
     return (
@@ -59,11 +87,8 @@ const HotelsSuperAdmin = ({ hotelAdminId }: HotelsSuperAdminProps) => {
                                 className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]"
                                 onClick={() => handleViewDetails(hotel)}
                             >
-                                Ver Detalles
+                                Ver Detalles y Editar
                             </button>
-                            <Link href={`/editHotel/${hotel.id}`} className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]">
-                                Editar
-                            </Link>
                             <button
                                 className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]"
                                 onClick={async () => {
@@ -92,20 +117,77 @@ const HotelsSuperAdmin = ({ hotelAdminId }: HotelsSuperAdminProps) => {
                 {isModalOpen && selectedHotel && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                         <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-md">
-                            <h2 className="text-xl font-bold mb-4">{selectedHotel.name}</h2>
-                            <p><strong>Email:</strong> {selectedHotel.email}</p>
-                            <p><strong>País:</strong> {selectedHotel.country}</p>
-                            <p><strong>Ciudad:</strong> {selectedHotel.city}</p>
-                            <p><strong>Precio promedio:</strong> ${selectedHotel.price.toFixed(2)}</p>
-                            <p><strong>Dirección:</strong> {selectedHotel.address}</p>
-                            <p><strong>Servicios:</strong> {selectedHotel.services.join(', ')}</p>
-                            <p><strong>Calificación:</strong> {selectedHotel.rating} / 5</p>
-                            <button
-                                className="bg-gray-300 text-black rounded-md p-1 px-2 mt-4 hover:bg-gray-400"
-                                onClick={handleCloseModal}
-                            >
-                                Cerrar
-                            </button>
+                            <h2 className="text-xl font-bold mb-4">Editar {selectedHotel.name}</h2>
+                            <input
+                                type="text"
+                                name="name"
+                                className="w-full mb-2 p-2 border rounded"
+                                value={selectedHotel.name}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="email"
+                                className="w-full mb-2 p-2 border rounded"
+                                value={selectedHotel.email}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="country"
+                                className="w-full mb-2 p-2 border rounded"
+                                value={selectedHotel.country}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="city"
+                                className="w-full mb-2 p-2 border rounded"
+                                value={selectedHotel.city}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="number"
+                                name="price"
+                                className="w-full mb-2 p-2 border rounded"
+                                value={selectedHotel.price}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="address"
+                                className="w-full mb-2 p-2 border rounded"
+                                value={selectedHotel.address}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="services"
+                                className="w-full mb-2 p-2 border rounded"
+                                value={selectedHotel.services.join(', ')}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="number"
+                                name="rating"
+                                className="w-full mb-2 p-2 border rounded"
+                                value={selectedHotel.rating}
+                                onChange={handleInputChange}
+                            />
+                            <div className="flex justify-end mt-4">
+                                <button
+                                    className="bg-gray-300 text-black rounded-md p-1 px-2 mr-2 hover:bg-gray-400"
+                                    onClick={handleCloseModal}
+                                >
+                                    Cerrar
+                                </button>
+                                <button
+                                    className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]"
+                                    onClick={handleUpdateHotel}
+                                >
+                                    Guardar Cambios
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}

@@ -324,6 +324,7 @@ export interface ISuperAdminContextType {
   fetchDeleteHotelAdmin: (hotelAdminId: string) => Promise<boolean>;
   fetchHotelAdminById: (hotelAdminId: string) => Promise<IHotelAdminDetails | undefined>;
   fetchDeleteHotelOfHotelAdmin: (hotelId: string, hotelAdminId: string) => Promise<boolean>;
+  fetchUpdateHotelDetails: (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin>, hotelAdminId: string) => Promise<boolean>;
   fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>;
 }
 

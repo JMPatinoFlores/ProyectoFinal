@@ -23,6 +23,12 @@ export class RoomsTypeRepository {
         else throw new NotFoundException("there are not roomstype");
     }
 
+    async getRoomTypesByHotelId(hotelId: string): Promise<RoomsType[]> {
+        const roomtypes = await this.roomstypeDbRepository.find({ where: { hotel: { id: hotelId } } })
+        if (roomtypes.length === 0) throw new NotFoundException('El hotel no tiene room types.')
+        return roomtypes
+    }
+
     async getDbRoomTypeById(id: string): Promise<RoomsType> {
         const roomtypeFound: RoomsType = await this.roomstypeDbRepository //findOne({where:{id}, relations:{rooms:true}});
             .createQueryBuilder('roomstype')

@@ -1,4 +1,4 @@
-import { IHotelAdminDetails } from "@/interfaces"
+import { IHotelAdminDetails, IHotelOfSuperAdmin } from "@/interfaces"
 
 export const getAllCustomers = async () => {
     const token = localStorage.getItem("token")
@@ -79,6 +79,22 @@ export const deleteHotelOfHotelAdmin = async (hotelId: string) => {
     if (!token) throw new Error('No estás autorizado.')
     const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
         method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer: ${token}`
+        }
+    })
+    console.log(response);
+    
+    if (!response.ok) throw new Error('Error en la solicitud.')
+    return true
+}
+
+export const updateHotelDetails = async (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin>, hotelAdminId: string) => {
+    const token = localStorage.getItem("token")
+    if (!token) throw new Error('No estás autorizado.')
+    const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
+        method: "PUT",
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer: ${token}`
