@@ -1,5 +1,7 @@
 import {
   ICreateReview,
+  IEditProfileHotelier,
+  IEditProfileUser,
   ILogin,
   INewPassword,
   IReview,
@@ -85,4 +87,53 @@ export const postReview = async (review: ICreateReview) => {
 
 export const getAllReviews = async () => {
   const response = await fetch("http://localhost:3000/reviews");
+};
+
+export const putUpdateProfile = async (userId: string, profileData: IEditProfileUser) => {
+  try {
+      const token = typeof window !== "undefined" && localStorage.getItem("token");
+
+    const response = await fetch(`http://localhost:3000/customers/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify(profileData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar el perfil");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    throw new Error("Error al actualizar el perfil");
+  }
+};
+export const putUpdateProfileHotelier = async (userId: string, profileData: IEditProfileHotelier) => {
+  try {
+      const token = typeof window !== "undefined" && localStorage.getItem("token");
+
+    const response = await fetch(`http://localhost:3000/hotel-admins/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify(profileData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar el perfil");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    throw new Error("Error al actualizar el perfil");
+  }
 };

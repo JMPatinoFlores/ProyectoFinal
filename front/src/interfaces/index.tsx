@@ -443,3 +443,24 @@ export interface ISuperAdmin {
 export interface IHotelAdminsProps {
   searchQuery: string
 }
+
+export interface IEditProfileUser {
+  name: string;
+  lastName: string;
+  email: string;
+  country: string;
+  city: string;
+  address: string;
+  phone: string;
+}
+
+export interface IEditProfileHotelier {
+  name: string;
+  lastName: string;
+  email: string;
+  country: string;
+  city: string;
+  address: string;
+  phone: string;
+  birthDate: string;
+}
