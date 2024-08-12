@@ -21,15 +21,8 @@ export const getAllCustomers = async () => {
     );
     if (!response.ok) {
       throw new Error("Error en la solicitud.");
-      throw new Error("Error en la solicitud.");
     }
     const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error en la operación:", error);
-    throw error;
-  }
-};
     return data;
   } catch (error) {
     console.error("Error en la operación:", error);
@@ -56,23 +49,10 @@ export const getAllHotelAdmins = async () => {
         },
       }
     );
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
     if (!response.ok) {
-      throw new Error("Error en la solicitud.");
       throw new Error("Error en la solicitud.");
     }
     const data = await response.json();
-    console.log("fetchSuperAdmins: ", data);
-    return data;
-  } catch (error) {
-    console.error("Error en la operación:", error);
-    throw error;
-  }
-};
     console.log("fetchSuperAdmins: ", data);
     return data;
   } catch (error) {
@@ -188,25 +168,6 @@ export const deleteHotelOfHotelAdmin = async (hotelId: string) => {
   return true;
 };
 
-export const updateBookingDetails = async (bookingId: string, selectedBooking: Partial<IBookingOfSuperAdmin> | null, customerId: string) => {
-  const token = localStorage.getItem("token")
-  if (!token) throw new Error('No estás autorizado.')
-  console.log('Ejecutando updateBookingDetails');
-
-  const response = await fetch(`http://localhost:3000/bookings/${bookingId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer: ${token}`
-    },
-    body: JSON.stringify(selectedBooking)
-  })
-  console.log(response);
-
-  if (!response.ok) throw new Error('Error en la solicitud.')
-  return true
-}
-
 export const updateHotelDetails = async (
   hotelId: string,
   selectedHotel: Partial<IHotelOfSuperAdmin> | null
@@ -274,11 +235,6 @@ export const updateCustomerDetails = async (customerId: string, selectedCustomer
 }
 
 export const getAllBookings = async () => {
-  const token = localStorage.getItem("token");
-  console.log(token);
-  if (!token) {
-    throw new Error("No estás autorizado.");
-  }
   const token = localStorage.getItem("token");
   console.log(token);
   if (!token) {
