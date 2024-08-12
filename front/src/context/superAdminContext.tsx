@@ -57,6 +57,7 @@ export const SuperAdminContext = createContext<ISuperAdminContextType>({
   fetchCustomersBySearch: async (searchQuery: string) => Promise.resolve([] as ICustomerDetails[])
 });
 
+
 export const SuperAdminProvider = ({
   children,
 }: {
@@ -87,6 +88,7 @@ export const SuperAdminProvider = ({
       console.error("Error during sign in:", error);
       return false;
     }
+  };
   };
 
   const fetchCustomers = useCallback(async (): Promise<ICustomerDetails[]> => {
@@ -132,6 +134,19 @@ export const SuperAdminProvider = ({
     }
   }, []);
 
+  const fetchHotelAdmins = useCallback(async (): Promise<
+    IHotelAdminDetails[]
+  > => {
+    try {
+      const data = await getAllHotelAdmins();
+      setHotelAdmins(data);
+      localStorage.setItem("hotelAdmins", JSON.stringify(data));
+      return data;
+    } catch (error) {
+      console.error("Error fetching hotel admins:", error);
+      return [];
+    }
+  }, []);
   const fetchHotelAdmins = useCallback(async (): Promise<
     IHotelAdminDetails[]
   > => {

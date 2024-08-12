@@ -21,8 +21,15 @@ export const getAllCustomers = async () => {
     );
     if (!response.ok) {
       throw new Error("Error en la solicitud.");
+      throw new Error("Error en la solicitud.");
     }
     const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en la operación:", error);
+    throw error;
+  }
+};
     return data;
   } catch (error) {
     console.error("Error en la operación:", error);
@@ -49,10 +56,23 @@ export const getAllHotelAdmins = async () => {
         },
       }
     );
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     if (!response.ok) {
+      throw new Error("Error en la solicitud.");
       throw new Error("Error en la solicitud.");
     }
     const data = await response.json();
+    console.log("fetchSuperAdmins: ", data);
+    return data;
+  } catch (error) {
+    console.error("Error en la operación:", error);
+    throw error;
+  }
+};
     console.log("fetchSuperAdmins: ", data);
     return data;
   } catch (error) {
@@ -259,6 +279,11 @@ export const getAllBookings = async () => {
   if (!token) {
     throw new Error("No estás autorizado.");
   }
+  const token = localStorage.getItem("token");
+  console.log(token);
+  if (!token) {
+    throw new Error("No estás autorizado.");
+  }
 
   try {
     console.log('Ejecutando getAllBookings');
@@ -299,6 +324,7 @@ export const getBookingsByCustomerId = async (customerId: string) => {
       },
     });
     if (!response.ok) {
+      throw new Error("Error en la solicitud.");
       throw new Error("Error en la solicitud.");
     }
     const data = await response.json();

@@ -42,7 +42,7 @@ export class Hotel {
   @Column({ type: 'simple-json', default: [0, 0] })
   location: number[];
 
-  @Column({ type: 'int', default:0 })
+  @Column({ type: 'int', default: 0 })
   totalRooms: number;
 
   @Column({ type: 'simple-json' })

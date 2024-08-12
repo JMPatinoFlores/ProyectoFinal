@@ -37,10 +37,8 @@ export class AuthService {
     private readonly mailService: MailService,
     private readonly jwtService: JwtService,
     @InjectRepository(Customers)
-   
     private readonly customersDBRepository: Repository<Customers>,
     @InjectRepository(HotelAdmins)
-   
     private readonly hotelAdminsDBRepository: Repository<HotelAdmins>,
     @InjectRepository(SuperAdmins)
     private readonly SuperAdminsDBRepository: Repository<SuperAdmins>,
@@ -324,18 +322,18 @@ export class AuthService {
     const foundCustomer = await this.customersRepository.getCustomerByEmail(
       details.email,
     );
-    if (foundCustomer) return "googleRegisterError=userExists"
+    if (foundCustomer) return 'googleRegisterError=userExists';
     const newCustomer = await this.customersDBRepository.save(details);
-    if (!newCustomer) return "googleRegisterError=internalError"
+    if (!newCustomer) return 'googleRegisterError=internalError';
     return newCustomer;
   }
 
   async googleRegisterHotelAdmin(details: GoogleRegisterUserDetails) {
     const foundHotelAdmin =
       await this.hotelAdminRepository.getHotelAdminByEmail(details.email);
-    if (foundHotelAdmin) return "googleRegisterError=userExists"
+    if (foundHotelAdmin) return 'googleRegisterError=userExists';
     const newHotelAdmin = await this.hotelAdminsDBRepository.save(details);
-    if (!newHotelAdmin) return "googleRegisterError=internalError"
+    if (!newHotelAdmin) return 'googleRegisterError=internalError';
     return newHotelAdmin;
   }
 
@@ -347,7 +345,7 @@ export class AuthService {
       details.email,
     );
 
-    if (!customer && !adminHotel) return 'googleLoginError'
+    if (!customer && !adminHotel) return 'googleLoginError';
 
     if (customer) {
       return customer;
