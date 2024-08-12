@@ -1,7 +1,7 @@
 "use client";
 
 import { IBookingDetails, IBookingOfSuperAdmin, ICustomerDetails, IDecodedTokenSuperAdmin, IHotelAdminDetails, IHotelAdminsProps, IHotelOfSuperAdmin, ILoginUser, ISuperAdmin, ISuperAdminContextType } from "@/interfaces";
-import { deleteHotelAdmin, deleteHotelOfHotelAdmin, getAllBookings, getAllCustomers, getAllHotelAdmins, getHotelAdminById, updateHotelAdminDetails, updateHotelDetails } from "@/lib/server/fetchSuperAdmins";
+import { deleteBookingOfCustomer, deleteCustomer, deleteHotelAdmin, deleteHotelOfHotelAdmin, getAllBookings, getAllCustomers, getAllHotelAdmins, getCustomerById, getHotelAdminById, updateBookingDetails, updateCustomerDetails, updateHotelAdminDetails, updateHotelDetails } from "@/lib/server/fetchSuperAdmins";
 import { postLogin } from "@/lib/server/fetchUsers";
 import { jwtDecode } from "jwt-decode";
 import { createContext, useCallback, useEffect, useState } from "react";
@@ -19,11 +19,17 @@ export const SuperAdminContext = createContext<ISuperAdminContextType>({
     fetchBookings: async () => Promise.resolve([] as IBookingOfSuperAdmin[]),
     fetchHotelAdmins: async () => Promise.resolve([] as IHotelAdminDetails[]),
     fetchDeleteHotelAdmin: async (hotelAdminId: string) => Promise.resolve(false),
+    fetchDeleteCustomer: async (customerId: string) => Promise.resolve(false),
     fetchHotelAdminById: async (hotelAdminId: string) => Promise.resolve(undefined),
+    fetchCustomerById: async (customerId: string) => Promise.resolve(undefined),
     fetchDeleteHotelOfHotelAdmin: async (hotelId: string) => Promise.resolve(false),
+    fetchDeleteBookingOfCustomer: async (bookingId: string) => Promise.resolve(false),
     fetchUpdateHotelDetails: async (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin> | null, hotelAdminId: string) => Promise.resolve(false),
+    fetchUpdateBookingDetails: async (bookingId: string, selectedBooking: Partial<IBookingOfSuperAdmin> | null, customerId: string) => Promise.resolve(false),
     fetchUpdateHotelAdminDetails: async (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null) => Promise.resolve(false),
-    fetchHotelAdminsBySearch: async (searchQuery: string) => Promise.resolve([] as IHotelAdminDetails[])
+    fetchUpdateCustomerDetails: async (customerId: string, selectedCustomer: Partial<ICustomerDetails> | null) => Promise.resolve(false),
+    fetchHotelAdminsBySearch: async (searchQuery: string) => Promise.resolve([] as IHotelAdminDetails[]),
+    fetchCustomersBySearch: async (searchQuery: string) => Promise.resolve([] as ICustomerDetails[])
 });
 
 
@@ -80,6 +86,27 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
         }
     }, []);
 
+    const fetchCustomersBySearch = useCallback(async (searchQuery: string): Promise<ICustomerDetails[]> => {
+        try {
+            const response = await fetch(
+                `http://localhost:3000/customers/search?search=${searchQuery}`
+            );
+            if (!response.ok) {
+                throw new Error(`HTTP error status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (Array.isArray(data)) {
+                return data;
+            } else {
+                console.error("fetchCustomersBySearch did not return an array.");
+                return [];
+            }
+        } catch (error) {
+            console.error("Error fetching customers by search:", error);
+            return [];
+        }
+    }, [])
+
     const fetchHotelAdmins = useCallback(async (): Promise<IHotelAdminDetails[]> => {
         try {
             const data = await getAllHotelAdmins();
@@ -109,6 +136,22 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
         }
     }, [])
 
+    const fetchDeleteCustomer = useCallback(async (customerId: string): Promise<boolean> => {
+        try {
+            const deleted = await deleteCustomer(customerId)
+            if (deleted) {
+                const data = await getAllCustomers()
+                setCustomers(data)
+                typeof window !== "undefined" && localStorage.setItem("customersSuperAdmin", JSON.stringify(data))
+                return true
+            }
+            return false
+        } catch (error) {
+            console.log("Error en fetchDeleteCustomer: ", error);
+            return false
+        }
+    }, [])
+
     const fetchHotelAdminById = useCallback(async (hotelAdminId: string): Promise<IHotelAdminDetails | undefined> => {
         try {
             const hotelAdmin = await getHotelAdminById(hotelAdminId);
@@ -119,6 +162,20 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             return undefined;
         } catch (error) {
             console.log("Error en el fetchHotelAdminById: ", error);
+            return undefined;
+        }
+    }, []);
+
+    const fetchCustomerById = useCallback(async (customerId: string): Promise<ICustomerDetails | undefined> => {
+        try {
+            const customer = await getCustomerById(customerId);
+            if (customer) {
+                // Assuming you need to map or transform IHotelDetail to IHotelOfSuperAdmin
+                return customer
+            }
+            return undefined;
+        } catch (error) {
+            console.log("Error en el fetchCustomerById: ", error);
             return undefined;
         }
     }, []);
@@ -135,6 +192,22 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             return false
         } catch (error) {
             console.log("Error en fetchDeleteHotelOfHotelAdmin: ", error);
+            return false
+        }
+    }, [])
+
+    const fetchDeleteBookingOfCustomer = useCallback(async (bookingId: string, customerId: string): Promise<boolean> => {
+        try {
+            const deleted = await deleteBookingOfCustomer(bookingId)
+            if (deleted) {
+                const data = await getCustomerById(customerId)
+                setBookings(data.bookings)
+                typeof window !== "undefined" && localStorage.setItem("bookingsCustomerSuperAdmin", JSON.stringify(data.bookings))
+                return true
+            }
+            return false
+        } catch (error) {
+            console.log("Error en fetchDeleteBookingCustomer: ", error);
             return false
         }
     }, [])
@@ -157,6 +230,24 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
         }
     }, [])
 
+    const fetchUpdateBookingDetails = useCallback(async (bookingId: string, selectedBooking: Partial<IBookingOfSuperAdmin> | null, customerId: string): Promise<boolean> => {
+        try {
+            const updated = await updateBookingDetails(bookingId, selectedBooking, customerId)
+            if (updated) {
+                const data = await getCustomerById(customerId)
+                if (data) {
+                    typeof window !== "undefined" && localStorage.setItem("bookingsCustomerSuperAdmin", JSON.stringify(data.bookings))
+                    return true
+                }
+                return false
+            }
+            return false
+        } catch (error) {
+            console.log('Error en fetchUpdateBookingDetails: ', error);
+            return false
+        }
+    }, [])
+
     const fetchUpdateHotelAdminDetails = useCallback(async (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null): Promise<boolean> => {
         try {
             const updated = await updateHotelAdminDetails(hotelAdminId, selectedHotelAdmin)
@@ -171,6 +262,24 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             return false
         } catch (error) {
             console.log('Error en fetchUpdateHotelAdminDetails: ', error);
+            return false
+        }
+    }, [])
+
+    const fetchUpdateCustomerDetails = useCallback(async (customerId: string, selectedCustomer: Partial<ICustomerDetails> | null): Promise<boolean> => {
+        try {
+            const updated = await updateCustomerDetails(customerId, selectedCustomer)
+            if (updated) {
+                const data = await getAllCustomers()
+                if (data) {
+                    typeof window !== "undefined" && localStorage.setItem("customerOfSuperAdmin", JSON.stringify(data))
+                    return true
+                }
+                return false
+            }
+            return false
+        } catch (error) {
+            console.log('Error en fetchUpdateCustomerDetails: ', error);
             return false
         }
     }, [])
@@ -273,11 +382,17 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             fetchCustomers,
             fetchHotelAdmins,
             fetchDeleteHotelAdmin,
+            fetchDeleteCustomer,
             fetchHotelAdminById,
+            fetchCustomerById,
             fetchDeleteHotelOfHotelAdmin,
+            fetchDeleteBookingOfCustomer,
             fetchUpdateHotelDetails,
+            fetchUpdateBookingDetails,
             fetchUpdateHotelAdminDetails,
+            fetchUpdateCustomerDetails,
             fetchHotelAdminsBySearch,
+            fetchCustomersBySearch
         }} >{children}</SuperAdminContext.Provider>
     )
 }

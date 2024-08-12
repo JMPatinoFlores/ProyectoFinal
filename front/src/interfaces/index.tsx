@@ -327,11 +327,17 @@ export interface ISuperAdminContextType {
   fetchBookings: () => Promise<IBookingOfSuperAdmin[]>;
   fetchHotelAdmins: () => Promise<IHotelAdminDetails[]>;
   fetchDeleteHotelAdmin: (hotelAdminId: string) => Promise<boolean>;
+  fetchDeleteCustomer: (customerId: string) => Promise<boolean>;
   fetchHotelAdminById: (hotelAdminId: string) => Promise<IHotelAdminDetails | undefined>;
+  fetchCustomerById: (customerId: string) => Promise<ICustomerDetails | undefined>;
   fetchDeleteHotelOfHotelAdmin: (hotelId: string, hotelAdminId: string) => Promise<boolean>;
+  fetchDeleteBookingOfCustomer: (bookingId: string, customerId: string) => Promise<boolean>;
   fetchUpdateHotelDetails: (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin> | null, hotelAdminId: string) => Promise<boolean>;
-  fetchUpdateHotelAdminDetails: (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null) => Promise<boolean>
+  fetchUpdateBookingDetails: (bookingId: string, selectedBooking: Partial<IBookingOfSuperAdmin> | null, customerId: string) => Promise<boolean>;
+  fetchUpdateHotelAdminDetails: (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null) => Promise<boolean>;
+  fetchUpdateCustomerDetails: (customerId: string, selectedCustomer: Partial<ICustomerDetails> | null) => Promise<boolean>;
   fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>;
+  fetchCustomersBySearch: (searchQuery: string) => Promise<ICustomerDetails[]>;
 }
 
 
@@ -347,7 +353,7 @@ export interface IHotelAdminDetails {
   birthDate: string;
   numberOfHotels: number;
   isAdmin: boolean;
-  hotels: IHotelDetail[];
+  hotels: IHotelOfSuperAdmin[];
 }
 
 export interface ICustomerDetails {
@@ -361,6 +367,7 @@ export interface ICustomerDetails {
   address: string;
   birthDate: string;
   isAdmin: boolean;
+  bookings: IBookingOfSuperAdmin[]
 }
 
 export interface IBookingOfSuperAdmin {
@@ -395,6 +402,7 @@ export interface IHotelOfSuperAdmin {
   rating: string;
   images: string[];
   isDeleted: boolean;
+  roomtypes: IRoomTypeOfSuperAdmin[]
 }
 
 export interface IRoomTypeOfSuperAdmin {
@@ -425,7 +433,19 @@ export interface IAvailabilityOfSuperAdmin {
   room: IRoomOfSuperAdmin;
 }
 
-export interface ICustomerOfSuperAdmin {}
+export interface ICustomerOfSuperAdmin {
+  id: string;
+  name: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  country: string;
+  city: string;
+  address: string;
+  birthDate: string;
+  isAdmin: boolean;
+  bookings: IBookingOfSuperAdmin[];
+}
 
 export interface IDecodedTokenSuperAdmin extends JwtPayload {
   id: string;
@@ -442,5 +462,9 @@ export interface ISuperAdmin {
 }
 
 export interface IHotelAdminsProps {
+  searchQuery: string
+}
+
+export interface ICustomersProps {
   searchQuery: string
 }
