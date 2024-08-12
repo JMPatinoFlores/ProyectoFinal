@@ -1,4 +1,9 @@
-import { ICreateBooking, IHotelRegister, IRoomType } from "@/interfaces";
+import {
+  ICreateBooking,
+  ICreateNumberOfRoom,
+  IHotelRegister,
+  IRoomType,
+} from "@/interfaces";
 
 export const postHotel = async (hotel: IHotelRegister) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
@@ -25,13 +30,19 @@ export const postRoomType = async (roomType: IRoomType) => {
     body: JSON.stringify(roomType),
   });
 
-  const data = await response.json();
+  const data = await response.text();
   return data;
 };
 
-export const postRoom = async () => {
+export const postRoom = async (room: ICreateNumberOfRoom) => {
+  const token = typeof window !== "undefined" && localStorage.getItem("token");
   const response = await fetch("http://localhost:3000/rooms", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(room),
   });
   const data = await response.json();
   return data;
@@ -116,4 +127,44 @@ export const postBooking = async (booking: ICreateBooking) => {
   });
   const data = await response.json();
   return data;
+};
+
+export const getRoomTypesByHotelId = async (
+  hotelId: string
+): Promise<IRoomType[]> => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+      `http://localhost:3000/roomstype/hotel/${hotelId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    console.log("Datos JSON recibidos:", data);
+    if (Array.isArray(data)) {
+      return data.map((item) => ({
+        id: item.id,
+        roomTypeId: item.roomTypeId,
+        name: item.name,
+        capacity: item.capacity,
+        totalBathrooms: item.totalBathrooms,
+        totalBeds: item.totalBeds,
+        image: item.image,
+        price: item.price,
+      }));
+    } else {
+      console.error("Error: Expected array but received:", data);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    return [];
+  }
 };

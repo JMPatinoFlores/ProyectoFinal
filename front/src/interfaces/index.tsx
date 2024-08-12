@@ -122,7 +122,12 @@ export interface IRoom {
   hotelId: string;
 }
 
+export interface ICreateNumberOfRoom {
+  roomNumber: string;
+  roomsTypeId: string;
+}
 export interface IRoomType {
+  id: string | number | readonly string[] | undefined;
   roomTypeId: string;
   name: string;
   capacity: number;
