@@ -162,7 +162,7 @@ export const deleteHotelOfHotelAdmin = async (hotelId: string) => {
 
 export const updateHotelDetails = async (
   hotelId: string,
-  selectedHotel: Partial<IHotelOfSuperAdmin>,
+  selectedHotel: Partial<IHotelOfSuperAdmin> | null,
   hotelAdminId: string
 ) => {
   const token = localStorage.getItem("token");
