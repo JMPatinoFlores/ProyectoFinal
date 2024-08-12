@@ -1,14 +1,19 @@
 "use client";
 
-import { UserContext } from "@/context/userContext";
-import { useContext } from "react";
-import CustomerDashboard from "../CustomerDashboard";
+import { useContext, useEffect } from "react";
 import Profile from "../Profile";
+import { useRouter } from "next/navigation";
+import { UserContext } from "@/context/userContext";
 
 function Dashboard() {
-  const { isAdmin } = useContext(UserContext);
+  const router = useRouter();
+  const { isLogged } = useContext(UserContext);
 
-  return <div>{isAdmin ? <Profile /> : <CustomerDashboard />}</div>;
+  if (!isLogged) {
+    router.push("/login");
+  }
+
+  return <Profile />;
 }
 
 export default Dashboard;
