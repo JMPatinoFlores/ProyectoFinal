@@ -324,7 +324,8 @@ export interface ISuperAdminContextType {
   fetchDeleteHotelAdmin: (hotelAdminId: string) => Promise<boolean>;
   fetchHotelAdminById: (hotelAdminId: string) => Promise<IHotelAdminDetails | undefined>;
   fetchDeleteHotelOfHotelAdmin: (hotelId: string, hotelAdminId: string) => Promise<boolean>;
-  fetchUpdateHotelDetails: (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin>, hotelAdminId: string) => Promise<boolean>;
+  fetchUpdateHotelDetails: (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin> | null, hotelAdminId: string) => Promise<boolean>;
+  fetchUpdateHotelAdminDetails: (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null) => Promise<boolean>
   fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>;
 }
 
@@ -385,7 +386,7 @@ export interface IHotelOfSuperAdmin {
   address: string;
   location: number[];
   totalRooms: number;
-  services: string[];
+  services: string[] | string;
   rating: string;
   images: string[];
   isDeleted: boolean;

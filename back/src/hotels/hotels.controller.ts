@@ -176,6 +176,9 @@ export class HotelsController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateHotelDto: Partial<UpdateHotelDto>,
   ) {
+    if (!Object.keys(updateHotelDto).length) {
+      throw new BadRequestException('The body cannot be empty');
+    }
     return this.hotelDbService.updateDbHotel(id, updateHotelDto);
   }
 

@@ -5,10 +5,11 @@ import { useContext } from "react";
 
 interface HotelAdminProps {
     hotelAdmin: IHotelAdminDetails;
+    handleViewDetails: (hotelAdmin: IHotelAdminDetails) => void;
     setFilteredHotelAdmins: React.Dispatch<React.SetStateAction<IHotelAdminDetails[]>>;
 }
 
-const HotelAdmin = ({ hotelAdmin, setFilteredHotelAdmins }: HotelAdminProps) => {
+const HotelAdmin = ({ hotelAdmin, handleViewDetails, setFilteredHotelAdmins }: HotelAdminProps) => {
     const { fetchDeleteHotelAdmin, fetchHotelAdmins } = useContext(SuperAdminContext);
 
     async function handleDelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -36,12 +37,12 @@ const HotelAdmin = ({ hotelAdmin, setFilteredHotelAdmins }: HotelAdminProps) => 
             </div>
             {/* Links */}
             <div className="flex flex-wrap gap-2 mt-auto">
-                <Link
-                    href={`/editHotelAdminSuperAdmin`}
+                <button
                     className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]"
+                    onClick={() => handleViewDetails(hotelAdmin)}
                 >
-                    Editar
-                </Link>
+                    Ver Detalles y Editar
+                </button>
                 <button
                     className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]"
                     onClick={handleDelete}

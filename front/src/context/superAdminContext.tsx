@@ -1,7 +1,7 @@
 "use client";
 
 import { IBookingDetails, IBookingOfSuperAdmin, ICustomerDetails, IDecodedTokenSuperAdmin, IHotelAdminDetails, IHotelAdminsProps, IHotelOfSuperAdmin, ILoginUser, ISuperAdmin, ISuperAdminContextType } from "@/interfaces";
-import { deleteHotelAdmin, deleteHotelOfHotelAdmin, getAllBookings, getAllCustomers, getAllHotelAdmins, getHotelAdminById, updateHotelDetails } from "@/lib/server/fetchSuperAdmins";
+import { deleteHotelAdmin, deleteHotelOfHotelAdmin, getAllBookings, getAllCustomers, getAllHotelAdmins, getHotelAdminById, updateHotelAdminDetails, updateHotelDetails } from "@/lib/server/fetchSuperAdmins";
 import { postLogin } from "@/lib/server/fetchUsers";
 import { jwtDecode } from "jwt-decode";
 import { createContext, useCallback, useEffect, useState } from "react";
@@ -21,7 +21,8 @@ export const SuperAdminContext = createContext<ISuperAdminContextType>({
     fetchDeleteHotelAdmin: async (hotelAdminId: string) => Promise.resolve(false),
     fetchHotelAdminById: async (hotelAdminId: string) => Promise.resolve(undefined),
     fetchDeleteHotelOfHotelAdmin: async (hotelId: string) => Promise.resolve(false),
-    fetchUpdateHotelDetails: async (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin>, hotelAdminId: string) => Promise.resolve(false),
+    fetchUpdateHotelDetails: async (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin> | null, hotelAdminId: string) => Promise.resolve(false),
+    fetchUpdateHotelAdminDetails: async (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null) => Promise.resolve(false),
     fetchHotelAdminsBySearch: async (searchQuery: string) => Promise.resolve([] as IHotelAdminDetails[])
 });
 
@@ -138,7 +139,7 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
         }
     }, [])
 
-    const fetchUpdateHotelDetails = useCallback(async (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin>, hotelAdminId: string): Promise<boolean> => {
+    const fetchUpdateHotelDetails = useCallback(async (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin> | null, hotelAdminId: string): Promise<boolean> => {
         try {
             const updated = await updateHotelDetails(hotelId, selectedHotel, hotelAdminId)
             if (updated) {
@@ -156,6 +157,23 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
         }
     }, [])
 
+    const fetchUpdateHotelAdminDetails = useCallback(async (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null): Promise<boolean> => {
+        try {
+            const updated = await updateHotelAdminDetails(hotelAdminId, selectedHotelAdmin)
+            if (updated) {
+                const data = await getAllHotelAdmins()
+                if (data) {
+                    typeof window !== "undefined" && localStorage.setItem("hotelAdminsSuperAdmin", JSON.stringify(data))
+                    return true
+                }
+                return false
+            }
+            return false
+        } catch (error) {
+            console.log('Error en fetchUpdateHotelAdminDetails: ', error);
+            return false
+        }
+    }, [])
 
     const fetchBookings = useCallback(async (): Promise<IBookingOfSuperAdmin[]> => {
         try {
@@ -258,6 +276,7 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             fetchHotelAdminById,
             fetchDeleteHotelOfHotelAdmin,
             fetchUpdateHotelDetails,
+            fetchUpdateHotelAdminDetails,
             fetchHotelAdminsBySearch,
         }} >{children}</SuperAdminContext.Provider>
     )

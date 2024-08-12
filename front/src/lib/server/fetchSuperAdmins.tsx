@@ -90,7 +90,7 @@ export const deleteHotelOfHotelAdmin = async (hotelId: string) => {
     return true
 }
 
-export const updateHotelDetails = async (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin>, hotelAdminId: string) => {
+export const updateHotelDetails = async (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin> | null, hotelAdminId: string) => {
     const token = localStorage.getItem("token")
     if (!token) throw new Error('No estás autorizado.')
     const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
@@ -98,10 +98,28 @@ export const updateHotelDetails = async (hotelId: string, selectedHotel: Partial
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer: ${token}`
-        }
+        },
+        body: JSON.stringify(selectedHotel)
     })
     console.log(response);
     
+    if (!response.ok) throw new Error('Error en la solicitud.')
+    return true
+}
+
+export const updateHotelAdminDetails = async (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null) => {
+    const token = localStorage.getItem("token")
+    if (!token) throw new Error('No estás autorizado.')
+    const response = await fetch(`http://localhost:3000/hotel-admins/${hotelAdminId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer: ${token}`
+        },
+        body: JSON.stringify(selectedHotelAdmin)
+    })
+    console.log(response);
+
     if (!response.ok) throw new Error('Error en la solicitud.')
     return true
 }

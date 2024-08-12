@@ -129,21 +129,11 @@ export class HotelsRepository {
     id: string,
     updateHotelDto: Partial<UpdateHotelDto>,
   ): Promise<string> {
-    const { hotel_admin_id, ...hotelData } = updateHotelDto;
-    const hotelAdminFound: HotelAdmins =
-      await this.hotelAdminRepository.findOne({
-        where: { id: hotel_admin_id },
-      });
-    if (!hotelAdminFound) throw new NotFoundException('Hotel Admin not found');
-
-    const foundHotel: Hotel = await this.hotelDbRepository.findOne({
-      where: { id },
-    });
-    if (!foundHotel) throw new NotFoundException('Hotel not found');
-    await this.hotelDbRepository.update(id, {
-      ...hotelData,
-      hotelAdmin: hotelAdminFound,
-    });
+    const { ...hotelData } = updateHotelDto;
+    const hotel = await this.hotelDbRepository.findOneBy({id})
+    if (!hotel) throw new NotFoundException('Hotel not found');
+    await this.hotelDbRepository.update({id}, {
+      ...hotelData});
     return id;
   }
 
