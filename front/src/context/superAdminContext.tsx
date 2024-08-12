@@ -1,7 +1,7 @@
 "use client";
 
 import { IBookingDetails, IBookingOfSuperAdmin, ICustomerDetails, IDecodedTokenSuperAdmin, IHotelAdminDetails, IHotelAdminsProps, IHotelOfSuperAdmin, ILoginUser, ISuperAdmin, ISuperAdminContextType } from "@/interfaces";
-import { deleteHotelAdmin, deleteHotelOfHotelAdmin, getAllBookings, getAllCustomers, getAllHotelAdmins, getHotelAdminById } from "@/lib/server/fetchSuperAdmins";
+import { deleteHotelAdmin, deleteHotelOfHotelAdmin, getAllBookings, getAllCustomers, getAllHotelAdmins, getHotelAdminById, updateHotelDetails } from "@/lib/server/fetchSuperAdmins";
 import { postLogin } from "@/lib/server/fetchUsers";
 import { jwtDecode } from "jwt-decode";
 import { createContext, useCallback, useEffect, useState } from "react";
@@ -21,6 +21,7 @@ export const SuperAdminContext = createContext<ISuperAdminContextType>({
     fetchDeleteHotelAdmin: async (hotelAdminId: string) => Promise.resolve(false),
     fetchHotelAdminById: async (hotelAdminId: string) => Promise.resolve(undefined),
     fetchDeleteHotelOfHotelAdmin: async (hotelId: string) => Promise.resolve(false),
+    fetchUpdateHotelDetails: async (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin>, hotelAdminId: string) => Promise.resolve(false),
     fetchHotelAdminsBySearch: async (searchQuery: string) => Promise.resolve([] as IHotelAdminDetails[])
 });
 
@@ -83,7 +84,7 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             const data = await getAllHotelAdmins();
             setHotelAdmins(data);
             typeof window !== "undefined" &&
-                localStorage.setItem("hotelAdmins", JSON.stringify(data));
+                localStorage.setItem("hotelAdminsSuperAdmin", JSON.stringify(data));
             return data;
         } catch (error) {
             console.log(error);
@@ -97,7 +98,7 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             if (deleted) {
                 const data = await getAllHotelAdmins()
                 setHotelAdmins(data)
-                typeof window !== "undefined" && localStorage.setItem("hotelAdmins", JSON.stringify(data))
+                typeof window !== "undefined" && localStorage.setItem("hotelAdminsSuperAdmin", JSON.stringify(data))
                 return true
             }
             return false
@@ -127,7 +128,7 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             if (deleted) {
                 const data = await getHotelAdminById(hotelAdminId)
                 setHotels(data.hotels)
-                typeof window !== "undefined" && localStorage.setItem("hotels", JSON.stringify(data.hotels))
+                typeof window !== "undefined" && localStorage.setItem("hotelsHotelAdminSuperAdmin", JSON.stringify(data.hotels))
                 return true
             }
             return false
@@ -135,7 +136,25 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             console.log("Error en fetchDeleteHotelOfHotelAdmin: ", error);
             return false
         }
-    }, []) 
+    }, [])
+
+    const fetchUpdateHotelDetails = useCallback(async (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin>, hotelAdminId: string): Promise<boolean> => {
+        try {
+            const updated = await updateHotelDetails(hotelId, selectedHotel, hotelAdminId)
+            if (updated) {
+                const data = await getHotelAdminById(hotelAdminId)
+                if (data) {
+                    typeof window !== "undefined" && localStorage.setItem("hotelsHotelAdminSuperAdmin", JSON.stringify(data.hotels))
+                    return true
+                }
+                return false
+            }
+            return false
+        } catch (error) {
+            console.log('Error en fetchUpdateHotelDetails: ', error);
+            return false
+        }
+    }, [])
 
 
     const fetchBookings = useCallback(async (): Promise<IBookingOfSuperAdmin[]> => {
@@ -238,6 +257,7 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
             fetchDeleteHotelAdmin,
             fetchHotelAdminById,
             fetchDeleteHotelOfHotelAdmin,
+            fetchUpdateHotelDetails,
             fetchHotelAdminsBySearch,
         }} >{children}</SuperAdminContext.Provider>
     )
