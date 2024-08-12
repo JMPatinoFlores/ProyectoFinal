@@ -1,31 +1,31 @@
 import { SuperAdminContext } from "@/context/superAdminContext";
-import { IHotelAdminDetails } from "@/interfaces";
+import { ICustomerDetails } from "@/interfaces";
 import Link from "next/link";
 import { useContext } from "react";
 
-interface HotelAdminProps {
-    hotelAdmin: IHotelAdminDetails;
-    handleViewDetails: (hotelAdmin: IHotelAdminDetails) => void;
-    setFilteredHotelAdmins: React.Dispatch<React.SetStateAction<IHotelAdminDetails[]>>;
+interface CustomerProps {
+    customer: ICustomerDetails;
+    handleViewDetails: (customer: ICustomerDetails) => void;
+    setFilteredCustomers: React.Dispatch<React.SetStateAction<ICustomerDetails[]>>;
 }
 
-const HotelAdmin = ({ hotelAdmin, handleViewDetails, setFilteredHotelAdmins }: HotelAdminProps) => {
-    const { fetchDeleteHotelAdmin, fetchHotelAdmins } = useContext(SuperAdminContext);
+const Customer = ({ customer, handleViewDetails, setFilteredCustomers }: CustomerProps) => {
+    const { fetchDeleteCustomer, fetchCustomers } = useContext(SuperAdminContext);
 
     async function handleDelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-        const confirmed = window.confirm("¿Estás seguro que quieres eliminar este administrador de hotel?");
+        const confirmed = window.confirm("¿Estás seguro que quieres eliminar este cliente?");
         if (!confirmed) return;
 
         try {
-            const response = await fetchDeleteHotelAdmin(hotelAdmin.id);
+            const response = await fetchDeleteCustomer(customer.id);
             if (response) {
-                const hotelAdmins = await fetchHotelAdmins();
-                setFilteredHotelAdmins(hotelAdmins);
+                const customers = await fetchCustomers();
+                setFilteredCustomers(customers);
             } else {
-                alert('Hubo un error al eliminar el administrador de hotel.')
+                alert('Hubo un error al eliminar al cliente.')
             }
         } catch (error) {
-            console.log("Error deleting hotel admin: ", error);
+            console.log("Error deleting customer: ", error);
         }
     }
 
@@ -34,14 +34,14 @@ const HotelAdmin = ({ hotelAdmin, handleViewDetails, setFilteredHotelAdmins }: H
             {/* Name and Last Name */}
             <div className="flex-grow mb-2">
                 <h3 className="text-lg font-semibold">
-                    {hotelAdmin.name} {hotelAdmin.lastName}
+                    {customer.name} {customer.lastName}
                 </h3>
             </div>
             {/* Links */}
             <div className="flex flex-wrap gap-2 mt-auto">
                 <button
                     className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]"
-                    onClick={() => handleViewDetails(hotelAdmin)}
+                    onClick={() => handleViewDetails(customer)}
                 >
                     Ver Detalles y Editar
                 </button>
@@ -52,14 +52,14 @@ const HotelAdmin = ({ hotelAdmin, handleViewDetails, setFilteredHotelAdmins }: H
                     Eliminar
                 </button>
                 <Link
-                    href={`/hotelsSuperAdmin/${hotelAdmin.id}`}
+                    href={`/bookingsSuperAdmin/${customer.id}`}
                     className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]"
                 >
-                    Ver Hoteles
+                    Ver Reservas
                 </Link>
             </div>
         </div>
     );
 };
 
-export default HotelAdmin;
+export default Customer;

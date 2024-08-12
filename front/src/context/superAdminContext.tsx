@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  IBookingDetails,
   IBookingOfSuperAdmin,
   ICustomerDetails,
   IDecodedTokenSuperAdmin,
@@ -11,36 +12,69 @@ import {
   ISuperAdminContextType,
 } from "@/interfaces";
 import {
+  deleteBookingOfCustomer,
+  deleteCustomer,
   deleteHotelAdmin,
   deleteHotelOfHotelAdmin,
   getAllBookings,
   getAllCustomers,
   getAllHotelAdmins,
+  getBookingsByCustomerId,
+  getCustomerById,
   getHotelAdminById,
+  updateCustomerDetails,
+  updateHotelAdminDetails,
   updateHotelDetails,
 } from "@/lib/server/fetchSuperAdmins";
 import { postLogin } from "@/lib/server/fetchUsers";
 import { jwtDecode } from "jwt-decode";
 import { createContext, useCallback, useEffect, useState } from "react";
 
+// Create SuperAdmin context
 export const SuperAdminContext = createContext<ISuperAdminContextType>({
   superAdmin: null,
-  setSuperAdmin: () => {},
+  setSuperAdmin: () => { },
   isLogged: false,
-  setIsLogged: () => {},
+  setIsLogged: () => { },
   isSuperAdmin: false,
-  setIsSuperAdmin: () => {},
+  setIsSuperAdmin: () => { },
   signIn: async () => false,
-  fetchCustomers: async () => [],
-  fetchBookings: async () => [],
-  fetchHotelAdmins: async () => [],
-  fetchDeleteHotelAdmin: async () => false,
-  fetchHotelAdminById: async () => undefined,
-  fetchDeleteHotelOfHotelAdmin: async () => false,
-  fetchUpdateHotelDetails: async () => false,
-  fetchHotelAdminsBySearch: async () => [],
+  fetchCustomers: async () => Promise.resolve([] as ICustomerDetails[]),
+  fetchBookings: async () => Promise.resolve([] as IBookingOfSuperAdmin[]),
+  fetchBookingsByCustomerId: async (customerId: string) =>
+    Promise.resolve([] as IBookingOfSuperAdmin[]),
+  fetchHotelAdmins: async () => Promise.resolve([] as IHotelAdminDetails[]),
+  fetchDeleteHotelAdmin: async (hotelAdminId: string) =>
+    Promise.resolve(false),
+  fetchDeleteCustomer: async (customerId: string) => Promise.resolve(false),
+  fetchHotelAdminById: async (hotelAdminId: string) =>
+    Promise.resolve(undefined),
+  fetchCustomerById: async (customerId: string) =>
+    Promise.resolve(undefined),
+  fetchDeleteHotelOfHotelAdmin: async (hotelId: string) =>
+    Promise.resolve(false),
+  fetchDeleteBookingOfCustomer: async (bookingId: string) =>
+    Promise.resolve(false),
+  fetchUpdateHotelDetails: async (
+    hotelId: string,
+    selectedHotel: Partial<IHotelOfSuperAdmin> | null,
+    hotelAdminId: string
+  ) => Promise.resolve(false),
+  fetchUpdateHotelAdminDetails: async (
+    hotelAdminId: string,
+    selectedHotelAdmin: Partial<IHotelAdminDetails> | null
+  ) => Promise.resolve(false),
+  fetchUpdateCustomerDetails: async (
+    customerId: string,
+    selectedCustomer: Partial<ICustomerDetails> | null
+  ) => Promise.resolve(false),
+  fetchHotelAdminsBySearch: async (searchQuery: string) =>
+    Promise.resolve([] as IHotelAdminDetails[]),
+  fetchCustomersBySearch: async (searchQuery: string) =>
+    Promise.resolve([] as ICustomerDetails[]),
 });
 
+// SuperAdmin Provider
 export const SuperAdminProvider = ({
   children,
 }: {
@@ -85,9 +119,7 @@ export const SuperAdminProvider = ({
     }
   }, []);
 
-  const fetchBookings = useCallback(async (): Promise<
-    IBookingOfSuperAdmin[]
-  > => {
+  const fetchBookings = useCallback(async (): Promise<IBookingOfSuperAdmin[]> => {
     try {
       const data = await getAllBookings();
       setBookings(data);
@@ -99,9 +131,31 @@ export const SuperAdminProvider = ({
     }
   }, []);
 
-  const fetchHotelAdmins = useCallback(async (): Promise<
-    IHotelAdminDetails[]
-  > => {
+  const fetchCustomersBySearch = useCallback(
+    async (searchQuery: string): Promise<ICustomerDetails[]> => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/customers/search?search=${searchQuery}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          return data;
+        } else {
+          console.error("fetchCustomersBySearch did not return an array.");
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching customers by search:", error);
+        return [];
+      }
+    },
+    []
+  );
+
+  const fetchHotelAdmins = useCallback(async (): Promise<IHotelAdminDetails[]> => {
     try {
       const data = await getAllHotelAdmins();
       setHotelAdmins(data);
@@ -130,6 +184,25 @@ export const SuperAdminProvider = ({
     }
   };
 
+  const fetchDeleteCustomer = useCallback(
+    async (customerId: string): Promise<boolean> => {
+      try {
+        const deleted = await deleteCustomer(customerId);
+        if (deleted) {
+          const data = await getAllCustomers();
+          setCustomers(data);
+          localStorage.setItem("customersSuperAdmin", JSON.stringify(data));
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.log("Error en fetchDeleteCustomer: ", error);
+        return false;
+      }
+    },
+    []
+  );
+
   const fetchHotelAdminById = async (
     hotelAdminId: string
   ): Promise<IHotelAdminDetails | undefined> => {
@@ -141,6 +214,19 @@ export const SuperAdminProvider = ({
       return undefined;
     }
   };
+
+  const fetchCustomerById = useCallback(
+    async (customerId: string): Promise<ICustomerDetails | undefined> => {
+      try {
+        const customer = await getCustomerById(customerId);
+        return customer;
+      } catch (error) {
+        console.log("Error en el fetchCustomerById: ", error);
+        return undefined;
+      }
+    },
+    []
+  );
 
   const fetchDeleteHotelOfHotelAdmin = async (
     hotelId: string
@@ -159,15 +245,11 @@ export const SuperAdminProvider = ({
 
   const fetchUpdateHotelDetails = async (
     hotelId: string,
-    selectedHotel: Partial<IHotelOfSuperAdmin>,
+    selectedHotel: Partial<IHotelOfSuperAdmin> | null,
     hotelAdminId: string
   ): Promise<boolean> => {
     try {
-      const success = await updateHotelDetails(
-        hotelId,
-        selectedHotel,
-        hotelAdminId
-      );
+      const success = await updateHotelDetails(hotelId, selectedHotel);
       if (success) {
         setHotels((prev) =>
           prev.map((hotel) =>
@@ -182,76 +264,121 @@ export const SuperAdminProvider = ({
     }
   };
 
-  const fetchHotelAdminsBySearch = async (
-    searchQuery: string
-  ): Promise<IHotelAdminDetails[]> => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/hotel-admins/search?search=${searchQuery}`
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error status: ${response.status}`);
+  const fetchDeleteBookingOfCustomer = useCallback(
+    async (bookingId: string, customerId: string): Promise<boolean> => {
+      try {
+        const deleted = await deleteBookingOfCustomer(bookingId);
+        if (deleted) {
+          const data = await getCustomerById(customerId);
+          if (data) {
+            setCustomers((prev) =>
+              prev.map((customer) =>
+                customer.id === customerId ? { ...customer, ...data } : customer
+              )
+            );
+          }
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.log("Error en fetchDeleteBookingOfCustomer: ", error);
+        return false;
       }
-      const data = await response.json();
-      return data;
+    },
+    []
+  );
+
+  const fetchUpdateHotelAdminDetails = async (
+    hotelAdminId: string,
+    selectedHotelAdmin: Partial<IHotelAdminDetails> | null
+  ): Promise<boolean> => {
+    try {
+      const success = await updateHotelAdminDetails(
+        hotelAdminId,
+        selectedHotelAdmin
+      );
+      if (success) {
+        setHotelAdmins((prev) =>
+          prev.map((admin) =>
+            admin.id === hotelAdminId ? { ...admin, ...selectedHotelAdmin } : admin
+          )
+        );
+      }
+      return success;
     } catch (error) {
-      console.error("Error fetching hotel admins by search:", error);
-      return [];
+      console.error("Error updating hotel admin details:", error);
+      return false;
     }
   };
 
-  useEffect(() => {
-    if (isSuperAdmin) {
-      const customers =
-        typeof window !== "undefined" && localStorage.getItem("customers");
-      if (customers) {
-        setCustomers(JSON.parse(customers));
-      } else {
-        fetchCustomers();
+  const fetchUpdateCustomerDetails = useCallback(
+    async (
+      customerId: string,
+      selectedCustomer: Partial<ICustomerDetails> | null
+    ): Promise<boolean> => {
+      try {
+        const updated = await updateCustomerDetails(
+          customerId,
+          selectedCustomer
+        );
+        if (updated) {
+          const data = await getAllCustomers();
+          setCustomers(data);
+          localStorage.setItem("customersSuperAdmin", JSON.stringify(data));
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.log("Error en el fetchUpdateCustomerDetails: ", error);
+        return false;
       }
+    },
+    []
+  );
+
+  const fetchBookingsByCustomerId = useCallback(async (customerId: string): Promise<IBookingOfSuperAdmin[]> => {
+    try {
+      const data = await getBookingsByCustomerId(customerId);
+      setBookings(data);
+      localStorage.setItem("bookingsSuperAdmin", JSON.stringify(data));
+      return data;
+    } catch (error) {
+      console.error("Error fetching hotel admins:", error);
+      return [];
     }
-  }, [fetchCustomers, isSuperAdmin]);
+  }, []);
+
+  const fetchHotelAdminsBySearch = useCallback(
+    async (searchQuery: string): Promise<IHotelAdminDetails[]> => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/hotel-admins/search?search=${searchQuery}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          return data;
+        } else {
+          console.error("fetchHotelAdminsBySearch did not return an array.");
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching hotel admins by search:", error);
+        return [];
+      }
+    },
+    []
+  );
 
   useEffect(() => {
-    if (isSuperAdmin) {
-      const hotelAdmins =
-        typeof window !== "undefined" && localStorage.getItem("hotelAdmins");
-      if (hotelAdmins) {
-        setHotelAdmins(JSON.parse(hotelAdmins));
-      } else {
-        fetchHotelAdmins();
-      }
-    }
-  }, [fetchHotelAdmins, isSuperAdmin]);
-
-  useEffect(() => {
-    if (isSuperAdmin) {
-      const bookings =
-        typeof window !== "undefined" && localStorage.getItem("bookings");
-      if (bookings) {
-        setBookings(JSON.parse(bookings));
-      } else {
-        fetchBookings();
-      }
-    }
-  }, [fetchBookings, isSuperAdmin]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      if (token) {
-        setIsLogged(true);
-        const decodedToken = jwtDecode<IDecodedTokenSuperAdmin>(token);
-        setIsSuperAdmin(decodedToken.superAdmin);
-      } else {
-        setIsLogged(false);
-      }
-      const superAdmin = localStorage.getItem("superAdmin");
-      if (superAdmin) {
-        setSuperAdmin(JSON.parse(superAdmin) as ISuperAdmin);
-      } else {
-        setSuperAdmin(null);
-      }
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode<IDecodedTokenSuperAdmin>(token);
+      setIsLogged(true);
+      setIsSuperAdmin(decodedToken.superAdmin);
+      setSuperAdmin(decodedToken);
     }
   }, []);
 
@@ -265,14 +392,21 @@ export const SuperAdminProvider = ({
         isSuperAdmin,
         setIsSuperAdmin,
         signIn,
-        fetchBookings,
         fetchCustomers,
+        fetchBookings,
+        fetchBookingsByCustomerId,
         fetchHotelAdmins,
         fetchDeleteHotelAdmin,
+        fetchDeleteCustomer,
         fetchHotelAdminById,
+        fetchCustomerById,
         fetchDeleteHotelOfHotelAdmin,
+        fetchDeleteBookingOfCustomer,
         fetchUpdateHotelDetails,
+        fetchUpdateHotelAdminDetails,
+        fetchUpdateCustomerDetails,
         fetchHotelAdminsBySearch,
+        fetchCustomersBySearch,
       }}
     >
       {children}

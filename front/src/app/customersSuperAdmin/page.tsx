@@ -1,10 +1,10 @@
 "use client";
 
-import Clientes from '@/components/Clientes';
+import Customers from '@/components/CustomersSuperAdmin';
 import SearchBar from '@/components/SearchBar';
 import { useState } from 'react';
 
-function ClientesSuperAdmin() {
+function CustomersSuperAdmin() {
     const [searchQuery, setSearchQuery] = useState<string>("");
 
     const handleSearch = (searchQuery: string) => {
@@ -13,10 +13,10 @@ function ClientesSuperAdmin() {
 
     return (
         <div>
-            <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
-            <Clientes />
+            <SearchBar onSearch={handleSearch} />
+            <Customers searchQuery={searchQuery} />
         </div>
-    )
+    );
 }
 
-export default ClientesSuperAdmin
+export default CustomersSuperAdmin;

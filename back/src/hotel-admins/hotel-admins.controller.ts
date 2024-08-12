@@ -88,7 +88,7 @@ export class HotelAdminsController {
 
   @Put(':id')
   @ApiBearerAuth()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.SuperAdmin)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Cambiar la información de un hotelero' })
   updateHotelAdminInfo(

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -81,6 +82,7 @@ export class CustomersController {
     @Param('id') id: string,
     @Body() customer: UpdateCustomerInfoDto,
   ) {
+    if (Object.keys(customer).length === 0) throw new BadRequestException('Debe enviar al menos un campo para actualizar.')
     return this.customersService.updateCustomerInfo(id, customer);
   }
 

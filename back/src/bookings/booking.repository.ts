@@ -526,13 +526,8 @@ export class BookingRepository {
       relations: { bookingDetails: { availabilities: true } },
     });
 
-    if (!booking)
-      throw new NotFoundException('No se encontró un booking con ese id.');
-    if (booking.bookingDetails.status === BookingDetailsStatus.ACTIVE)
-      throw new BadRequestException(
-        'No se puede eliminar el booking ya que se encuentra activo.',
-      );
-
+    if (!booking) throw new NotFoundException('No se encontró un booking con ese id.')
+    
     for (const availability of booking.bookingDetails.availabilities) {
       await this.roomAvailabilityDBRepository.update(
         { id: availability.id },
@@ -540,14 +535,8 @@ export class BookingRepository {
       );
     }
 
-    await this.bookingDBRepository.update(
-      { id: booking.id },
-      { isDeleted: true },
-    );
-    await this.bookingDetailsDBRepository.update(
-      { id: booking.bookingDetails.id },
-      { isDeleted: true },
-    );
-    return 'El booking, su bookigDetails y sus availabilities han sido borrados con un borrado lógico.';
+    await this.bookingDBRepository.update({ id: booking.id }, { isDeleted: true })
+    await this.bookingDetailsDBRepository.update({ id: booking.bookingDetails.id }, { isDeleted: true, status: BookingDetailsStatus.CANCELLED })
+    return "El booking, su bookigDetails y sus availabilities han sido borrados con un borrado lógico."
   }
 }

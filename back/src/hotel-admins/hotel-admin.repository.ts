@@ -31,7 +31,7 @@ export class HotelAdminRepository {
   //! Obtener todos los admins de Hotel
 
   async getAllHotelAdmins(page: number, limit: number) {
-    const hotelAdmins = await this.hotelAdminsRepository.find();
+    const hotelAdmins = await this.hotelAdminsRepository.find({ where: { isDeleted: false } });
     return hotelAdmins.map(
       ({ password, numberOfHotels, ...hotelAdminNoPassword }) =>
         hotelAdminNoPassword,
@@ -131,7 +131,7 @@ export class HotelAdminRepository {
 
   async logicalDeleteHotelAdmin(id: string) {
     const fakeEmail = `deleted_${id}@example.com`;
-    await this.hotelAdminsRepository.update(id, {
+    await this.hotelAdminsRepository.update({ id }, {
       isDeleted: true,
       email: fakeEmail,
     });

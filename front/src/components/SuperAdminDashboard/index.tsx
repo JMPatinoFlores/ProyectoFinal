@@ -93,7 +93,7 @@ export default function SuperAdmin() {
                 <div className="p-6 border border-gray-300 rounded-lg">
                     <div className="flex justify-between">
                         <div className="flex-1 mx-2 text-center">
-                            <Link href="/clientesSuperAdmin" className="block p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            <Link href="/customersSuperAdmin" className="block p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
                                 <h4 className="text-md font-semibold">Clientes</h4>
                                 <p className="text-sm text-gray-600">
                                     Haz click para crear, editar y eliminar clientes, y mirar los datos de sus reservas.

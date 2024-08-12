@@ -1,22 +1,22 @@
 "use client";
 
 import { useContext, useEffect, useState } from "react";
-import HotelAdmin from "@/components/HotelAdmin";
-import { IHotelAdminDetails, IHotelAdminsProps } from "@/interfaces";
+import Customer from "@/components/CustomerSuperAdmin";
+import { ICustomerDetails, ICustomersProps } from "@/interfaces";
 import { SuperAdminContext } from "@/context/superAdminContext";
 import Link from "next/link";
 import Sidebar from "../SidebarSuperAdmin";
 
-const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
-    const [hotelAdmins, setHotelAdmins] = useState<IHotelAdminDetails[]>([]);
+const Customers = ({ searchQuery }: ICustomersProps) => {
+    const [customers, setCustomers] = useState<ICustomerDetails[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(9);
-    const [filteredHotelAdmins, setFilteredHotelAdmins] = useState<IHotelAdminDetails[]>([]);
+    const [filteredCustomers, setFilteredCustomers] = useState<ICustomerDetails[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedHotelAdmin, setSelectedHotelAdmin] = useState<IHotelAdminDetails | null>(null);
-    const [selectedHotelAdminToSend, setSelectedHotelAdminToSend] = useState<IHotelAdminDetails | null>(null);
+    const [selectedCustomer, setSelectedCustomer] = useState<ICustomerDetails | null>(null);
+    const [selectedCustomerToSend, setSelectedCustomerToSend] = useState<ICustomerDetails | null>(null);
     const [emailError, setEmailError] = useState<string | null>(null);
-    const { fetchHotelAdmins, fetchHotelAdminsBySearch, fetchUpdateHotelAdminDetails } = useContext(SuperAdminContext);
+    const { fetchCustomers, fetchCustomersBySearch, fetchUpdateCustomerDetails } = useContext(SuperAdminContext);
 
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -26,66 +26,65 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
         setCurrentPage(currentPage - 1);
     };
 
-    const handleViewDetails = (hotelAdmin: IHotelAdminDetails) => {
-        setSelectedHotelAdmin(hotelAdmin);
+    const handleViewDetails = (customer: ICustomerDetails) => {
+        setSelectedCustomer(customer);
         setIsModalOpen(true);
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        setSelectedHotelAdmin(null);
+        setSelectedCustomer(null);
     };
 
-    const handleUpdateHotel = async () => {
-        if (selectedHotelAdmin) {
+    const handleUpdateCustomer = async () => {
+        if (selectedCustomer) {
             try {
                 if (emailError) {
-                    // If there is an email error, do not proceed with the update
                     console.log("Error: Email is invalid.");
                     return;
                 }
 
-                const response = await fetchUpdateHotelAdminDetails(selectedHotelAdmin.id, selectedHotelAdminToSend);
+                const response = await fetchUpdateCustomerDetails(selectedCustomer.id, selectedCustomerToSend);
                 if (response) {
-                    const updatedHotelAdmins = hotelAdmins.map(hotelAdmin =>
-                        hotelAdmin.id === selectedHotelAdmin.id ? selectedHotelAdmin : hotelAdmin
+                    const updatedCustomers = customers.map(customer =>
+                        customer.id === selectedCustomer.id ? selectedCustomer : customer
                     );
-                    setHotelAdmins(updatedHotelAdmins);
+                    setCustomers(updatedCustomers);
                     handleCloseModal();
                 } else {
-                    alert('Hubo un error al actualizar el administrador de hotel.')
+                    alert('Hubo un error al actualizar el cliente.')
                 }
             } catch (error) {
-                console.log("Error updating hotel admin details: ", error);
+                console.log("Error updating customer details: ", error);
             }
         }
     };
 
     useEffect(() => {
-        fetchHotelAdmins().then((data) => {
+        fetchCustomers().then((data) => {
             if (Array.isArray(data)) {
-                setHotelAdmins(data);
+                setCustomers(data);
             } else {
-                console.error("fetchHotelAdmins did not return an array.");
-                setHotelAdmins([]);
+                console.error("fetchCustomers did not return an array.");
+                setCustomers([]);
             }
         });
-    }, [fetchHotelAdmins]);
+    }, [fetchCustomers]);
 
     useEffect(() => {
         if (searchQuery) {
-            fetchHotelAdminsBySearch(searchQuery).then((data) => {
+            fetchCustomersBySearch(searchQuery).then((data) => {
                 if (Array.isArray(data)) {
-                    setFilteredHotelAdmins(data);
+                    setFilteredCustomers(data);
                 } else {
-                    console.error("fetchHotelsBySearch did not return an array.");
-                    setFilteredHotelAdmins([]);
+                    console.error("fetchCustomersBySearch did not return an array.");
+                    setFilteredCustomers([]);
                 }
             });
         } else {
-            setFilteredHotelAdmins(hotelAdmins);
+            setFilteredCustomers(customers);
         }
-    }, [searchQuery, hotelAdmins, fetchHotelAdminsBySearch]);
+    }, [searchQuery, customers, fetchCustomersBySearch]);
 
     const validateEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -93,7 +92,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if (selectedHotelAdmin) {
+        if (selectedCustomer) {
             const { name, value } = e.target;
 
             if (name === "email") {
@@ -109,26 +108,26 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                 const validDate = (Number(value.split('-')[0]) > 1900) && (Number(value.split('-')[0])) < 2025
                 if (validDate) {
                     const date = new Date(value).toISOString();
-                    setSelectedHotelAdminToSend({
-                        ...selectedHotelAdmin,
+                    setSelectedCustomerToSend({
+                        ...selectedCustomer,
                         [name]: date
                     });
                 }
             } else {
-                setSelectedHotelAdminToSend({
-                    ...selectedHotelAdmin,
+                setSelectedCustomerToSend({
+                    ...selectedCustomer,
                     [name]: value,
                 });
-                setSelectedHotelAdmin({
-                    ...selectedHotelAdmin,
+                setSelectedCustomer({
+                    ...selectedCustomer,
                     [name]: value,
                 });
             }
         }
     };
 
-    const paginatedHotelAdmins = Array.isArray(filteredHotelAdmins)
-        ? filteredHotelAdmins.slice(
+    const paginatedCustomers = Array.isArray(filteredCustomers)
+        ? filteredCustomers.slice(
             (currentPage - 1) * itemsPerPage,
             currentPage * itemsPerPage
         )
@@ -140,22 +139,22 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
             <div className="flex-1 p-6">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                     <h1 className="text-2xl text-center md:text-3xl font-bold flex-grow mb-4 md:mb-0">
-                        Administradores de Hoteles
+                        Clientes
                     </h1>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-                    {paginatedHotelAdmins.length > 0 ? (
-                        paginatedHotelAdmins.map((hotelAdmin, index) => (
-                            <HotelAdmin key={index} handleViewDetails={handleViewDetails} setFilteredHotelAdmins={setFilteredHotelAdmins} hotelAdmin={hotelAdmin} />
+                    {paginatedCustomers.length > 0 ? (
+                        paginatedCustomers.map((customer, index) => (
+                            <Customer key={index} handleViewDetails={handleViewDetails} setFilteredCustomers={setFilteredCustomers} customer={customer} />
                         ))
                     ) : (
                         <p>No hay resultados que coincidan con su búsqueda.</p>
                     )}
-                    {isModalOpen && selectedHotelAdmin && (
+                    {isModalOpen && selectedCustomer && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                             <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-md">
                                 <h2 className="text-xl text-center font-bold mb-4">
-                                    Editar Administrador de Hotel
+                                    Editar Cliente
                                 </h2>
                                 <div className="space-y-4">
                                     <div className="flex items-center">
@@ -164,7 +163,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                                             type="text"
                                             name="name"
                                             className="w-2/3 p-2 border rounded"
-                                            value={selectedHotelAdmin.name}
+                                            value={selectedCustomer.name}
                                             onChange={handleInputChange}
                                         />
                                     </div>
@@ -174,7 +173,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                                             type="text"
                                             name="lastName"
                                             className="w-2/3 p-2 border rounded"
-                                            value={selectedHotelAdmin.lastName}
+                                            value={selectedCustomer.lastName}
                                             onChange={handleInputChange}
                                         />
                                     </div>
@@ -185,7 +184,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                                                 type="text"
                                                 name="email"
                                                 className="w-2/3 p-2 border rounded"
-                                                value={selectedHotelAdmin.email}
+                                                value={selectedCustomer.email}
                                                 onChange={handleInputChange}
                                             />
                                         </div>
@@ -199,7 +198,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                                             type="text"
                                             name="phone"
                                             className="w-2/3 p-2 border rounded"
-                                            value={selectedHotelAdmin.phone}
+                                            value={selectedCustomer.phone}
                                             onChange={handleInputChange}
                                         />
                                     </div>
@@ -218,7 +217,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                                             type="text"
                                             name="country"
                                             className="w-2/3 p-2 border rounded"
-                                            value={selectedHotelAdmin.country}
+                                            value={selectedCustomer.country}
                                             onChange={handleInputChange}
                                         />
                                     </div>
@@ -228,7 +227,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                                             type="text"
                                             name="city"
                                             className="w-2/3 p-2 border rounded"
-                                            value={selectedHotelAdmin.city}
+                                            value={selectedCustomer.city}
                                             onChange={handleInputChange}
                                         />
                                     </div>
@@ -238,7 +237,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                                             type="text"
                                             name="address"
                                             className="w-2/3 p-2 border rounded"
-                                            value={selectedHotelAdmin.address}
+                                            value={selectedCustomer.address}
                                             onChange={handleInputChange}
                                         />
                                     </div>
@@ -252,7 +251,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                                     </button>
                                     <button
                                         className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]"
-                                        onClick={handleUpdateHotel}
+                                        onClick={handleUpdateCustomer}
                                     >
                                         Guardar Cambios
                                     </button>
@@ -261,28 +260,22 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                         </div>
                     )}
                 </div>
-                {filteredHotelAdmins.length > itemsPerPage && (
+                {filteredCustomers.length > itemsPerPage && (
                     <div className="flex justify-center mt-4">
                         <button
-                            className="bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]"
+                            className="bg-[#f83f3a] text-white rounded-md p-1 px-2 mr-2 hover:bg-[#e63946]"
                             onClick={handlePrevPage}
                             disabled={currentPage === 1}
                         >
                             Anterior
                         </button>
                         <button
-                            className="bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]"
+                            className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]"
                             onClick={handleNextPage}
-                            disabled={
-                                currentPage >= Math.ceil(filteredHotelAdmins.length / itemsPerPage)
-                            }
+                            disabled={currentPage * itemsPerPage >= filteredCustomers.length}
                         >
                             Siguiente
                         </button>
-                        <span className="ml-4">
-                            Página {currentPage} de{" "}
-                            {Math.ceil(filteredHotelAdmins.length / itemsPerPage)}
-                        </span>
                     </div>
                 )}
             </div>
@@ -290,4 +283,4 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
     );
 };
 
-export default HotelAdmins;
+export default Customers;
