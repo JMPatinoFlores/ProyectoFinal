@@ -5,7 +5,6 @@ import {
   MaxLength,
   MinLength,
   IsEmail,
-  IsNumber,
   IsStrongPassword,
 } from 'class-validator';
 
@@ -42,7 +41,7 @@ export class CreateHotelAdminDto {
 
   /**
    * Debe tener entre 3 y 50 carácteres
-   * @example 'Test'
+   * @example 'Test*1234'
    */
   @IsNotEmpty()
   @IsString()

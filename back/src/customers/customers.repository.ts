@@ -5,12 +5,14 @@ import { Repository } from 'typeorm';
 import { CreateCustomerDto } from './customers.dto';
 import { IdDto } from 'src/dto/id.dto';
 import { validate } from 'class-validator';
+import { MailService } from 'src/email-notify/mail.service';
 
 @Injectable()
 export class CustomersRepository {
   constructor(
     @InjectRepository(Customers)
     private customersRepository: Repository<Customers>,
+    private readonly mailService: MailService,
   ) {}
 
   //! Validar ID
@@ -76,6 +78,7 @@ export class CustomersRepository {
     });
 
     const { password, ...customerNoPassword } = dbCustomer;
+    await this.mailService.sendWelcomeEmailforCustomer(customer);
 
     return customerNoPassword;
   }

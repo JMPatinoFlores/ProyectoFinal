@@ -38,40 +38,43 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   @Get('api/google/register/customer')
   @UseGuards(CustomerGoogleAuthGuard)
-  async googleCustomerAuth(@Req() req: Request) { }
+  async googleCustomerAuth(@Req() req: Request) {}
 
   @Get('api/callback/google/register/customer')
   @UseGuards(CustomerGoogleAuthGuard)
   async googleCustomerAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    const user: any = req.user
-    if (user !== null && typeof user === 'object' && !Array.isArray(user)) res.redirect('http://localhost:3001/login');
-    if (typeof user === "string") res.redirect(`http://localhost:3001/register?${user}`)
+    const user: any = req.user;
+    if (user !== null && typeof user === 'object' && !Array.isArray(user))
+      res.redirect('http://localhost:3001/login');
+    if (typeof user === 'string')
+      res.redirect(`http://localhost:3001/register?${user}`);
   }
 
   @Get('api/google/register/hotelAdmin')
   @UseGuards(HotelAdminGoogleAuthGuard)
-  async googleHotelAdminAuth(@Req() req: Request) { }
+  async googleHotelAdminAuth(@Req() req: Request) {}
 
   @Get('api/callback/google/register/hotelAdmin')
   @UseGuards(HotelAdminGoogleAuthGuard)
   async googleHotelAdminAuthRedirect(
-    
     @Req() req: Request,
 
     @Res() res: Response,
   ) {
-    const user: any = req.user
-    if (user !== null && typeof user === 'object' && !Array.isArray(user)) res.redirect('http://localhost:3001/login');
-    if (typeof user === "string") res.redirect(`http://localhost:3001/register?${user}`)
+    const user: any = req.user;
+    if (user !== null && typeof user === 'object' && !Array.isArray(user))
+      res.redirect('http://localhost:3001/login');
+    if (typeof user === 'string')
+      res.redirect(`http://localhost:3001/register?${user}`);
   }
 
   @Get('api/google/login')
   @UseGuards(LoginGoogleAuthGuard)
-  async googleLoginAuth(@Req() req: Request) { }
+  async googleLoginAuth(@Req() req: Request) {}
 
   @Get('api/callback/google/login')
   @UseGuards(LoginGoogleAuthGuard)
@@ -85,11 +88,13 @@ export class AuthController {
         isAdmin: user.isAdmin,
       };
       const token = this.jwtService.sign(payload);
-      if (payload.isAdmin) res.redirect(`http://localhost:3001/dashboard?token=${token}`);
-      if (!payload.isAdmin) res.redirect(`http://localhost:3001/home?token=${token}`);
+      if (payload.isAdmin)
+        res.redirect(`http://localhost:3001/dashboard?token=${token}`);
+      if (!payload.isAdmin)
+        res.redirect(`http://localhost:3001/home?token=${token}`);
     }
     if (typeof user === 'string') {
-      res.redirect(`http://localhost:3001/register?${user}=userDoesNotExist`)
+      res.redirect(`http://localhost:3001/register?${user}=userDoesNotExist`);
     }
   }
 
