@@ -3,7 +3,7 @@
 import useGoogleMapsDataLocation from "../../lib/googleMaps/googleMapsData";
 import { IHotelDetail } from "@/interfaces";
 import { GoogleMap, Marker } from "@react-google-maps/api";
-import Rating from "../rating";
+import Rating from "../Rating";
 import PostReview from "../PostReview";
 import Image from "next/image";
 
