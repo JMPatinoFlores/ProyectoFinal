@@ -32,8 +32,6 @@ export default function TypesRegister() {
         if (userObject.hotels && userObject.hotels.length > 0) {
           const fetchedHotelId = userObject.hotels[0].id;
           setHotelId(fetchedHotelId);
-
-          // Actualiza los valores iniciales de Formik con el hotelId obtenido
           setInitialValues((prevValues) => ({
             ...prevValues,
             hotelId: fetchedHotelId,
@@ -44,14 +42,6 @@ export default function TypesRegister() {
       }
     }
   }, []);
-
-  const typesOptions = [
-    "Estándar",
-    "Deluxe",
-    "Suite",
-    "Familiar",
-    "Accesible",
-  ];
 
   const uploadImageToCloudinary = async (file: File): Promise<string> => {
     const formData = new FormData();
@@ -143,13 +133,8 @@ export default function TypesRegister() {
                   <label htmlFor="name" className="formLabel">
                     Tipo de habitación
                   </label>
-                  <Field as="select" name="name" className="formInput">
-                    <option value="">Selecciona un tipo</option>
-                    {typesOptions.map((name) => (
-                      <option key={name} value={name}>
-                        {name}
-                      </option>
-                    ))}
+                  <Field type="text" name="name" className="formInput">
+                    
                   </Field>
                   <ErrorMessage
                     name="name"

@@ -127,6 +127,7 @@ export interface ICreateNumberOfRoom {
   roomsTypeId: string;
 }
 export interface IRoomType {
+  id: string | number | readonly string[] | undefined;
   roomTypeId: string;
   name: string;
   capacity: number;
@@ -328,6 +329,7 @@ export interface ISuperAdminContextType {
   fetchDeleteHotelAdmin: (hotelAdminId: string) => Promise<boolean>;
   fetchHotelAdminById: (hotelAdminId: string) => Promise<IHotelAdminDetails | undefined>;
   fetchDeleteHotelOfHotelAdmin: (hotelId: string, hotelAdminId: string) => Promise<boolean>;
+  fetchUpdateHotelDetails: (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin>, hotelAdminId: string) => Promise<boolean>;
   fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>;
 }
 

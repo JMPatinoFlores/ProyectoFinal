@@ -1,10 +1,41 @@
 "use client";
-import { ICreateNumberOfRoom } from "@/interfaces";
-import { postRoom } from "@/lib/server/fetchHotels";
+import { ICreateNumberOfRoom, IRoomType } from "@/interfaces";
+import { getRoomTypesByHotelId, postRoom } from "@/lib/server/fetchHotels";
 import { Field, Form, Formik, ErrorMessage } from "formik";
-
+import { useEffect, useState } from "react";
 
 export default function RoomNumberForm() {
+  const [roomTypes, setRoomTypes] = useState<IRoomType[]>([]);
+  const [selectedHotelId, setSelectedHotelId] = useState<string>("");
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      const hotelId = user.hotels[0]?.id;
+      setSelectedHotelId(hotelId || "");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedHotelId) {
+      const fetchRoomsTypes = async () => {
+        try {
+          const data = await getRoomTypesByHotelId(selectedHotelId);
+          if (Array.isArray(data)) {
+            setRoomTypes(data);
+          } else {
+            console.error("Error: Expected array but received:", data);
+          }
+        } catch (error) {
+          console.error("Error fetching room types:", error);
+        }
+      };
+
+      fetchRoomsTypes();
+    }
+  }, [selectedHotelId]);
+
   const initialValues: ICreateNumberOfRoom = {
     roomNumber: "",
     roomsTypeId: "",
@@ -14,6 +45,17 @@ export default function RoomNumberForm() {
     values: ICreateNumberOfRoom,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
+
+    if (!values.roomNumber || !values.roomsTypeId) {
+      console.error("roomNumber o roomsTypeId están vacíos");
+      return;
+    }
+
+     if (values.roomNumber.length > 10) {
+       console.error("roomNumber debe tener 10 caracteres o menos");
+       return;
+     }
+
     const formData = {
       roomNumber: values.roomNumber,
       roomsTypeId: values.roomsTypeId,
@@ -22,11 +64,10 @@ export default function RoomNumberForm() {
     console.log("Datos del formData:", formData);
 
     try {
-      const response = postRoom(formData);
+      const response = await postRoom(formData);
       setSubmitting(false);
-      console.log(response);
     } catch (error) {
-      console.log("Error: ", error);
+      console.error("Error: ", error);
     }
   };
 
@@ -58,6 +99,20 @@ export default function RoomNumberForm() {
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
+              </div>
+
+              <div className="formDiv flex-1 mb-4">
+                <label htmlFor={`roomsTypeId`} className="formLabel">
+                  Tipo de Habitación:
+                </label>
+                <Field as="select" name="roomsTypeId" className="formInput">
+                  <option value="">Seleccione un tipo de habitación</option>
+                  {roomTypes.map((roomType) => (
+                    <option key={String(roomType.id)} value={roomType.id}>
+                      {roomType.name}
+                    </option>
+                  ))}
+                </Field>
               </div>
 
               <div className="formDiv flex-1 mb-4 text-center">
