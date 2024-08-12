@@ -36,22 +36,22 @@ function Navbar() {
               Inicio
             </Link>
             <Link
-              href="#"
+              href="/services"
               className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
             >
               Servicios
             </Link>
             <Link
-              href="#"
+              href="/recommendations"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Recomendaciones
+            </Link>
+            <Link
+              href="/team"
               className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
             >
               Nosotros
-            </Link>
-            <Link
-              href="#"
-              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
-            >
-              Contacto
             </Link>
           </div>
         </div>
@@ -107,22 +107,22 @@ function Navbar() {
               Inicio
             </Link>
             <Link
-              href="#"
+              href="/services"
               className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
             >
               Servicios
             </Link>
             <Link
-              href="#"
+              href="/recommendations"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Recomendaciones
+            </Link>
+            <Link
+              href="/team"
               className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
             >
               Nosotros
-            </Link>
-            <Link
-              href="#"
-              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
-            >
-              Contacto
             </Link>
           </div>
         </div>
@@ -182,22 +182,22 @@ function Navbar() {
                 Inicio
               </Link>
               <Link
-                href="#"
+                href="/services"
                 className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
               >
                 Servicios
               </Link>
               <Link
-                href="#"
+                href="/recommendations"
+                className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+              >
+                Recomendaciones
+              </Link>
+              <Link
+                href="/team"
                 className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
               >
                 Nosotros
-              </Link>
-              <Link
-                href="#"
-                className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
-              >
-                Contacto
               </Link>
               {isLogged ? (
                 <div className="flex justify-center">

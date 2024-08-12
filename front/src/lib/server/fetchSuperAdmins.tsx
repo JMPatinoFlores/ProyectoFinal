@@ -7,6 +7,8 @@ export const getAllCustomers = async () => {
   }
 
   try {
+    console.log('Ejecutando getAllCustomers');
+
     const response = await fetch(
       "http://localhost:3000/customers/allCustomers",
       {
@@ -17,8 +19,6 @@ export const getAllCustomers = async () => {
         },
       }
     );
-    console.log(response);
-    
     if (!response.ok) {
       throw new Error("Error en la solicitud.");
     }
@@ -37,6 +37,8 @@ export const getAllHotelAdmins = async () => {
   }
 
   try {
+    console.log('Ejecutando getAllHotelAdmins');
+
     const response = await fetch(
       "http://localhost:3000/hotel-admins/AllHotelAdmins",
       {
@@ -64,6 +66,8 @@ export const deleteHotelAdmin = async (hotelAdminId: string) => {
   if (!token) throw new Error("No estás autorizado.");
 
   try {
+    console.log('Ejecutando deleteHotelAdmin');
+
     const response = await fetch(
       `http://localhost:3000/hotel-admins/${hotelAdminId}`,
       {
@@ -85,6 +89,8 @@ export const deleteHotelAdmin = async (hotelAdminId: string) => {
 export const deleteCustomer = async (customerId: string) => {
   const token = localStorage.getItem("token")
   if (!token) throw new Error('No estás autorizado.')
+  console.log('Ejecutando deleteCustomer');
+
   const response = await fetch(`http://localhost:3000/customers/${customerId}`,
     {
       method: "DELETE",
@@ -105,6 +111,8 @@ export const getHotelAdminById = async (
   if (!token) throw new Error("No estás autorizado.");
 
   try {
+    console.log('Ejecutando getHotelAdminById');
+
     const response = await fetch(
       `http://localhost:3000/hotel-admins/${hotelAdminId}`,
       {
@@ -127,6 +135,8 @@ export const getHotelAdminById = async (
 export const getCustomerById = async (customerId: string): Promise<ICustomerDetails> => {
   const token = localStorage.getItem("token")
   if (!token) throw new Error('No estás autorizado.')
+  console.log('Ejecutando getCustomerById');
+
   const response = await fetch(`http://localhost:3000/customers/${customerId}`,
     {
       method: "GET",
@@ -141,71 +151,28 @@ export const getCustomerById = async (customerId: string): Promise<ICustomerDeta
 }
 
 export const deleteHotelOfHotelAdmin = async (hotelId: string) => {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("No estás autorizado.");
+  const token = localStorage.getItem("token")
+  if (!token) throw new Error('No estás autorizado.')
+  console.log('Ejecutando deleteHotelOfHotelAdmin');
 
-  try {
-    const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer: ${token}`,
-      },
-    });
-    console.log(response);
+  const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer: ${token}`
+    }
+  })
+  console.log(response);
 
-    if (!response.ok) throw new Error("Error en la solicitud.");
-    return true;
-  } catch (error) {
-    console.error("Error en la operación:", error);
-    throw error;
-  }
+  if (!response.ok) throw new Error("Error en la solicitud.");
+  return true;
 };
-
-export const updateHotelDetails = async (
-  hotelId: string,
-  selectedHotel: Partial<IHotelOfSuperAdmin> | null) => {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("No estás autorizado.");
-
-  try {
-    const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer: ${token}`,
-      },
-      body: JSON.stringify(selectedHotel)
-    });
-    console.log(response);
-    
-    if (!response.ok) throw new Error('Error en la solicitud.')
-    return true
-  } catch (error) {
-    console.error("Error en la operación:", error);
-    throw error;
-  }
-}
-
-export const deleteBookingOfCustomer = async (bookingId: string) => {
-    const token = localStorage.getItem("token")
-    if (!token) throw new Error('No estás autorizado.')
-    const response = await fetch(`http://localhost:3000/bookings/softDelete/${bookingId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer: ${token}`
-      }
-    })
-    console.log(response);
-
-    if (!response.ok) throw new Error('Error en la solicitud.')
-    return true
-  }
 
 export const updateBookingDetails = async (bookingId: string, selectedBooking: Partial<IBookingOfSuperAdmin> | null, customerId: string) => {
   const token = localStorage.getItem("token")
   if (!token) throw new Error('No estás autorizado.')
+  console.log('Ejecutando updateBookingDetails');
+
   const response = await fetch(`http://localhost:3000/bookings/${bookingId}`, {
     method: "PUT",
     headers: {
@@ -220,9 +187,39 @@ export const updateBookingDetails = async (bookingId: string, selectedBooking: P
   return true
 }
 
+export const updateHotelDetails = async (
+  hotelId: string,
+  selectedHotel: Partial<IHotelOfSuperAdmin> | null
+) => {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("No estás autorizado.");
+
+  try {
+    console.log('Ejecutando updateHotelDetails');
+
+    const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer: ${token}`,
+      },
+      body: JSON.stringify(selectedHotel)
+    });
+    console.log(response);
+
+    if (!response.ok) throw new Error("Error en la solicitud.");
+    return true;
+  } catch (error) {
+    console.error("Error en la operación:", error);
+    throw error;
+  }
+};
+
 export const updateHotelAdminDetails = async (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null) => {
   const token = localStorage.getItem("token")
   if (!token) throw new Error('No estás autorizado.')
+  console.log('Ejecutando updateHotelAdminDetails');
+
   const response = await fetch(`http://localhost:3000/hotel-admins/${hotelAdminId}`, {
     method: "PUT",
     headers: {
@@ -240,6 +237,8 @@ export const updateHotelAdminDetails = async (hotelAdminId: string, selectedHote
 export const updateCustomerDetails = async (customerId: string, selectedCustomer: Partial<ICustomerDetails> | null) => {
   const token = localStorage.getItem("token")
   if (!token) throw new Error('No estás autorizado.')
+  console.log('Ejecutando updateCustomerDetails');
+
   const response = await fetch(`http://localhost:3000/customers/${customerId}`, {
     method: "PUT",
     headers: {
@@ -262,6 +261,8 @@ export const getAllBookings = async () => {
   }
 
   try {
+    console.log('Ejecutando getAllBookings');
+
     const response = await fetch("http://localhost:3000/bookings", {
       method: "GET",
       headers: {
@@ -288,6 +289,8 @@ export const getBookingsByCustomerId = async (customerId: string) => {
   }
 
   try {
+    console.log('Ejecutando getBookingsByCustomerId');
+
     const response = await fetch(`http://localhost:3000/bookings/customer/${customerId}`, {
       method: "GET",
       headers: {
@@ -305,3 +308,21 @@ export const getBookingsByCustomerId = async (customerId: string) => {
     throw error;
   }
 }
+
+export const deleteBookingOfCustomer = async (bookingId: string) => {
+  const token = localStorage.getItem("token")
+  if (!token) throw new Error('No estás autorizado.')
+  console.log('Ejecutando deleteBookingOfCustomer');
+
+  const response = await fetch(`http://localhost:3000/bookings/softDelete/${bookingId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer: ${token}`
+    }
+  })
+  console.log(response);
+
+  if (!response.ok) throw new Error("Error en la solicitud.");
+  return true;
+};

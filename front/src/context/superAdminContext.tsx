@@ -57,7 +57,11 @@ export const SuperAdminContext = createContext<ISuperAdminContextType>({
   fetchCustomersBySearch: async (searchQuery: string) => Promise.resolve([] as ICustomerDetails[])
 });
 
-export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) => {
+export const SuperAdminProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [customers, setCustomers] = useState<ICustomerDetails[]>([]);
   const [hotelAdmins, setHotelAdmins] = useState<IHotelAdminDetails[]>([]);
   const [hotels, setHotels] = useState<IHotelOfSuperAdmin[]>([]);
@@ -66,27 +70,21 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
   const [isLogged, setIsLogged] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
-  const signIn = async (credentials: ILoginUser) => {
+  const signIn = async (credentials: ILoginUser): Promise<boolean> => {
     try {
       const data = await postLogin(credentials);
       if (data.token) {
-        const decodedToken = jwtDecode<IDecodedTokenSuperAdmin>(data.token);
-        const superAdmin: ISuperAdmin = {
-          id: decodedToken.id,
-          name: decodedToken.name,
-          email: decodedToken.email,
-          superAdmin: decodedToken.superAdmin,
-        };
-        setSuperAdmin(superAdmin);
-        localStorage.setItem("superAdmin", JSON.stringify(superAdmin));
-        setIsLogged(true);
-        setIsSuperAdmin(decodedToken.superAdmin);
         localStorage.setItem("token", data.token);
+        setIsLogged(true);
+        const decodedToken = jwtDecode<IDecodedTokenSuperAdmin>(data.token);
+        setIsSuperAdmin(decodedToken.superAdmin);
+        localStorage.setItem("superAdmin", JSON.stringify(decodedToken));
+        setSuperAdmin(decodedToken);
         return true;
       }
       return false;
     } catch (error) {
-      console.error('Error en el inicio de sesión: ', error);
+      console.error("Error during sign in:", error);
       return false;
     }
   };
@@ -134,7 +132,9 @@ export const SuperAdminProvider = ({ children }: { children: React.ReactNode }) 
     }
   }, []);
 
-  const fetchHotelAdmins = useCallback(async (): Promise<IHotelAdminDetails[]> => {
+  const fetchHotelAdmins = useCallback(async (): Promise<
+    IHotelAdminDetails[]
+  > => {
     try {
       const data = await getAllHotelAdmins();
       setHotelAdmins(data);
