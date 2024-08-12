@@ -7,16 +7,25 @@ import {
 
 export const postHotel = async (hotel: IHotelRegister) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
-  const response = await fetch("http://localhost:3000/hotels", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(hotel),
-  });
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch("http://localhost:3000/hotels", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(hotel),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Error en la solicitud: " + response.status);
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const postRoomType = async (roomType: IRoomType) => {
@@ -61,7 +70,7 @@ export const getHotelById = async (id: string) => {
   }
 };
 
-export const getHotelsByAdminId = async (adminId: string) => {
+export const getHotelsByAdminId = async (id: string) => {
   const token = localStorage.getItem("token");
 
   if (!token) {
@@ -69,7 +78,7 @@ export const getHotelsByAdminId = async (adminId: string) => {
   }
 
   const response = await fetch(
-    `http://localhost:3000/hotels-admin/${adminId}`,
+    `http://localhost:3000/hotels/hotelAdmin/${id}`,
     {
       method: "GET",
       headers: {
@@ -78,29 +87,51 @@ export const getHotelsByAdminId = async (adminId: string) => {
       },
     }
   );
+  console.log(response);
 
   if (!response.ok) {
     throw new Error(
       `Error en la solicitud: ${response.status} - ${response.statusText}`
     );
   }
-
-  const data = await response.json();
-  return data;
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  } else {
+    throw new Error("Error en la solicitud: " + response.status);
+  }
 };
 
 export const getHotels = async () => {
-  const response = await fetch("http://localhost:3000/hotels");
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch("http://localhost:3000/hotels");
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Error en la solicitud: " + response.status);
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const getHotelsBySearch = async (searchQuery: string) => {
-  const response = await fetch(
-    `http://localhost:3000/api/hotels/search?search=${searchQuery}`
-  );
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/hotels/search?search=${searchQuery}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Error en la solicitud: " + response.status);
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const getBookingByHotel = async (hotelId: string) => {
@@ -167,4 +198,24 @@ export const getRoomTypesByHotelId = async (
     console.error("Error en la solicitud:", error);
     return [];
   }
+};
+
+export const updateHotel = async (hotelId: string, hotelData: any) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(hotelData),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error en la actualización del hotel: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data;
 };
