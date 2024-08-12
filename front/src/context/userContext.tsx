@@ -13,7 +13,6 @@ import {
   postAdminRegister,
   postCustomerRegister,
   postLogin,
-  postReview,
 } from "@/lib/server/fetchUsers";
 import { jwtDecode } from "jwt-decode";
 import { createContext, useCallback, useEffect, useState } from "react";
@@ -26,10 +25,8 @@ export const UserContext = createContext<IUserContextType>({
   isAdmin: false,
   setIsAdmin: () => {},
   login: async () => false,
-  googleLogin: async () => false,
   customerRegister: async () => false,
   hotelierRegister: async () => false,
-  postReview: async () => false,
   getReviews: async () => {},
   reviews: [],
   logOut: () => {},
@@ -41,29 +38,33 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [reviews, setReviews] = useState<IReviewResponse[]>([]);
 
-  const customerRegister = async (user: Omit<IUser, "id">) => {
+  const customerRegister = async (
+    user: Omit<IUser, "id">
+  ): Promise<boolean> => {
     try {
       const data = await postCustomerRegister(user);
       console.log(data);
       return true;
     } catch (error) {
-      console.error(error);
+      console.error("Error en el registro de cliente:", error);
       return false;
     }
   };
 
-  const hotelierRegister = async (user: Omit<IUser, "id">) => {
+  const hotelierRegister = async (
+    user: Omit<IUser, "id">
+  ): Promise<boolean> => {
     try {
       const data = await postAdminRegister(user);
       console.log(data);
       return true;
     } catch (error) {
-      console.error(error);
+      console.error("Error en el registro de administrador:", error);
       return false;
     }
   };
 
-  const login = async (credentials: ILoginUser) => {
+  const login = async (credentials: ILoginUser): Promise<boolean> => {
     try {
       const data = await postLogin(credentials);
       console.log("Datos del servidor: ", data);
@@ -82,7 +83,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           address: data.user.address,
           birthDate: data.user.birthDate,
           isAdmin: decodedToken.isAdmin,
-          hotels: data.hotels,
+          hotels: data.user.hotels,
         };
 
         setUser(user);
@@ -99,30 +100,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const googleLogin = async (token: string, user: IUserResponse) => {
-    try {
-      if (token) {
-        const decodedToken = jwtDecode<IDecodeToken>(token);
-        console.log("Token decodificado", decodedToken);
-
-        setUser(user);
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", token);
-
-        setIsLogged(true);
-        setIsAdmin(decodedToken.isAdmin);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error("Error en el inicio de sesión con Google:", error);
-      return false;
-    }
-  };
-
   const getReviews = useCallback(async () => {
-    const data = await getAllReviews();
-    console.log(data);
+    try {
+      const data = await getAllReviews();
+      setReviews(data);
+      console.log("Revisiones obtenidas:", data);
+    } catch (error) {
+      console.error("Error al obtener revisiones:", error);
+    }
   }, []);
 
   const logOut = () => {
@@ -130,6 +115,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     if (confirm) {
       setUser(null);
       setIsLogged(false);
+      setIsAdmin(false);
       if (typeof window !== "undefined") {
         localStorage.removeItem("user");
         localStorage.removeItem("token");
@@ -167,10 +153,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         isAdmin,
         setIsAdmin,
         login,
-        googleLogin,
         hotelierRegister,
         customerRegister,
-        postReview,
         getReviews,
         reviews,
         logOut,

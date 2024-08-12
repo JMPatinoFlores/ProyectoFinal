@@ -173,6 +173,8 @@ export class AuthService {
     }
     if (superAdmin) {
       const validPassword = await bcrypt.compare(password, superAdmin.password);
+      console.log(validPassword);
+      
       if (!validPassword)
         throw new BadRequestException('Credenciales incorrectas');
 

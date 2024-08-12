@@ -32,8 +32,6 @@ export default function TypesRegister() {
         if (userObject.hotels && userObject.hotels.length > 0) {
           const fetchedHotelId = userObject.hotels[0].id;
           setHotelId(fetchedHotelId);
-
-          // Actualiza los valores iniciales de Formik con el hotelId obtenido
           setInitialValues((prevValues) => ({
             ...prevValues,
             hotelId: fetchedHotelId,
@@ -44,14 +42,6 @@ export default function TypesRegister() {
       }
     }
   }, []);
-
-  const typesOptions = [
-    "Estándar",
-    "Deluxe",
-    "Suite",
-    "Familiar",
-    "Accesible (para personas con discapacidad)",
-  ];
 
   const uploadImageToCloudinary = async (file: File): Promise<string> => {
     const formData = new FormData();
@@ -104,7 +94,7 @@ export default function TypesRegister() {
     const formData = {
       ...values,
       images: imageUrls,
-      hotelId: hotelId || values.hotelId, // Aseguramos que el hotelId esté incluido
+      hotelId: hotelId || values.hotelId,
     };
 
     console.log("Datos enviados: ", formData);
@@ -113,11 +103,11 @@ export default function TypesRegister() {
       const response = await postRoomType(formData);
       console.log("Datos enviados: ", response);
       alert("Tipo de habitación registrado exitosamente");
-      router.push("/dashboard")
+      router.push("/rooms-number")
     } catch (error) {
       console.error(error);
-      alert("Tipo de habitación registrado exitosamente");
-      router.push("/dashboard/myhotels");
+      alert("Error");
+      // router.push("/dashboard/myhotels");
     } finally {
       setSubmitting(false);
     }
@@ -143,13 +133,8 @@ export default function TypesRegister() {
                   <label htmlFor="name" className="formLabel">
                     Tipo de habitación
                   </label>
-                  <Field as="select" name="name" className="formInput">
-                    <option value="">Selecciona un tipo</option>
-                    {typesOptions.map((name) => (
-                      <option key={name} value={name}>
-                        {name}
-                      </option>
-                    ))}
+                  <Field type="text" name="name" className="formInput">
+                    
                   </Field>
                   <ErrorMessage
                     name="name"

@@ -10,7 +10,8 @@ function ProductsList({ searchQuery, queryParams }: IProductsListProps) {
   const [filteredHotels, setFilteredHotels] = useState<IHotelDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
-  const { fetchHotels, fetchHotelsBySearch, fetchHotelsByFilters } = useContext(HotelContext);
+  const { fetchHotels, fetchHotelsBySearch, fetchHotelsByFilters } =
+    useContext(HotelContext);
 
   const handleNextPage = () => {
     setCurrentPage(currentPage + 1);
@@ -21,45 +22,25 @@ function ProductsList({ searchQuery, queryParams }: IProductsListProps) {
   };
 
   useEffect(() => {
-    fetchHotels().then((data) => {
-      if (Array.isArray(data)) {
-        setHotels(data);
-      } else {
-        console.error("fetchHotels did not return an array.");
-        setHotels([]);
-      }
-    });
-  }, [fetchHotels]);
-
-  useEffect(() => {
     if (searchQuery) {
+      console.log("Ejecutando búsqueda con:", searchQuery);
       fetchHotelsBySearch(searchQuery).then((data) => {
         if (Array.isArray(data)) {
           setFilteredHotels(data);
         } else {
-          console.error("fetchHotelsBySearch did not return an array.");
           setFilteredHotels([]);
         }
       });
     } else {
-      setFilteredHotels(hotels);
-    }
-  }, [searchQuery, hotels, fetchHotelsBySearch]);
-
-  useEffect(() => {
-    if (queryParams) {
-      fetchHotelsByFilters(queryParams).then((data) => {
+      fetchHotels().then((data) => {
         if (Array.isArray(data)) {
           setFilteredHotels(data);
         } else {
-          console.error("fetchHotelsByFilters did not return an array.");
           setFilteredHotels([]);
         }
-      })
-    } else {
-      setFilteredHotels(hotels);
+      });
     }
-  }, [queryParams, fetchHotelsByFilters])
+  }, [searchQuery, fetchHotels, fetchHotelsBySearch]);
 
   const paginatedHotels = Array.isArray(filteredHotels)
     ? filteredHotels.slice(

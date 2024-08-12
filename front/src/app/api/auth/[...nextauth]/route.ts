@@ -1,16 +1,25 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import { NextApiHandler } from "next";
+import NextAuth from "next-auth/next";
+import Google from "next-auth/providers/google";
 
-export const authOptions = {
+const handler = NextAuth({
   providers: [
-    GoogleProvider({
+    Google({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
-};
-
-const handler: NextApiHandler = (req, res) => NextAuth(authOptions)(req, res);
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      console.log("Redirect callback triggered:", { url, baseUrl });
+      if (url.includes("/api/auth/callback/google")) {
+        return `${baseUrl}/home`;
+      }
+      if (url === "/api/auth/signout") {
+        return baseUrl;
+      }
+      return baseUrl;
+    },
+  },
+});
 
 export { handler as GET, handler as POST };

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  IAdminHotel,
   IHotel,
   IHotelContextType,
   IHotelDetail,
@@ -13,7 +14,7 @@ import {
   getHotelsByAdminId,
   getRoomsByHotel,
   postHotel,
-  getHotelsBySearch,
+  updateHotel,
 } from "@/lib/server/fetchHotels";
 import { createContext, useCallback, useEffect, useState } from "react";
 
@@ -28,6 +29,7 @@ export const HotelContext = createContext<IHotelContextType>({
   fetchHotelsBySearch: async () => [],
   fetchHotelsByFilters: async () => [],
   fetchHotelsByAdmin: async () => [],
+  updateHotelDetails: async () => false,
 });
 
 export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
@@ -44,7 +46,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
       }
       return false;
     } catch (error) {
-      console.log(error);
+      console.error("Error al agregar el hotel:", error);
       return false;
     }
   };
@@ -53,11 +55,12 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const data = await getHotels();
       setHotels(data);
-      typeof window !== "undefined" &&
+      if (typeof window !== "undefined") {
         localStorage.setItem("hotels", JSON.stringify(data));
+      }
       return data;
     } catch (error) {
-      console.log(error);
+      console.error("Error al obtener hoteles:", error);
       return [];
     }
   }, []);
@@ -67,7 +70,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
       const data = await getBookingByHotel(hotelId);
       return data;
     } catch (error) {
-      console.log(error);
+      console.error("Error al obtener reservas del hotel:", error);
       return [];
     }
   };
@@ -82,12 +85,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
           throw new Error(`HTTP error status: ${response.status}`);
         }
         const data = await response.json();
-        if (Array.isArray(data)) {
-          return data;
-        } else {
-          console.error("fetchHotelsBySearch did not return an array.");
-          return [];
-        }
+        return data;
       } catch (error) {
         console.error("Error fetching hotels by search:", error);
         return [];
@@ -120,23 +118,27 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     []
   );
 
-  const fetchHotelsByAdmin = async (adminId: string): Promise<IHotel[]> => {
-    try {
-      const data = await getHotelsByAdminId(adminId);
-      setHotels(data);
-      return data;
-    } catch (error) {
-      console.error("Error fetching hotels by admin:", error);
-      return [];
-    }
-  };
+  const fetchHotelsByAdmin = useCallback(
+    async (id: string): Promise<IHotel[]> => {
+      try {
+        const data = await getHotelsByAdminId(id);
+        setHotels(data);
+        console.log(data);
+        return data;
+      } catch (error) {
+        console.error("Error al obtener hoteles por admin:", error);
+        return [];
+      }
+    },
+    []
+  );
 
   const fetchRoomsByHotel = async (hotelId: string) => {
     try {
       const data = await getRoomsByHotel(hotelId);
       return data;
     } catch (error) {
-      console.log(error);
+      console.error("Error al obtener habitaciones del hotel:", error);
       return [];
     }
   };
@@ -148,20 +150,38 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
       const data = await getHotelById(hotelId);
       return data as IHotelDetail;
     } catch (error) {
-      console.log(error);
+      console.error("Error al obtener hotel por ID:", error);
       return null;
     }
   };
 
+  const updateHotelDetails = async (
+    hotelId: string,
+    hotelData: Partial<IAdminHotel>
+  ) => {
+    try {
+      const updatedHotel = await updateHotel(hotelId, hotelData);
+      setHotels((prev) =>
+        (prev ?? []).map((hotel) =>
+          hotel.id === hotelId ? updatedHotel : hotel
+        )
+      );
+      return true;
+    } catch (error) {
+      console.error("Error actualizando hotel:", error);
+      return false;
+    }
+  };
+
   useEffect(() => {
-    const hotels =
+    const storedHotels =
       typeof window !== "undefined" && localStorage.getItem("hotels");
-    if (hotels) {
-      setHotels(JSON.parse(hotels));
+    if (storedHotels) {
+      setHotels(JSON.parse(storedHotels));
     } else {
       fetchHotels();
     }
-  }, []);
+  }, [fetchHotels]);
 
   return (
     <HotelContext.Provider
@@ -176,6 +196,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         fetchHotelsBySearch,
         fetchHotelsByFilters,
         fetchHotelsByAdmin,
+        updateHotelDetails,
       }}
     >
       {children}

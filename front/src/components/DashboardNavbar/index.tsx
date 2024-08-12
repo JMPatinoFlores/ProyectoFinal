@@ -24,7 +24,7 @@ function DashboardNavbar() {
             className="rounded-lg"
           />
         </Link>
-        {isAdmin && (
+        {isAdmin ? (
           <div>
             <Link
               href="/dashboard/myhotels"
@@ -66,6 +66,20 @@ function DashboardNavbar() {
               />
             </Link>
           </div>
+        ) : (
+          <Link
+            href="/dashboard/bookings"
+            className="flex items-center justify-center p-3 hover:text-gray-400 hover:bg-gray-700 focus:text-gray-700 focus:bg-gray-700 rounded-lg"
+          >
+            <span className="sr-only">Reservas</span>
+            <Image
+              src="/booking.png"
+              alt="Reservas"
+              width={48}
+              height={48}
+              className="rounded-lg"
+            />
+          </Link>
         )}
       </nav>
       <div className="mx-4 mb-6">

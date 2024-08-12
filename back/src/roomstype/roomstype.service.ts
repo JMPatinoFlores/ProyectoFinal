@@ -13,6 +13,10 @@ export class RoomsTypeService {
         return await this.roomsTypeDbRepository.getDbRoomsType();
     }
 
+    async getRoomTypesByHotelId(hotelId: string) {
+        return await this.roomsTypeDbRepository.getRoomTypesByHotelId(hotelId)
+    }
+
     async getDbRoomTypeById(id:string){
         return await this.roomsTypeDbRepository.getDbRoomTypeById(id);
     }

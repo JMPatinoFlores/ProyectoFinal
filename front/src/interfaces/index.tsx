@@ -17,6 +17,7 @@ export interface IUser {
 export interface IUserResponse extends IUser {
   isAdmin: boolean;
   hotels?: IHotel[];
+  reviews?: IReview[];
 }
 
 export interface ILogin {
@@ -72,38 +73,38 @@ export interface IUserContextType {
   isAdmin: boolean;
   setIsAdmin: (isAdmin: boolean) => void;
   login: (credentials: ILogin) => Promise<boolean>;
-  googleLogin: (token: string, user: IUserResponse) => Promise<boolean>;
+  // googleLogin: (token: string, user: IUserResponse) => Promise<boolean>;
   customerRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   hotelierRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
-  postReview: (review: ICreateReview) => Promise<boolean>;
   getReviews: () => void;
-  reviews: IReviewResponse[];
+  reviews: IReview[];
   logOut: () => void;
 }
 
-export interface ICreateReview {
-  userId: number;
-  hotelId: number;
+export interface IPostReview {
   rating: number;
   comment: string;
+}
+
+export interface ICreateReview extends IPostReview {
+  clienteId: string;
+  hotelId: string;
 }
 
 export interface IReview {
-  rating: number;
-  comment: string;
-}
-
-export interface IReviewResponse {
   id: string;
-  userId: string;
-  hotelId: string;
   comment: string;
   date: string;
   rating: number;
 }
 
+export interface IReviewResponse extends IReview {
+  isDeleted: boolean;
+  customer: IUser;
+}
+
 export interface IReviewProps {
-  review: IReviewResponse;
+  review: IReview;
 }
 
 export interface IDecodeToken extends JwtPayload {
@@ -121,7 +122,12 @@ export interface IRoom {
   hotelId: string;
 }
 
+export interface ICreateNumberOfRoom {
+  roomNumber: string;
+  roomsTypeId: string;
+}
 export interface IRoomType {
+  id: string | number | readonly string[] | undefined;
   roomTypeId: string;
   name: string;
   capacity: number;
@@ -186,6 +192,7 @@ export interface IHotel {
   services: string[];
   images: string[];
   rating: number;
+  reviews?: IReview[];
   hotelAdminId: string;
 }
 
@@ -200,6 +207,10 @@ export interface IHotelContextType {
   fetchHotelsBySearch: (searchQuery: string) => Promise<IHotelDetail[]>;
   fetchHotelsByFilters: (queryParams: string) => Promise<IHotelDetail[]>;
   fetchHotelsByAdmin: (adminId: string) => Promise<IHotel[]>;
+  updateHotelDetails: (
+    hotelId: string,
+    hotelDetails: Partial<IAdminHotel>
+  ) => Promise<boolean>;
 }
 
 export interface IHotelResponse {
@@ -216,7 +227,21 @@ export interface IHotelResponse {
   services: string[];
   images: string[];
   rating: number;
+  reviews?: IReview[];
   hotelAdminId: string;
+}
+
+export interface IAdminHotel {
+  id: string;
+  name: string;
+  description: string;
+  email: string;
+  country: string;
+  city: string;
+  address: string;
+  totalRooms: number;
+  services: string[];
+  images: string[];
 }
 
 export interface IHotelAdmin {
@@ -261,6 +286,7 @@ export interface IHotelDetail {
   totalRooms: number;
   services: string[];
   rating: string;
+  reviews: IReviewResponse[];
   images: string[];
   isDeleted: boolean;
   roomstype: [];
@@ -292,7 +318,6 @@ export interface ILocationDetail {
 }
 
 export interface ISearchBarProps {
-  searchQuery: string;
   onSearch: (query: string) => void;
 }
 
@@ -308,15 +333,31 @@ export interface ISuperAdminDashboardProps {
 
 export interface ISuperAdminContextType {
   superAdmin: ISuperAdmin | null;
-  setSuperAdmin: React.Dispatch<React.SetStateAction<ISuperAdmin | null>>;
+  setSuperAdmin: (superAdmin: ISuperAdmin | null) => void;
   isLogged: boolean;
   setIsLogged: (isLogged: boolean) => void;
   isSuperAdmin: boolean;
   setIsSuperAdmin: (isSuperAdmin: boolean) => void;
-  signIn: (credentials: ILogin) => Promise<boolean>;
+  signIn: (credentials: ILoginUser) => Promise<boolean>;
   fetchCustomers: () => Promise<ICustomerDetails[]>;
   fetchBookings: () => Promise<IBookingOfSuperAdmin[]>;
   fetchHotelAdmins: () => Promise<IHotelAdminDetails[]>;
+  fetchDeleteHotelAdmin: (hotelAdminId: string) => Promise<boolean>;
+  fetchHotelAdminById: (
+    hotelAdminId: string
+  ) => Promise<IHotelAdminDetails | undefined>;
+  fetchDeleteHotelOfHotelAdmin: (
+    hotelId: string,
+    hotelAdminId: string
+  ) => Promise<boolean>;
+  fetchUpdateHotelDetails: (
+    hotelId: string,
+    selectedHotel: Partial<IHotelOfSuperAdmin>,
+    hotelAdminId: string
+  ) => Promise<boolean>;
+  fetchHotelAdminsBySearch: (
+    searchQuery: string
+  ) => Promise<IHotelAdminDetails[]>;
 }
 
 export interface IHotelAdminDetails {
@@ -376,7 +417,7 @@ export interface IHotelOfSuperAdmin {
   location: number[];
   totalRooms: number;
   services: string[];
-  rating: number;
+  rating: string;
   images: string[];
   isDeleted: boolean;
 }
@@ -423,4 +464,29 @@ export interface ISuperAdmin {
   name: string;
   email: string;
   superAdmin: boolean;
+}
+
+export interface IHotelAdminsProps {
+  searchQuery: string;
+}
+
+export interface IEditProfileUser {
+  name: string;
+  lastName: string;
+  email: string;
+  country: string;
+  city: string;
+  address: string;
+  phone: string;
+}
+
+export interface IEditProfileHotelier {
+  name: string;
+  lastName: string;
+  email: string;
+  country: string;
+  city: string;
+  address: string;
+  phone: string;
+  birthDate: string;
 }

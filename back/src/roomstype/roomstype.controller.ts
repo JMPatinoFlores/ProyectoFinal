@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Post,
@@ -29,6 +30,17 @@ export class RoomsTypeController {
   @Get()
   getDbRoomsType() {
     return this.roomstypeDbService.getDbRoomsType();
+  }
+
+  @ApiOperation({ summary: 'Lista de room types de un hotel.' })
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', required: true, description: 'Hotel ID', example: '1121qwewasd-qw54wqeqwe-45121' })
+  @Roles(Role.Admin, Role.SuperAdmin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @HttpCode(200)
+  @Get('/hotel/:id')
+  async getRoomTypesByHotelId(@Param('id', ParseUUIDPipe) hotelId: string) {
+    return await this.roomstypeDbService.getRoomTypesByHotelId(hotelId)
   }
 
   @ApiOperation({summary: 'Create a new Roomtype'})
