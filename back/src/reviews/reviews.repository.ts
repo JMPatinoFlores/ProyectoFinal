@@ -149,4 +149,9 @@ export class ReviewsRepository {
 
     return parseFloat(average.toFixed(2));
   }
+
+  async softDeleteReview(id: string) {
+    await this.reviewsDbRepository.update({ id }, { isDeleted: true })
+    return true
+  }
 }
