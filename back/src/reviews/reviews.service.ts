@@ -30,4 +30,8 @@ export class ReviewsService {
   async getDbReviewDeleted(){
     return await this.reviewRepository.getDbReviewDeleted();
   }
+
+  async softDeleteReview(id: string) {
+    return await this.reviewRepository.softDeleteReview(id);
+  }
 }

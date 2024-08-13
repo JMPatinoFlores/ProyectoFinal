@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { SuperAdminContext } from "../../context/superAdminContext";
 import { IReviewOfSuperAdmin } from "@/interfaces";
 import Rating from "../Rating"; // Assuming you have a Rating component
+import { date } from "yup";
 
 interface ReviewsHotelSuperAdminProps {
     hotelId: string;
@@ -42,7 +43,13 @@ const ReviewsHotelSuperAdmin = ({ hotelId }: ReviewsHotelSuperAdminProps) => {
     }, [hotelId]);
 
     useEffect(() => {
-        setFilteredReviews(reviews);
+        const newReviews = reviews.map(review => {
+            return {
+                ...review,
+                date: review.date.split('-').join('/')
+            }
+        })
+        setFilteredReviews(newReviews);
     }, [reviews]);
 
     const handleViewDetails = (review: IReviewOfSuperAdmin) => {
@@ -68,7 +75,15 @@ const ReviewsHotelSuperAdmin = ({ hotelId }: ReviewsHotelSuperAdminProps) => {
                 {paginatedReviews.length > 0 ? paginatedReviews.map((review) => (
                     <div key={review.id} className="relative p-4 bg-gray-100 rounded-lg shadow-md flex flex-col">
                         <div className="mb-2">
-                            <p>Cliente: {review.customer.name} {review.customer.lastName}</p>
+                            <div className="flex">
+                                <p className="font-bold pr-2">Cliente:</p>
+                                <p>{review.customer.name} {review.customer.lastName}</p>
+                            </div>
+                            <div className="flex">
+                                <p className="font-bold pr-2">Fecha:</p>
+                                <p>{review.date}</p>
+                            </div>
+
                             <Rating rating={review.rating.toString()} />
                         </div>
                         <div className="flex flex-wrap gap-2 mt-auto">
@@ -85,6 +100,7 @@ const ReviewsHotelSuperAdmin = ({ hotelId }: ReviewsHotelSuperAdminProps) => {
                                     if (!confirmed) return;
                                     try {
                                         const response = await fetchDeleteReviewOfHotel(review.id);
+                                        
                                         if (response) {
                                             const hotel = await fetchHotelById(hotelId);
                                             if (hotel && hotel.reviews) setReviews(hotel.reviews);
@@ -109,8 +125,12 @@ const ReviewsHotelSuperAdmin = ({ hotelId }: ReviewsHotelSuperAdminProps) => {
                             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-10">
                                 <div className="w-full max-w-[600px]">
                                     <div className="mb-2 flex items-center">
-                                        <label className="w-1/3 font-semibold">Cliente:</label>
+                                        <label className="w-1/3 font-bold">Cliente:</label>
                                         <p className="w-2/3 p-2 border rounded bg-gray-100">{selectedReview.customer.name} {selectedReview.customer.lastName}</p>
+                                    </div>
+                                    <div className="mb-2 flex items-center">
+                                        <label className="w-1/3 font-bold">Fecha:</label>
+                                        <p className="w-2/3 p-2 border rounded bg-gray-100">{selectedReview.date}</p>
                                     </div>
                                     <div className="mb-2 flex items-center">
                                         <label className="w-1/3 font-semibold">Rating:</label>

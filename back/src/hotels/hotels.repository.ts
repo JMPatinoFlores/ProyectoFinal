@@ -45,6 +45,7 @@ export class HotelsRepository {
       .leftJoinAndSelect('hotel.roomstype', 'roomstype')
       .leftJoinAndSelect('roomstype.rooms', 'room')
       .leftJoinAndSelect('hotel.reviews', 'reviews')
+      .leftJoinAndSelect('reviews.customer', 'customer')  // Join with the customer related to the review
       .where('hotel.id = :id', { id })
       .andWhere('hotel.isDeleted = false')
       .getOne();
@@ -59,8 +60,10 @@ export class HotelsRepository {
     hotelFound.roomstype.forEach((roomType) => {
       roomType.rooms = roomType.rooms.filter((room) => !room.isDeleted);
     });
+
     return hotelFound;
   }
+
 
   async createDbHotel(hotelDto: CreateHotelDto): Promise<string> {
     const { hotel_admin_id, name, email, ...hotelData } = hotelDto;

@@ -113,4 +113,16 @@ export class ReviewsController {
     return this.reviewService.deleteDbReview(id);
   }
 
+  @ApiOperation({ summary: 'Borrado lógico de una reseña.' })
+  @ApiParam({ name: 'id', required: true, description: 'ID Review', example: '1121qwewasd-qw54wqeqwe-45121' })
+  @ApiResponse({ status: 200, description: 'Review soft delete successfully :)' })
+  @ApiResponse({ status: 404, description: 'Review not was eliminated with soft delete  :(' })
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.SuperAdmin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Delete('softDelete/:id')
+  async softDeleteReview(@Param('id', ParseUUIDPipe) id: string) {
+    return this.reviewService.softDeleteReview(id)
+  }
+
 }
