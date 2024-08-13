@@ -133,7 +133,7 @@ export interface IRoomType {
   capacity: number;
   totalBathrooms: number;
   totalBeds: number;
-  image: string[];
+  images: string[];
   price: number;
 }
 

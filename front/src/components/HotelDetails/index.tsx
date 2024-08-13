@@ -66,76 +66,74 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
   const [selectedHotelId, setSelectedHotelId] = useState<string>("");
   const [showConfirmBooking, setShowConfirmBooking] = useState(false);
 
-
-    useEffect(() => {
+  useEffect(() => {
     const token =
       typeof window !== "undefined" && localStorage.getItem("token");
-      console.log("Token devuelto: ", token);
+    console.log("Token devuelto: ", token);
     if (token) {
       const decodedToken: TokenPayload = JSON.parse(atob(token.split(".")[1]));
       setUserId(decodedToken.id);
     }
   }, []);
-  
-    useEffect(() => {
-      if (hotel) {
-        // Usa roomstype directamente del hotel
-        setRoomTypes(hotel.roomstype || []);
-      }
-    }, [hotel]);
 
-    const initialValues: ICreateBooking = {
-      customerId: userId || "",
-      hotelId: hotel?.id || "",
-      roomTypesIdsAndDates: [
-        { roomTypeId: "", checkInDate: "", checkOutDate: "" },
-      ],
+  useEffect(() => {
+    if (hotel) {
+      // Usa roomstype directamente del hotel
+      setRoomTypes(hotel.roomstype || []);
+    }
+  }, [hotel]);
+
+  const initialValues: ICreateBooking = {
+    customerId: userId || "",
+    hotelId: hotel?.id || "",
+    roomTypesIdsAndDates: [
+      { roomTypeId: "", checkInDate: "", checkOutDate: "" },
+    ],
+  };  
+
+  const handleSubmit = async (booking: ICreateBooking) => {
+    const formData = {
+      customerId: booking.customerId,
+      hotelId: booking.hotelId,
+      roomTypesIdsAndDates: booking.roomTypesIdsAndDates.map((item) => ({
+        roomTypeId: item.roomTypeId,
+        checkInDate: item.checkInDate,
+        checkOutDate: item.checkOutDate,
+      })),
     };
 
-    const handleSubmit = async (booking: ICreateBooking) => {
-
-      const formData = {
-        customerId: booking.customerId,
-        hotelId: booking.hotelId,
-        roomTypesIdsAndDates: booking.roomTypesIdsAndDates.map((item) => ({
-          roomTypeId: item.roomTypeId,
-          checkInDate: item.checkInDate,
-          checkOutDate: item.checkOutDate,
-        })),
-      };
-
-      try {
-        const response = await postBooking(formData);
-        console.log("Datos de la reserva realizada:", response);
-        if (response) {
-          alert("Reserva hecha exitosamente");
-          setShowConfirmBooking(true);
-        }
-      } catch (error) {
-        console.log("Error al realizar la reserva: ", error);
+    try {
+      const response = await postBooking(formData);
+      console.log("Datos de la reserva realizada:", response);
+      if (response) {
+        alert("Reserva hecha exitosamente");
+        setShowConfirmBooking(true);
       }
-    };
+    } catch (error) {
+      console.log("Error al realizar la reserva: ", error);
+    }
+  };
 
-    if (!hotel)
-      return (
-        <div className="flex justify-center items-center h-64">
-          <p>Loading...</p>
-        </div>
-      );
+  if (!hotel)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading...</p>
+      </div>
+    );
 
-    if (!isLoaded)
-      return (
-        <div className="flex justify-center items-center h-64">
-          <p>Loading...</p>
-        </div>
-      );
+  if (!isLoaded)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading...</p>
+      </div>
+    );
 
-    if (!mapCenter)
-      return (
-        <div className="flex justify-center items-center h-64">
-          <p>Loading map...</p>
-        </div>
-      );
+  if (!mapCenter)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading map...</p>
+      </div>
+    );
 
   return (
     <div className="flex flex-col items-center mx-auto w-4/5">
@@ -208,9 +206,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
                                 key={String(roomType.id)}
                                 value={roomType.id}
                               >
-                                {roomType.name}; ${roomType.price}; Capacidad: {roomType.capacity};
-                                Baños: {roomType.totalBathrooms}; Camas:{" "}
-                                {roomType.totalBeds}
+                                {roomType.name}: ${roomType.price}
                               </option>
                             ))
                           ) : (
@@ -292,6 +288,59 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
                 <GatewayPayment />
               </div>
             )}
+          </div>
+        </div>
+        <div className="flex flex-col items-center mt-4 mb-8">
+          <div className="text-center font-semibold text-2xl mt-4">
+            <h1>Tipos de habitación</h1>
+            <div className="flex flex-wrap justify-center gap-4">
+              {roomTypes.length > 0 ? (
+                roomTypes.map((roomType) => {
+                  console.log(roomType.images[0]);
+                  return (
+                    <div className="w-64 bg-white shadow-md rounded-lg overflow-hidden">
+                      {roomType.images && roomType.images.length > 0 ? (
+                        <div className="h-40 w-full bg-gray-200 overflow-hidden">
+                          <Image
+                            unoptimized
+                            src={roomType.images[0]}
+                            alt={hotel.name}
+                            width={400}
+                            height={300}
+                            className="object-cover w-full h-full"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-full h-40 bg-gray-200 flex items-center justify-center">
+                          <span className="text-gray-500">
+                            Imagen no disponible
+                          </span>
+                        </div>
+                      )}
+                      <div className="p-4">
+                        <h2 className="text-lg font-semibold">
+                          {roomType.name}
+                        </h2>
+                        <p className="text-gray-600 text-sm mb-2">
+                          ${roomType.price}/noche
+                        </p>
+                        <p className="text-gray-600 text-xs mb-1">
+                          Capacidad: {roomType.capacity}
+                        </p>
+                        <p className="text-gray-600 text-xs mb-1">
+                          Camas: {roomType.totalBeds}
+                        </p>
+                        <p className="text-gray-600 text-xs mb-1">
+                          Baños: {roomType.totalBathrooms}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <option value="">No hay tipos de habitación disponibles</option>
+              )}
+            </div>
           </div>
         </div>
         <div className="flex">
