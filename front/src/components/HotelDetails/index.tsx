@@ -11,6 +11,7 @@ import { validateFormBooking } from "@/helpers/validateData";
 import { useEffect, useState } from "react";
 import { getRoomTypesByHotelId, postBooking } from "@/lib/server/fetchHotels";
 import GatewayPayment from "../PaymentGateaway";
+import { FaStar } from "react-icons/fa";
 
 const getTodayDate = () => {
   const today = new Date();
@@ -66,79 +67,77 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
   const [selectedHotelId, setSelectedHotelId] = useState<string>("");
   const [showConfirmBooking, setShowConfirmBooking] = useState(false);
 
-
-    useEffect(() => {
+  useEffect(() => {
     const token =
       typeof window !== "undefined" && localStorage.getItem("token");
-      console.log("Token devuelto: ", token);
+    console.log("Token devuelto: ", token);
     if (token) {
       const decodedToken: TokenPayload = JSON.parse(atob(token.split(".")[1]));
       setUserId(decodedToken.id);
     }
   }, []);
-  
-    useEffect(() => {
-      if (hotel) {
-        // Usa roomstype directamente del hotel
-        setRoomTypes(hotel.roomstype || []);
-      }
-    }, [hotel]);
 
-    const initialValues: ICreateBooking = {
-      customerId: userId || "",
-      hotelId: hotel?.id || "",
-      roomTypesIdsAndDates: [
-        { roomTypeId: "", checkInDate: "", checkOutDate: "" },
-      ],
+  useEffect(() => {
+    if (hotel) {
+      // Usa roomstype directamente del hotel
+      setRoomTypes(hotel.roomstype || []);
+    }
+  }, [hotel]);
+
+  const initialValues: ICreateBooking = {
+    customerId: userId || "",
+    hotelId: hotel?.id || "",
+    roomTypesIdsAndDates: [
+      { roomTypeId: "", checkInDate: "", checkOutDate: "" },
+    ],
+  };
+
+  const handleSubmit = async (booking: ICreateBooking) => {
+    const formData = {
+      customerId: booking.customerId,
+      hotelId: booking.hotelId,
+      roomTypesIdsAndDates: booking.roomTypesIdsAndDates.map((item) => ({
+        roomTypeId: item.roomTypeId,
+        checkInDate: item.checkInDate,
+        checkOutDate: item.checkOutDate,
+      })),
     };
 
-    const handleSubmit = async (booking: ICreateBooking) => {
-
-      const formData = {
-        customerId: booking.customerId,
-        hotelId: booking.hotelId,
-        roomTypesIdsAndDates: booking.roomTypesIdsAndDates.map((item) => ({
-          roomTypeId: item.roomTypeId,
-          checkInDate: item.checkInDate,
-          checkOutDate: item.checkOutDate,
-        })),
-      };
-
-      try {
-        const response = await postBooking(formData);
-        console.log("Datos de la reserva realizada:", response);
-        if (response) {
-          alert("Reserva hecha exitosamente");
-          setShowConfirmBooking(true);
-        }
-      } catch (error) {
-        console.log("Error al realizar la reserva: ", error);
+    try {
+      const response = await postBooking(formData);
+      console.log("Datos de la reserva realizada:", response);
+      if (response) {
+        alert("Reserva hecha exitosamente");
+        setShowConfirmBooking(true);
       }
-    };
+    } catch (error) {
+      console.log("Error al realizar la reserva: ", error);
+    }
+  };
 
-    if (!hotel)
-      return (
-        <div className="flex justify-center items-center h-64">
-          <p>Loading...</p>
-        </div>
-      );
+  if (!hotel)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading...</p>
+      </div>
+    );
 
-    if (!isLoaded)
-      return (
-        <div className="flex justify-center items-center h-64">
-          <p>Loading...</p>
-        </div>
-      );
+  if (!isLoaded)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading...</p>
+      </div>
+    );
 
-    if (!mapCenter)
-      return (
-        <div className="flex justify-center items-center h-64">
-          <p>Loading map...</p>
-        </div>
-      );
+  if (!mapCenter)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading map...</p>
+      </div>
+    );
 
   return (
-    <div className="flex flex-col items-center mx-auto w-4/5">
+    <div className="flex flex-col items-center mx-auto w-4/5 mt-8">
       <div className="w-full mb-4">
         <div className="flex w-full h-96 mb-4">
           <Image
@@ -208,8 +207,9 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
                                 key={String(roomType.id)}
                                 value={roomType.id}
                               >
-                                {roomType.name}; ${roomType.price}; Capacidad: {roomType.capacity};
-                                Baños: {roomType.totalBathrooms}; Camas:{" "}
+                                {roomType.name}; ${roomType.price}; Capacidad:{" "}
+                                {roomType.capacity}; Baños:{" "}
+                                {roomType.totalBathrooms}; Camas:{" "}
                                 {roomType.totalBeds}
                               </option>
                             ))
@@ -296,17 +296,29 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
         </div>
         <div className="flex">
           <div className="flex-1 m-2">
-            <h2 className="font-semibold text-2xl">Reseñas</h2>
+            <h2 className="font-semibold text-2xl mb-2">Opiniones</h2>
             {hotel?.reviews && hotel.reviews.length > 0 ? (
-              <ul>
+              <ul className="w-full">
                 {hotel.reviews.map((review, index) => (
-                  <li key={index} className="mb-4">
-                    <p className="text-lg font-medium">
-                      {review?.customer?.name} {review?.customer?.lastName}
-                    </p>
-                    <p className="text-sm text-gray-600">{review.date}</p>
-                    <p>{"⭐".repeat(review.rating)}</p>
-                    <p>{review.comment}</p>
+                  <li
+                    key={index}
+                    className="mb-4 border border-black p-4 rounded-lg"
+                  >
+                    <div className="flex justify-between">
+                      <p className="font-light">
+                        {review?.customer?.name} {review?.customer?.lastName}
+                      </p>
+                      <p className="text-sm text-gray-600 ">{review.date}</p>
+                    </div>
+                    <hr className="hr-text mb-3" data-content="" />
+                    <div>
+                      <p className="flex mb-2">
+                        {Array.from({ length: review.rating }, (_, i) => (
+                          <FaStar key={i} color="#FBC02D" />
+                        ))}
+                      </p>
+                      <p>{review.comment}</p>
+                    </div>
                   </li>
                 ))}
               </ul>
