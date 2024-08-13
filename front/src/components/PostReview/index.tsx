@@ -123,7 +123,7 @@ export function PostReview() {
                 </div>
                 <button
                   type="submit"
-                  className="bg-orange-400 text-white py-2 px-4 rounded-md hover:bg-orange-500"
+                  className="btn-secondary"
                   disabled={isSubmitting}
                 >
                   Enviar
