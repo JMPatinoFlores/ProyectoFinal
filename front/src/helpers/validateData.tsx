@@ -1,5 +1,11 @@
 import * as yup from "yup";
-import { ICreateBooking, IHotelRegister, ILogin, IRegisterValues } from "@/interfaces";
+import {
+  ICreateBooking,
+  IHotelErrors,
+  IHotelRegister,
+  ILogin,
+  IRegisterValues,
+} from "@/interfaces";
 
 export const validateRegisterForm = (values: IRegisterValues) => {
   const errors: Partial<IRegisterValues> = {};
@@ -67,7 +73,7 @@ export const validateLoginForm = (values: ILogin) => {
 };
 
 export const validatePostHotel = (values: IHotelRegister) => {
-  const errors: Partial<IHotelRegister> = {};
+  const errors: Partial<IHotelErrors> = {};
 
   if (!values.name) {
     errors.name = "Nombre requerido";
