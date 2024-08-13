@@ -51,7 +51,7 @@ export class AuthService {
     const foundCustomer =
       await this.customersRepository.getCustomerByEmail(email);
     if (foundCustomer) throw new BadRequestException('Email ya registrado');
-
+    
     //* Hasheo de la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 

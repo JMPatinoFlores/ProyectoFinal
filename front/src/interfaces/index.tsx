@@ -346,6 +346,7 @@ export interface ISuperAdminContextType {
   fetchDeleteHotelAdmin: (hotelAdminId: string) => Promise<boolean>;
   fetchDeleteCustomer: (customerId: string) => Promise<boolean>;
   fetchHotelAdminById: (hotelAdminId: string) => Promise<IHotelAdminDetails | undefined>;
+  fetchHotelById: (hotelId: string) => Promise<IHotelOfSuperAdmin | undefined>;
   fetchCustomerById: (customerId: string) => Promise<ICustomerDetails | undefined>;
   fetchDeleteHotelOfHotelAdmin: (hotelId: string, hotelAdminId: string) => Promise<boolean>;
   fetchDeleteBookingOfCustomer: (bookingId: string, customerId: string) => Promise<boolean>;
@@ -354,6 +355,7 @@ export interface ISuperAdminContextType {
   fetchUpdateCustomerDetails: (customerId: string, selectedCustomer: Partial<ICustomerDetails> | null) => Promise<boolean>;
   fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>;
   fetchCustomersBySearch: (searchQuery: string) => Promise<ICustomerDetails[]>;
+  fetchDeleteReviewOfHotel: (reviewId: string) => Promise<boolean>;
 }
 
 export interface IHotelAdminDetails {
@@ -418,7 +420,8 @@ export interface IHotelOfSuperAdmin {
   rating: string;
   images: string[];
   isDeleted: boolean;
-  roomtypes: IRoomTypeOfSuperAdmin[]
+  roomtypes: IRoomTypeOfSuperAdmin[],
+  reviews: IReviewOfSuperAdmin[],
 }
 
 export interface IRoomTypeOfSuperAdmin {
@@ -504,4 +507,12 @@ export interface IEditProfileHotelier {
 
 export interface ICustomersProps {
   searchQuery: string
+}
+
+export interface IReviewOfSuperAdmin {
+  id: string,
+  comment: string,
+  date: string,
+  rating: number,
+  customer: ICustomerOfSuperAdmin
 }

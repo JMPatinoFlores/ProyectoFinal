@@ -160,7 +160,7 @@ const HotelsSuperAdmin = ({ hotelAdminId }: HotelsSuperAdminProps) => {
                             >
                                 Eliminar
                             </button>
-                            <Link href={`/reviews/${hotel.id}`} className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]">
+                            <Link href={`/reviewsHotelSuperAdmin/${hotel.id}`} className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]">
                                 Ver Reseñas
                             </Link>
                         </div>
