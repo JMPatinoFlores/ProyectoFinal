@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
@@ -16,7 +17,8 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/auth/guards/roles.enum';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Review } from './reviews.entity';
 
 @ApiTags('Reviews')
 @Controller('reviews')
@@ -40,6 +42,16 @@ export class ReviewsController {
   @UseGuards(AuthGuard, RolesGuard)
   getDbReviewDeleted(){
     return this.reviewService.getDbReviewDeleted();
+  }
+
+  @ApiOperation({ summary: 'Lista todos los reviews de un hotel con base en una search query y el id del hotel.' })
+  @ApiQuery({ name: 'search', required: true, description: 'buscar...', example: 'Bonita experiencia' })
+  @ApiResponse({ status: 206, description: 'List of Reviews matches :)' })
+  @ApiResponse({ status: 404, description: 'There are no reviews :(' })
+  @Get('search')
+  async searchHotels(@Query('hotelId') hotelId: string, @Query('search') query?: string): Promise<Review[]> {
+    console.log('Received search term:', query);
+    return await this.reviewService.searchReviews(hotelId, query);
   }
   
   @ApiOperation({summary: 'List only one review by ID'})

@@ -11,6 +11,10 @@ export class ReviewsService {
     return await this.reviewRepository.getDbReviews();
   }
 
+  async searchReviews(hotelId: string, query: string) {
+    return await this.reviewRepository.searchReviews(hotelId, query);
+  }
+
   async getDbReviewById(id: string) {
     return await this.reviewRepository.getDbReviewById(id);
   }

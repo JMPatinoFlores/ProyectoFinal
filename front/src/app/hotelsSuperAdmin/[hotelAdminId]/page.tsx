@@ -1,6 +1,8 @@
 "use client";
 
 import HotelsSuperAdmin from "@/components/HotelsSuperAdmin";
+import SearchBar from "@/components/SearchBar";
+import { useState } from "react";
 
 // `page.tsx` in `[hotelAdminId]` directory
 interface Props {
@@ -11,9 +13,17 @@ interface Props {
 
 function HotelsSuperAdminPage({ params }: Props) {
     const { hotelAdminId } = params;
+    const [searchQuery, setSearchQuery] = useState<string>("");
+
+    const handleSearch = (searchQuery: string) => {
+        setSearchQuery(searchQuery);
+    };
 
     return (
-        <HotelsSuperAdmin hotelAdminId={hotelAdminId} />
+        <div>
+            <SearchBar onSearch={handleSearch} />
+            <HotelsSuperAdmin searchQuery={searchQuery} hotelAdminId={hotelAdminId} />
+        </div>
     );
 }
 
