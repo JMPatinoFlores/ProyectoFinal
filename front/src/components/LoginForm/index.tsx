@@ -36,6 +36,8 @@ export const showToast = (
   switch (type) {
     case "success":
       return toast.success(content, optionsToApply);
+    case "error":
+      return toast.error(content, optionsToApply);
   }
 };
 export default function LoginForm() {
@@ -62,7 +64,7 @@ export default function LoginForm() {
           alert("Iniciaste sesión correctamente");
           router.push("/superAdmin");
         } else {
-          alert("Error al iniciar sesión");
+          showToast("error", <p>Correo o contraseña incorrectos</p>);
         }
       }
       setSubmitting(false);
