@@ -8,9 +8,10 @@ import { IHotelOfSuperAdmin } from "@/interfaces";
 
 interface HotelsSuperAdminProps {
     hotelAdminId: string;
+    searchQuery: string;
 }
 
-const HotelsSuperAdmin = ({ hotelAdminId }: HotelsSuperAdminProps) => {
+const HotelsSuperAdmin = ({ hotelAdminId, searchQuery }: HotelsSuperAdminProps) => {
     const [hotelAdminName, setHotelAdminName] = useState<string>("")
     const [hotels, setHotels] = useState<IHotelOfSuperAdmin[]>([]);
     const [filteredHotels, setFilteredHotels] = useState<IHotelOfSuperAdmin[]>([])
@@ -19,7 +20,7 @@ const HotelsSuperAdmin = ({ hotelAdminId }: HotelsSuperAdminProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(9);
-    const { fetchHotelAdminById, fetchDeleteHotelOfHotelAdmin, fetchUpdateHotelDetails } = useContext(SuperAdminContext);
+    const { fetchHotelAdminById, fetchDeleteHotelOfHotelAdmin, fetchUpdateHotelDetails, fetchHotelsBySearch } = useContext(SuperAdminContext);
 
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -47,6 +48,21 @@ const HotelsSuperAdmin = ({ hotelAdminId }: HotelsSuperAdminProps) => {
     useEffect(() => {
         setFilteredHotels(hotels)
     }, [hotels])
+
+    useEffect(() => {
+        if (searchQuery) {
+            fetchHotelsBySearch(searchQuery).then((data) => {
+                if (Array.isArray(data)) {
+                    setFilteredHotels(data);
+                } else {
+                    console.error("fetchHotelsBySearch did not return an array.");
+                    setFilteredHotels([]);
+                }
+            });
+        } else {
+            setFilteredHotels(hotels);
+        }
+    }, [searchQuery, hotels, fetchHotelsBySearch]);
 
     const handleViewDetails = (hotel: IHotelOfSuperAdmin) => {
         setSelectedHotel(hotel);

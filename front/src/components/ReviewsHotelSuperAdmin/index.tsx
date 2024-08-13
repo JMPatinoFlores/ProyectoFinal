@@ -3,22 +3,24 @@
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { SuperAdminContext } from "../../context/superAdminContext";
-import { IReviewOfSuperAdmin } from "@/interfaces";
+import { IHotelOfSuperAdmin, IReviewOfSuperAdmin } from "@/interfaces";
 import Rating from "../Rating"; // Assuming you have a Rating component
 import { date } from "yup";
 
 interface ReviewsHotelSuperAdminProps {
     hotelId: string;
+    searchQuery: string
 }
 
-const ReviewsHotelSuperAdmin = ({ hotelId }: ReviewsHotelSuperAdminProps) => {
+const ReviewsHotelSuperAdmin = ({ hotelId, searchQuery }: ReviewsHotelSuperAdminProps) => {
     const [reviews, setReviews] = useState<IReviewOfSuperAdmin[]>([]);
     const [filteredReviews, setFilteredReviews] = useState<IReviewOfSuperAdmin[]>([]);
     const [selectedReview, setSelectedReview] = useState<IReviewOfSuperAdmin | null>(null);
+    const [hotel, setHotel] = useState<IHotelOfSuperAdmin | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(9);
-    const { fetchHotelById, fetchDeleteReviewOfHotel } = useContext(SuperAdminContext);
+    const { fetchHotelById, fetchDeleteReviewOfHotel, fetchReviewsBySearch } = useContext(SuperAdminContext);
 
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -33,6 +35,7 @@ const ReviewsHotelSuperAdmin = ({ hotelId }: ReviewsHotelSuperAdminProps) => {
             const fetchData = async () => {
                 const hotel = await fetchHotelById(hotelId);
                 if (hotel && hotel.reviews) {
+                    setHotel(hotel)
                     setReviews(hotel.reviews);
                 } else {
                     console.warn('No reviews found for the given hotelId');
@@ -51,6 +54,21 @@ const ReviewsHotelSuperAdmin = ({ hotelId }: ReviewsHotelSuperAdminProps) => {
         })
         setFilteredReviews(newReviews);
     }, [reviews]);
+
+    useEffect(() => {
+        if (searchQuery && hotel) {
+            fetchReviewsBySearch(hotel.id, searchQuery).then((data) => {
+                if (Array.isArray(data)) {
+                    setFilteredReviews(data);
+                } else {
+                    console.error("fetchHotelsBySearch did not return an array.");
+                    setFilteredReviews([]);
+                }
+            });
+        } else {
+            setFilteredReviews(reviews);
+        }
+    }, [searchQuery, reviews, fetchReviewsBySearch]);
 
     const handleViewDetails = (review: IReviewOfSuperAdmin) => {
         setSelectedReview(review);
@@ -71,6 +89,11 @@ const ReviewsHotelSuperAdmin = ({ hotelId }: ReviewsHotelSuperAdminProps) => {
 
     return (
         <div className="flex-1 p-6">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+                <h1 className="text-2xl text-center md:text-3xl font-bold flex-grow mb-4 md:mb-0">
+                    Reseñas del hotel {hotel?.name}
+                </h1>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                 {paginatedReviews.length > 0 ? paginatedReviews.map((review) => (
                     <div key={review.id} className="relative p-4 bg-gray-100 rounded-lg shadow-md flex flex-col">
@@ -133,12 +156,12 @@ const ReviewsHotelSuperAdmin = ({ hotelId }: ReviewsHotelSuperAdminProps) => {
                                         <p className="w-2/3 p-2 border rounded bg-gray-100">{selectedReview.date}</p>
                                     </div>
                                     <div className="mb-2 flex items-center">
-                                        <label className="w-1/3 font-semibold">Rating:</label>
-                                        <Rating rating={selectedReview.rating.toString()} />
-                                    </div>
-                                    <div className="mb-2 flex items-center">
                                         <label className="w-1/3 font-semibold">Comentario:</label>
                                         <p className="w-2/3 p-2 border rounded bg-gray-100">{selectedReview.comment}</p>
+                                    </div>
+                                    <div className="mb-2 flex items-center">
+                                        <label className="w-1/3 font-semibold">Rating:</label>
+                                        <Rating rating={selectedReview.rating.toString()} />
                                     </div>
                                 </div>
                             </div>
