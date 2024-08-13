@@ -1,6 +1,8 @@
 "use client";
 
 import ReviewsHotelSuperAdmin from "@/components/ReviewsHotelSuperAdmin";
+import SearchBar from "@/components/SearchBar";
+import { useState } from "react";
 
 interface Props {
     params: {
@@ -10,8 +12,16 @@ interface Props {
 
 function ReviewsOfHotelOfSuperAdmin({ params }: Props) {
     const { hotelId } = params;
+    const [searchQuery, setSearchQuery] = useState<string>("");
+
+    const handleSearch = (searchQuery: string) => {
+        setSearchQuery(searchQuery);
+    };
     return (
-        <ReviewsHotelSuperAdmin hotelId={hotelId} />
+        <div>
+            <SearchBar onSearch={handleSearch} />
+            <ReviewsHotelSuperAdmin searchQuery={searchQuery} hotelId={hotelId} />
+        </div>
     );
 }
 
