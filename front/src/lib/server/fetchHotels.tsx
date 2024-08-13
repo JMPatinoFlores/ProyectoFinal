@@ -8,7 +8,7 @@ import {
 export const postHotel = async (hotel: IHotelRegister) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
   try {
-    const response = await fetch("http://localhost:3000/hotels", {
+    const response = await fetch("https://back-rutaviajera.onrender.com/hotels", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export const postHotel = async (hotel: IHotelRegister) => {
 
 export const postRoomType = async (roomType: IRoomType) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
-  const response = await fetch("http://localhost:3000/roomstype", {
+  const response = await fetch("https://back-rutaviajera.onrender.com/roomstype", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export const postRoomType = async (roomType: IRoomType) => {
 
 export const postRoom = async (room: ICreateNumberOfRoom) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
-  const response = await fetch("http://localhost:3000/rooms", {
+  const response = await fetch("https://back-rutaviajera.onrender.com/rooms", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export const postRoom = async (room: ICreateNumberOfRoom) => {
 
 export const getHotelById = async (id: string) => {
   try {
-    const response = await fetch(`http://localhost:3000/hotels/${id}`, {
+    const response = await fetch(`https://back-rutaviajera.onrender.com/hotels/${id}`, {
       cache: "no-cache",
     });
     const hotel = await response.json();
@@ -78,7 +78,7 @@ export const getHotelsByAdminId = async (id: string) => {
   }
 
   const response = await fetch(
-    `http://localhost:3000/hotels/hotelAdmin/${id}`,
+    `https://back-rutaviajera.onrender.com/hotels/hotelAdmin/${id}`,
     {
       method: "GET",
       headers: {
@@ -104,7 +104,7 @@ export const getHotelsByAdminId = async (id: string) => {
 
 export const getHotels = async () => {
   try {
-    const response = await fetch("http://localhost:3000/hotels");
+    const response = await fetch("https://back-rutaviajera.onrender.com/hotels");
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -120,7 +120,7 @@ export const getHotels = async () => {
 export const getHotelsBySearch = async (searchQuery: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/hotels/search?search=${searchQuery}`
+      `https://back-rutaviajera.onrender.com/api/hotels/search?search=${searchQuery}`
     );
     if (response.ok) {
       const data = await response.json();
@@ -148,7 +148,7 @@ export const getRoomsByHotel = async (hotelId: string) => {
 
 export const postBooking = async (booking: ICreateBooking) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
-  const response = await fetch("http://localhost:3000/bookings", {
+  const response = await fetch("https://back-rutaviajera.onrender.com/bookings", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -167,7 +167,7 @@ export const getRoomTypesByHotelId = async (
     const token = localStorage.getItem("token");
 
     const response = await fetch(
-      `http://localhost:3000/roomstype/hotel/${hotelId}`,
+      `https://back-rutaviajera.onrender.com/roomstype/hotel/${hotelId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -203,7 +203,7 @@ export const getRoomTypesByHotelId = async (
 export const updateHotel = async (hotelId: string, hotelData: any) => {
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
+  const response = await fetch(`https://back-rutaviajera.onrender.com/hotels/${hotelId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

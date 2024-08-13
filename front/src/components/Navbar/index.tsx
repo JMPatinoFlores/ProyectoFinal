@@ -1,7 +1,7 @@
 "use client";
 
 import { UserContext } from "@/context/userContext";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useState } from "react";
@@ -62,9 +62,8 @@ function Navbar() {
           >
             Panel de control
           </Link>
-          <Link href="/">
             <button
-              onClick={() => signOut()}
+              onClick={logOut}
               className="p-2 flex justify-center items-center text-white rounded-md bg-red-500 hover:bg-red-600 font-medium"
             >
               <Image
@@ -76,7 +75,6 @@ function Navbar() {
               />
               Salir
             </button>
-          </Link>
         </div>
       </div>
     );
@@ -134,7 +132,6 @@ function Navbar() {
             >
               Panel de control
             </Link>
-            <Link href="/">
               <button
                 onClick={logOut}
                 className="p-2 flex justify-center items-center text-white rounded-md bg-red-500 hover:bg-red-600 font-medium"
@@ -148,7 +145,6 @@ function Navbar() {
                 />
                 Salir
               </button>
-            </Link>
           </div>
         ) : (
           <div className="w-3/12 hidden md:flex justify-end items-center font-medium">

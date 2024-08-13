@@ -10,7 +10,7 @@ export const getAllCustomers = async () => {
     console.log('Ejecutando getAllCustomers');
 
     const response = await fetch(
-      "http://localhost:3000/customers/allCustomers",
+      "https://back-rutaviajera.onrender.com/customers/allCustomers",
       {
         method: "GET",
         headers: {
@@ -40,7 +40,7 @@ export const getAllHotelAdmins = async () => {
     console.log('Ejecutando getAllHotelAdmins');
 
     const response = await fetch(
-      "http://localhost:3000/hotel-admins/AllHotelAdmins",
+      "https://back-rutaviajera.onrender.com/hotel-admins/AllHotelAdmins",
       {
         method: "GET",
         headers: {
@@ -69,7 +69,7 @@ export const deleteHotelAdmin = async (hotelAdminId: string) => {
     console.log('Ejecutando deleteHotelAdmin');
 
     const response = await fetch(
-      `http://localhost:3000/hotel-admins/${hotelAdminId}`,
+      `https://back-rutaviajera.onrender.com/hotel-admins/${hotelAdminId}`,
       {
         method: "DELETE",
         headers: {
@@ -91,7 +91,7 @@ export const deleteCustomer = async (customerId: string) => {
   if (!token) throw new Error('No estás autorizado.')
   console.log('Ejecutando deleteCustomer');
 
-  const response = await fetch(`http://localhost:3000/customers/${customerId}`,
+  const response = await fetch(`https://back-rutaviajera.onrender.com/customers/${customerId}`,
     {
       method: "DELETE",
       headers: {
@@ -114,7 +114,7 @@ export const getHotelAdminById = async (
     console.log('Ejecutando getHotelAdminById');
 
     const response = await fetch(
-      `http://localhost:3000/hotel-admins/${hotelAdminId}`,
+      `https://back-rutaviajera.onrender.com/hotel-admins/${hotelAdminId}`,
       {
         method: "GET",
         headers: {
@@ -137,7 +137,7 @@ export const getCustomerById = async (customerId: string): Promise<ICustomerDeta
   if (!token) throw new Error('No estás autorizado.')
   console.log('Ejecutando getCustomerById');
 
-  const response = await fetch(`http://localhost:3000/customers/${customerId}`,
+  const response = await fetch(`https://back-rutaviajera.onrender.com/customers/${customerId}`,
     {
       method: "GET",
       headers: {
@@ -155,7 +155,7 @@ export const deleteHotelOfHotelAdmin = async (hotelId: string) => {
   if (!token) throw new Error('No estás autorizado.')
   console.log('Ejecutando deleteHotelOfHotelAdmin');
 
-  const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
+  const response = await fetch(`https://back-rutaviajera.onrender.com/hotels/${hotelId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -178,7 +178,7 @@ export const updateHotelDetails = async (
   try {
     console.log('Ejecutando updateHotelDetails');
 
-    const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
+    const response = await fetch(`https://back-rutaviajera.onrender.com/hotels/${hotelId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -201,7 +201,7 @@ export const updateHotelAdminDetails = async (hotelAdminId: string, selectedHote
   if (!token) throw new Error('No estás autorizado.')
   console.log('Ejecutando updateHotelAdminDetails');
 
-  const response = await fetch(`http://localhost:3000/hotel-admins/${hotelAdminId}`, {
+  const response = await fetch(`https://back-rutaviajera.onrender.com/hotel-admins/${hotelAdminId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -220,7 +220,7 @@ export const updateCustomerDetails = async (customerId: string, selectedCustomer
   if (!token) throw new Error('No estás autorizado.')
   console.log('Ejecutando updateCustomerDetails');
 
-  const response = await fetch(`http://localhost:3000/customers/${customerId}`, {
+  const response = await fetch(`https://back-rutaviajera.onrender.com/customers/${customerId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -244,7 +244,7 @@ export const getAllBookings = async () => {
   try {
     console.log('Ejecutando getAllBookings');
 
-    const response = await fetch("http://localhost:3000/bookings", {
+    const response = await fetch("https://back-rutaviajera.onrender.com/bookings", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -272,7 +272,7 @@ export const getBookingsByCustomerId = async (customerId: string) => {
   try {
     console.log('Ejecutando getBookingsByCustomerId');
 
-    const response = await fetch(`http://localhost:3000/bookings/customer/${customerId}`, {
+    const response = await fetch(`https://back-rutaviajera.onrender.com/bookings/customer/${customerId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -296,7 +296,7 @@ export const deleteBookingOfCustomer = async (bookingId: string) => {
   if (!token) throw new Error('No estás autorizado.')
   console.log('Ejecutando deleteBookingOfCustomer');
 
-  const response = await fetch(`http://localhost:3000/bookings/softDelete/${bookingId}`, {
+  const response = await fetch(`https://back-rutaviajera.onrender.com/bookings/softDelete/${bookingId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

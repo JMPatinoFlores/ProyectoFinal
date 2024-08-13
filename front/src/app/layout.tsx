@@ -8,6 +8,7 @@ import SessionWrapper from "@/lib/auth/SessionWrapper";
 import { HotelProvider } from "@/context/hotelContext";
 import { ThemeModeScript } from "flowbite-react";
 import { SuperAdminProvider } from "@/context/superAdminContext";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,9 +28,21 @@ export default function RootLayout({
         <ThemeModeScript />
       </head>
       <body className={inter.className}>
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <SessionWrapper>
           <div className="min-h-screen flex flex-col justify-between">
-            <SuperAdminProvider >
+            <SuperAdminProvider>
               <UserProvider>
                 <HotelProvider>
                   <Navbar />
