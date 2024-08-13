@@ -53,6 +53,7 @@ export class HotelsRepository {
       .leftJoinAndSelect('reviews.customer', 'customer') // Join with the customer related to the review
       .where('hotel.id = :id', { id })
       .andWhere('hotel.isDeleted = false')
+      .andWhere('reviews.isDeleted = false')
       .getOne();
 
     if (!hotelFound) {

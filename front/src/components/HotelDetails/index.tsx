@@ -92,6 +92,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
     ],
   };
 
+
   const handleSubmit = async (booking: ICreateBooking) => {
     const formData = {
       customerId: booking.customerId,
@@ -211,7 +212,6 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
                                 {roomType.capacity}; Baños:{" "}
                                 {roomType.totalBathrooms}; Camas:{" "}
                                 {roomType.totalBeds}
-                              </option>
                             ))
                           ) : (
                             <option value="">
@@ -292,6 +292,59 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
                 <GatewayPayment />
               </div>
             )}
+          </div>
+        </div>
+        <div className="flex flex-col items-center mt-4 mb-8">
+          <div className="text-center font-semibold text-2xl mt-4">
+            <h1>Tipos de habitación</h1>
+            <div className="flex flex-wrap justify-center gap-4">
+              {roomTypes.length > 0 ? (
+                roomTypes.map((roomType) => {
+                  console.log(roomType.images[0]);
+                  return (
+                    <div className="w-64 bg-white shadow-md rounded-lg overflow-hidden">
+                      {roomType.images && roomType.images.length > 0 ? (
+                        <div className="h-40 w-full bg-gray-200 overflow-hidden">
+                          <Image
+                            unoptimized
+                            src={roomType.images[0]}
+                            alt={hotel.name}
+                            width={400}
+                            height={300}
+                            className="object-cover w-full h-full"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-full h-40 bg-gray-200 flex items-center justify-center">
+                          <span className="text-gray-500">
+                            Imagen no disponible
+                          </span>
+                        </div>
+                      )}
+                      <div className="p-4">
+                        <h2 className="text-lg font-semibold">
+                          {roomType.name}
+                        </h2>
+                        <p className="text-gray-600 text-sm mb-2">
+                          ${roomType.price}/noche
+                        </p>
+                        <p className="text-gray-600 text-xs mb-1">
+                          Capacidad: {roomType.capacity}
+                        </p>
+                        <p className="text-gray-600 text-xs mb-1">
+                          Camas: {roomType.totalBeds}
+                        </p>
+                        <p className="text-gray-600 text-xs mb-1">
+                          Baños: {roomType.totalBathrooms}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <option value="">No hay tipos de habitación disponibles</option>
+              )}
+            </div>
           </div>
         </div>
         <div className="flex">

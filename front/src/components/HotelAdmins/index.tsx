@@ -78,7 +78,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                 if (Array.isArray(data)) {
                     setFilteredHotelAdmins(data);
                 } else {
-                    console.error("fetchHotelsBySearch did not return an array.");
+                    console.error("fetchHotelAdminsBySearch did not return an array.");
                     setFilteredHotelAdmins([]);
                 }
             });
