@@ -440,7 +440,7 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
                   />
                 </div>
 
-                {/* {hotelLocation && (
+                {hotelLocation && (
                   <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden">
                     <GoogleMap
                       options={{
@@ -456,7 +456,7 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
                       {marker && <Marker position={mapCenter} />}
                     </GoogleMap>
                   </div>
-                )} */}
+                )}
 
                 <div className="formDiv flex-1 mr-2">
                   <label htmlFor="location" className="formLabel">
