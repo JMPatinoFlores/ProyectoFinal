@@ -308,3 +308,46 @@ export const deleteBookingOfCustomer = async (bookingId: string) => {
   if (!response.ok) throw new Error("Error en la solicitud.");
   return true;
 };
+
+export const getHotelById = async (hotelId: string) => {
+  try {
+    const token = localStorage.getItem("token")
+    if (!token) throw new Error('No estás autorizado.')
+    console.log('Ejecutando getHotelById');
+
+
+    const response = await fetch(`http://localhost:3000/hotels/${hotelId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer: ${token}`
+      }
+    })
+
+    if (!response.ok) throw new Error('Error al hacer la petición.')
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.log('Error en el getHotelById: ', error);
+    
+  }
+}
+
+export const deleteReviewOfHotel = async (reviewId: string) => {
+  try {
+    const token = localStorage.getItem("token")
+    if (!token) throw new Error('No estás autorizado.') 
+    const response = await fetch(`http://localhost:3000/reviews/softDelete/${reviewId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer: ${token}`
+      }
+    })
+    if (!response.ok) throw new Error('Error al hacer la petición.')
+    return true
+  } catch (error) {
+    console.log('Error en el deleteReviewOfHotel: ', error);
+    return false
+  }
+}

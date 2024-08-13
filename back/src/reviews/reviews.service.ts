@@ -11,6 +11,10 @@ export class ReviewsService {
     return await this.reviewRepository.getDbReviews();
   }
 
+  async searchReviews(hotelId: string, query: string) {
+    return await this.reviewRepository.searchReviews(hotelId, query);
+  }
+
   async getDbReviewById(id: string) {
     return await this.reviewRepository.getDbReviewById(id);
   }
@@ -29,5 +33,9 @@ export class ReviewsService {
 
   async getDbReviewDeleted(){
     return await this.reviewRepository.getDbReviewDeleted();
+  }
+
+  async softDeleteReview(id: string) {
+    return await this.reviewRepository.softDeleteReview(id);
   }
 }

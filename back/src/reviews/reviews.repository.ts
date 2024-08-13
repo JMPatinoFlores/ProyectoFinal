@@ -74,6 +74,25 @@ export class ReviewsRepository {
     return newReview.id;
   }
 
+  async searchReviews(hotelId: string, query?: string): Promise<Review[]> {
+    const queryBuilder = this.reviewsDbRepository
+      .createQueryBuilder('review')
+      .leftJoinAndSelect('review.customer', 'customer')
+      .where('review.hotel.id = :hotelId', { hotelId });
+
+    if (query) {
+      console.log('buscando reviews...');
+      const searchTerm = `%${query.toLowerCase()}%`;
+
+      queryBuilder
+        .andWhere('unaccent(LOWER(review.comment)) ILIKE unaccent(:searchTerm)', { searchTerm })
+        .orWhere('unaccent(LOWER(customer.name)) ILIKE unaccent(:searchTerm)', { searchTerm })
+        .orWhere('unaccent(LOWER(customer.lastName)) ILIKE unaccent(:searchTerm)', { searchTerm });
+    }
+
+    return await queryBuilder.getMany();
+  }
+
   async updateDbReview(
     id: string,
     updatereviewDto: Partial<UpdateReviewDto>,
@@ -148,5 +167,10 @@ export class ReviewsRepository {
     const average = totalRating / reviewList.length;
 
     return parseFloat(average.toFixed(2));
+  }
+
+  async softDeleteReview(id: string) {
+    await this.reviewsDbRepository.update({ id }, { isDeleted: true })
+    return true
   }
 }

@@ -8,6 +8,7 @@ import {
   IHotelAdminDetails,
   IHotelOfSuperAdmin,
   ILoginUser,
+  IReviewOfSuperAdmin,
   ISuperAdmin,
   ISuperAdminContextType,
 } from "@/interfaces";
@@ -16,12 +17,14 @@ import {
   deleteCustomer,
   deleteHotelAdmin,
   deleteHotelOfHotelAdmin,
+  deleteReviewOfHotel,
   getAllBookings,
   getAllCustomers,
   getAllHotelAdmins,
   getBookingsByCustomerId,
   getCustomerById,
   getHotelAdminById,
+  getHotelById,
   updateCustomerDetails,
   updateHotelAdminDetails,
   updateHotelDetails,
@@ -46,11 +49,13 @@ export const SuperAdminContext = createContext<ISuperAdminContextType>({
   fetchHotelAdmins: async () => Promise.resolve([] as IHotelAdminDetails[]),
   fetchDeleteHotelAdmin: async (hotelAdminId: string) =>
     Promise.resolve(false),
+  fetchDeleteReviewOfHotel: async (reviewId: string) => Promise.resolve(false),
   fetchDeleteCustomer: async (customerId: string) => Promise.resolve(false),
   fetchHotelAdminById: async (hotelAdminId: string) =>
     Promise.resolve(undefined),
   fetchCustomerById: async (customerId: string) =>
     Promise.resolve(undefined),
+  fetchHotelById: async (hotelId: string) => Promise.resolve(undefined),
   fetchDeleteHotelOfHotelAdmin: async (hotelId: string) =>
     Promise.resolve(false),
   fetchDeleteBookingOfCustomer: async (bookingId: string) =>
@@ -70,8 +75,10 @@ export const SuperAdminContext = createContext<ISuperAdminContextType>({
   ) => Promise.resolve(false),
   fetchHotelAdminsBySearch: async (searchQuery: string) =>
     Promise.resolve([] as IHotelAdminDetails[]),
+  fetchHotelsBySearch: async (searchQuery: string) => Promise.resolve([] as IHotelOfSuperAdmin[]),
   fetchCustomersBySearch: async (searchQuery: string) =>
     Promise.resolve([] as ICustomerDetails[]),
+  fetchReviewsBySearch: async (hotelId: string, searchQuery: string) => Promise.resolve([] as IReviewOfSuperAdmin[])
 });
 
 // SuperAdmin Provider
@@ -372,6 +379,7 @@ export const SuperAdminProvider = ({
     []
   );
 
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -381,6 +389,77 @@ export const SuperAdminProvider = ({
       setSuperAdmin(decodedToken);
     }
   }, []);
+  
+  const fetchHotelById = useCallback(
+    async (hotelId: string): Promise<IHotelOfSuperAdmin | undefined> => {
+      try {
+        const hotel = await getHotelById(hotelId);
+        return hotel;
+      } catch (error) {
+        console.log("Error en el fetchHotelById: ", error);
+        return undefined;
+      }
+    },
+    []
+  );
+
+  const fetchDeleteReviewOfHotel = useCallback(
+    async (reviewId: string): Promise<boolean> => {
+        const updated = await deleteReviewOfHotel(reviewId);
+        return updated;
+    },
+    []
+  );
+
+  const fetchHotelsBySearch = useCallback(
+    async (searchQuery: string): Promise<IHotelOfSuperAdmin[]> => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/hotels/search?search=${searchQuery}`
+        );
+        console.log(response);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          return data;
+        } else {
+          console.error("fetchHotelsBySearch did not return an array.");
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching hotels by search:", error);
+        return [];
+      }
+    }, []
+  )
+
+  const fetchReviewsBySearch = useCallback(
+    async (hotelId: string, searchQuery: string): Promise<IReviewOfSuperAdmin[]> => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/reviews/search?search=${searchQuery}&hotelId=${hotelId}`
+        );
+        console.log(response);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          return data;
+        } else {
+          console.error("fetchReviewsBySearch did not return an array.");
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching reviews by search:", error);
+        return [];
+      }
+    }, []
+  )
 
   return (
     <SuperAdminContext.Provider
@@ -400,6 +479,7 @@ export const SuperAdminProvider = ({
         fetchDeleteCustomer,
         fetchHotelAdminById,
         fetchCustomerById,
+        fetchHotelById,
         fetchDeleteHotelOfHotelAdmin,
         fetchDeleteBookingOfCustomer,
         fetchUpdateHotelDetails,
@@ -407,6 +487,9 @@ export const SuperAdminProvider = ({
         fetchUpdateCustomerDetails,
         fetchHotelAdminsBySearch,
         fetchCustomersBySearch,
+        fetchDeleteReviewOfHotel,
+        fetchHotelsBySearch,
+        fetchReviewsBySearch
       }}
     >
       {children}
