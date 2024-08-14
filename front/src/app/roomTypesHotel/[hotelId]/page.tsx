@@ -1,32 +1,31 @@
 "use client";
 
-import HotelsSuperAdmin from "@/components/HotelsSuperAdmin";
+import RoomTypesHotel from "@/components/RoomTypesSuperAdmin";
 import SearchBar from "@/components/SearchBar";
 import { useState } from "react";
 
-// `page.tsx` in `[hotelAdminId]` directory
 interface Props {
     params: {
-        hotelAdminId: string;
+        hotelId: string;
     };
 }
 
-function HotelsSuperAdminPage({ params }: Props) {
-    const { hotelAdminId } = params;
+function RoomTypesSuperAdminPage({ params }: Props) {
+    const { hotelId } = params;
     const [searchQuery, setSearchQuery] = useState<string>("");
 
     const handleSearch = (searchQuery: string) => {
         setSearchQuery(searchQuery);
     };
 
-    const placeholder = "Busca un hotel."
+    const placeholder = "Busca un tipo de cuarto."
 
     return (
         <div>
             <SearchBar placeholder={placeholder} onSearch={handleSearch} />
-            <HotelsSuperAdmin searchQuery={searchQuery} hotelAdminId={hotelAdminId} />
+            <RoomTypesHotel searchQuery={searchQuery} hotelId={hotelId} />
         </div>
     );
 }
 
-export default HotelsSuperAdminPage;
+export default RoomTypesSuperAdminPage;

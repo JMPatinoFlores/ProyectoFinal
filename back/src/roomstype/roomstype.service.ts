@@ -41,4 +41,7 @@ export class RoomsTypeService {
         return await this.roomsTypeDbRepository.getDbRoomstypeDeleted();
     }
 
+    async searchRoomTypes(hotelId: string, query: string) {
+        return await this.roomsTypeDbRepository.searchRoomTypes(hotelId, query);
+    }
 }
