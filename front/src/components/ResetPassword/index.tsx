@@ -1,10 +1,11 @@
 "use client";
 
+import { validateResetPassword } from "@/helpers/validateData";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-interface FormValues {
+export interface FormValues {
   newPassword: string;
   confirmPassword: string;
 }
@@ -71,7 +72,7 @@ export default function ResetPassword({ token }: ResetPasswordProps) {
         <h2 className="text-2xl font-semibold mb-6 text-center">
           Cambia tu contraseña
         </h2>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validateResetPassword}>
           {({ isSubmitting }) => (
             <Form>
               <div className="mb-4">

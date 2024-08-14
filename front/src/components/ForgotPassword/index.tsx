@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ILogin } from "@/interfaces";
 import { sendEmail } from "@/lib/server/fetchUsers";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { validateEmail } from "@/helpers/validateData";
 
 function ForgotPassword() {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +53,11 @@ function ForgotPassword() {
             <p className="text-sm text-gray-600 text-center mt-8 mb-6">
               Introduce tu correo electrónico para restablecer tu contraseña
             </p>
-            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            <Formik
+              initialValues={initialValues}
+              validate={validateEmail}
+              onSubmit={handleSubmit}
+            >
               {({ isSubmitting }) => (
                 <Form className="mb-6">
                   <div>

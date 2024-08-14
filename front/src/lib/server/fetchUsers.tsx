@@ -17,7 +17,7 @@ import {
 
 export const postCustomerRegister = async (user: Omit<IUser, "id">) => {
   try {
-    const response = await fetch("http://localhost:3000/auth/cxSignUp", {
+    const response = await fetch("https://back-rutaviajera.onrender.com/auth/cxSignUp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),
@@ -36,7 +36,7 @@ export const postCustomerRegister = async (user: Omit<IUser, "id">) => {
 
 export const postAdminRegister = async (user: Omit<IUser, "id">) => {
   try {
-    const response = await fetch("http://localhost:3000/auth/adminSignUp", {
+    const response = await fetch("https://back-rutaviajera.onrender.com/auth/adminSignUp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),
@@ -55,7 +55,7 @@ export const postAdminRegister = async (user: Omit<IUser, "id">) => {
 
 export const postLogin = async (credentials: ILogin) => {
   try {
-    const response = await fetch("http://localhost:3000/auth/SignIn", {
+    const response = await fetch("https://back-rutaviajera.onrender.com/auth/SignIn", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +77,7 @@ export const postLogin = async (credentials: ILogin) => {
 export const sendEmail = async (credentials: Partial<ILogin>) => {
   try {
     const response = await fetch(
-      "http://localhost:3000/auth/password-recovery",
+      "https://back-rutaviajera.onrender.com/auth/password-recovery",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -96,7 +96,7 @@ export const tokenVerified = async (
 ) => {
   try {
     const response = await fetch(
-      "http://localhost:3000/auth/api/reset-password",
+      "https://back-rutaviajera.onrender.com/auth/api/reset-password",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -114,7 +114,7 @@ export const postReview = async (review: ICreateReview) => {
   const token = getToken();
   console.log("Token:", token);
   try {
-    const response = await fetch("http://localhost:3000/reviews", {
+    const response = await fetch("https://back-rutaviajera.onrender.com/reviews", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -139,9 +139,11 @@ export const postReview = async (review: ICreateReview) => {
 
 export const getAllReviews = async () => {
   try {
-    const response = await fetch("http://localhost:3000/reviews");
+    const response = await fetch("https://back-rutaviajera.onrender.com/reviews");
     if (response.ok) {
       const data = await response.json();
+      console.log(data);
+
       return data;
     } else {
       throw new Error("Error en la solicitud: " + response.status);
@@ -152,15 +154,19 @@ export const getAllReviews = async () => {
   }
 };
 
-export const putUpdateProfile = async (userId: string, profileData: IEditProfileUser) => {
+export const putUpdateProfile = async (
+  userId: string,
+  profileData: IEditProfileUser
+) => {
   try {
-      const token = typeof window !== "undefined" && localStorage.getItem("token");
+    const token =
+      typeof window !== "undefined" && localStorage.getItem("token");
 
-    const response = await fetch(`http://localhost:3000/customers/${userId}`, {
+    const response = await fetch(`https://back-rutaviajera.onrender.com/customers/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(profileData),
     });
@@ -176,18 +182,24 @@ export const putUpdateProfile = async (userId: string, profileData: IEditProfile
     throw new Error("Error al actualizar el perfil");
   }
 };
-export const putUpdateProfileHotelier = async (userId: string, profileData: IEditProfileHotelier) => {
+export const putUpdateProfileHotelier = async (
+  userId: string,
+  profileData: IEditProfileHotelier
+) => {
   try {
-      const token = typeof window !== "undefined" && localStorage.getItem("token");
-
-    const response = await fetch(`http://localhost:3000/hotel-admins/${userId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      body: JSON.stringify(profileData),
-    });
+    const token =
+      typeof window !== "undefined" && localStorage.getItem("token");
+    const response = await fetch(
+      `http://localhost:3000/hotel-admins/${userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(profileData),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Error al actualizar el perfil");
