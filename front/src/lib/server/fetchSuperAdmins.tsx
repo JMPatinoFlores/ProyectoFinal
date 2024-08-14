@@ -311,6 +311,8 @@ export const deleteBookingOfCustomer = async (bookingId: string) => {
 
 export const getHotelById = async (hotelId: string) => {
   try {
+    console.log(hotelId);
+    
     const token = localStorage.getItem("token")
     if (!token) throw new Error('No estás autorizado.')
     console.log('Ejecutando getHotelById');

@@ -75,7 +75,7 @@ export const SuperAdminContext = createContext<ISuperAdminContextType>({
   ) => Promise.resolve(false),
   fetchHotelAdminsBySearch: async (searchQuery: string) =>
     Promise.resolve([] as IHotelAdminDetails[]),
-  fetchHotelsBySearch: async (searchQuery: string) => Promise.resolve([] as IHotelOfSuperAdmin[]),
+  fetchHotelsBySearch: async (hotelAdminId: string, searchQuery: string) => Promise.resolve([] as IHotelOfSuperAdmin[]),
   fetchCustomersBySearch: async (searchQuery: string) =>
     Promise.resolve([] as ICustomerDetails[]),
   fetchReviewsBySearch: async (hotelId: string, searchQuery: string) => Promise.resolve([] as IReviewOfSuperAdmin[])
@@ -412,10 +412,10 @@ export const SuperAdminProvider = ({
   );
 
   const fetchHotelsBySearch = useCallback(
-    async (searchQuery: string): Promise<IHotelOfSuperAdmin[]> => {
+    async (hotelAdminId: string, searchQuery: string): Promise<IHotelOfSuperAdmin[]> => {
       try {
         const response = await fetch(
-          `http://localhost:3000/hotels/search?search=${searchQuery}`
+          `http://localhost:3000/hotels/search?hotelAdminId=${hotelAdminId}&search=${searchQuery}`
         );
         console.log(response);
         

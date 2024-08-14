@@ -6,10 +6,10 @@ import { useContext } from "react";
 interface CustomerProps {
     customer: ICustomerDetails;
     handleViewDetails: (customer: ICustomerDetails) => void;
-    setFilteredCustomers: React.Dispatch<React.SetStateAction<ICustomerDetails[]>>;
+    setCustomers: React.Dispatch<React.SetStateAction<ICustomerDetails[]>>;
 }
 
-const Customer = ({ customer, handleViewDetails, setFilteredCustomers }: CustomerProps) => {
+const Customer = ({ customer, handleViewDetails, setCustomers }: CustomerProps) => {
     const { fetchDeleteCustomer, fetchCustomers } = useContext(SuperAdminContext);
 
     async function handleDelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -20,7 +20,7 @@ const Customer = ({ customer, handleViewDetails, setFilteredCustomers }: Custome
             const response = await fetchDeleteCustomer(customer.id);
             if (response) {
                 const customers = await fetchCustomers();
-                setFilteredCustomers(customers);
+                setCustomers(customers);
             } else {
                 alert('Hubo un error al eliminar al cliente.')
             }

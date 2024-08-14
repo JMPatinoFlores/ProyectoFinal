@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { Review } from './reviews.entity';
 import { CreateReviewDto } from './reviews.dtos';
 import { Hotel } from 'src/hotels/hotels.entity';
@@ -85,9 +85,14 @@ export class ReviewsRepository {
       const searchTerm = `%${query.toLowerCase()}%`;
 
       queryBuilder
-        .andWhere('unaccent(LOWER(review.comment)) ILIKE unaccent(:searchTerm)', { searchTerm })
-        .orWhere('unaccent(LOWER(customer.name)) ILIKE unaccent(:searchTerm)', { searchTerm })
-        .orWhere('unaccent(LOWER(customer.lastName)) ILIKE unaccent(:searchTerm)', { searchTerm });
+      .andWhere('review.isDeleted = false')
+      .andWhere(
+        new Brackets(qb => {
+            qb.where('unaccent(LOWER(review.comment)) ILIKE unaccent(:searchTerm)', { searchTerm })
+            .orWhere('unaccent(LOWER(customer.name)) ILIKE unaccent(:searchTerm)', { searchTerm })
+            .orWhere('unaccent(LOWER(customer.lastName)) ILIKE unaccent(:searchTerm)', { searchTerm });
+          })
+        )
     }
 
     return await queryBuilder.getMany();

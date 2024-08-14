@@ -145,7 +145,7 @@ const Customers = ({ searchQuery }: ICustomersProps) => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                     {paginatedCustomers.length > 0 ? (
                         paginatedCustomers.map((customer, index) => (
-                            <Customer key={index} handleViewDetails={handleViewDetails} setFilteredCustomers={setFilteredCustomers} customer={customer} />
+                            <Customer key={index} handleViewDetails={handleViewDetails} setCustomers={setCustomers} customer={customer} />
                         ))
                     ) : (
                         <p>No hay resultados que coincidan con su búsqueda.</p>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ISearchBarProps } from "@/interfaces";
 import Image from "next/image";
 
-function SearchBar({ onSearch }: ISearchBarProps) {
+function SearchBar({ onSearch, placeholder }: ISearchBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
@@ -19,6 +19,7 @@ function SearchBar({ onSearch }: ISearchBarProps) {
             <input
               type="search"
               value={searchQuery}
+              placeholder={placeholder}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex rounded-l-md bg-white text-black py-2 px-4 focus:outline-none  border border-red-600"
               style={{ borderRight: "none" }}
