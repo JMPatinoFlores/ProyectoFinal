@@ -146,7 +146,7 @@ const HotelAdmins = ({ searchQuery }: IHotelAdminsProps) => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                     {paginatedHotelAdmins.length > 0 ? (
                         paginatedHotelAdmins.map((hotelAdmin, index) => (
-                            <HotelAdmin key={index} handleViewDetails={handleViewDetails} setFilteredHotelAdmins={setFilteredHotelAdmins} hotelAdmin={hotelAdmin} />
+                            <HotelAdmin key={index} handleViewDetails={handleViewDetails} setHotelAdmins={setHotelAdmins} hotelAdmin={hotelAdmin} />
                         ))
                     ) : (
                         <p>No hay resultados que coincidan con su búsqueda.</p>

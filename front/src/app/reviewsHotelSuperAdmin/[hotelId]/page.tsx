@@ -17,9 +17,10 @@ function ReviewsOfHotelOfSuperAdmin({ params }: Props) {
     const handleSearch = (searchQuery: string) => {
         setSearchQuery(searchQuery);
     };
+    const placeholder = "Busca reseñas del hotel."
     return (
         <div>
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar placeholder={placeholder} onSearch={handleSearch} />
             <ReviewsHotelSuperAdmin searchQuery={searchQuery} hotelId={hotelId} />
         </div>
     );

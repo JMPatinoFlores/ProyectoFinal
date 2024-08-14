@@ -334,6 +334,7 @@ export interface ILocationDetail {
 
 export interface ISearchBarProps {
   onSearch: (query: string) => void;
+  placeholder: string;
 }
 
 export interface IHotelsFilterProps {
@@ -366,34 +367,14 @@ export interface ISuperAdminContextType {
     hotelAdminId: string
   ) => Promise<IHotelAdminDetails | undefined>;
   fetchHotelById: (hotelId: string) => Promise<IHotelOfSuperAdmin | undefined>;
-  fetchCustomerById: (
-    customerId: string
-  ) => Promise<ICustomerDetails | undefined>;
-  fetchDeleteHotelOfHotelAdmin: (
-    hotelId: string,
-    hotelAdminId: string
-  ) => Promise<boolean>;
-  fetchDeleteBookingOfCustomer: (
-    bookingId: string,
-    customerId: string
-  ) => Promise<boolean>;
-  fetchUpdateHotelDetails: (
-    hotelId: string,
-    selectedHotel: Partial<IHotelOfSuperAdmin> | null,
-    hotelAdminId: string
-  ) => Promise<boolean>;
-  fetchUpdateHotelAdminDetails: (
-    hotelAdminId: string,
-    selectedHotelAdmin: Partial<IHotelAdminDetails> | null
-  ) => Promise<boolean>;
-  fetchUpdateCustomerDetails: (
-    customerId: string,
-    selectedCustomer: Partial<ICustomerDetails> | null
-  ) => Promise<boolean>;
-  fetchHotelAdminsBySearch: (
-    searchQuery: string
-  ) => Promise<IHotelAdminDetails[]>;
-  fetchHotelsBySearch: (searchQuery: string) => Promise<IHotelOfSuperAdmin[]>;
+  fetchCustomerById: (customerId: string) => Promise<ICustomerDetails | undefined>;
+  fetchDeleteHotelOfHotelAdmin: (hotelId: string, hotelAdminId: string) => Promise<boolean>;
+  fetchDeleteBookingOfCustomer: (bookingId: string, customerId: string) => Promise<boolean>;
+  fetchUpdateHotelDetails: (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin> | null, hotelAdminId: string) => Promise<boolean>;
+  fetchUpdateHotelAdminDetails: (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null) => Promise<boolean>;
+  fetchUpdateCustomerDetails: (customerId: string, selectedCustomer: Partial<ICustomerDetails> | null) => Promise<boolean>;
+  fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>;
+  fetchHotelsBySearch: (hotelAdminId: string, searchQuery: string) => Promise<IHotelOfSuperAdmin[]>;
   fetchCustomersBySearch: (searchQuery: string) => Promise<ICustomerDetails[]>;
   fetchReviewsBySearch: (
     hotelId: string,

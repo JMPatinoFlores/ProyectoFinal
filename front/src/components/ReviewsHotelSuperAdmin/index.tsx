@@ -37,6 +37,10 @@ const ReviewsHotelSuperAdmin = ({ hotelId, searchQuery }: ReviewsHotelSuperAdmin
                 if (hotel && hotel.reviews) {
                     setHotel(hotel)
                     setReviews(hotel.reviews);
+                } else if (hotel) {
+                    setHotel(hotel)
+                    console.log(hotel);
+                    
                 } else {
                     console.warn('No reviews found for the given hotelId');
                 }
@@ -46,13 +50,15 @@ const ReviewsHotelSuperAdmin = ({ hotelId, searchQuery }: ReviewsHotelSuperAdmin
     }, [hotelId]);
 
     useEffect(() => {
-        const newReviews = reviews.map(review => {
-            return {
-                ...review,
-                date: review.date.split('-').join('/')
-            }
-        })
-        setFilteredReviews(newReviews);
+        if (!searchQuery) {
+            const newReviews = reviews.map(review => {
+                return {
+                    ...review,
+                    date: review.date.split('-').join('/')
+                }
+            })
+            setFilteredReviews(newReviews);
+        }
     }, [reviews]);
 
     useEffect(() => {
@@ -91,7 +97,7 @@ const ReviewsHotelSuperAdmin = ({ hotelId, searchQuery }: ReviewsHotelSuperAdmin
         <div className="flex-1 p-6">
             <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                 <h1 className="text-2xl text-center md:text-3xl font-bold flex-grow mb-4 md:mb-0">
-                    Reseñas del hotel {hotel?.name}
+                    Reseñas del hotel: {hotel?.name}
                 </h1>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
@@ -106,8 +112,12 @@ const ReviewsHotelSuperAdmin = ({ hotelId, searchQuery }: ReviewsHotelSuperAdmin
                                 <p className="font-bold pr-2">Fecha:</p>
                                 <p>{review.date}</p>
                             </div>
-
-                            <Rating rating={review.rating.toString()} />
+                            <div className="flex">
+                                <p className="font-bold pr-2">Calificación:</p>
+                                <div className="flex items-center justify-center">
+                                    <Rating rating={review.rating.toString()} />
+                                </div>
+                            </div>
                         </div>
                         <div className="flex flex-wrap gap-2 mt-auto">
                             <button

@@ -46,12 +46,12 @@ const HotelsSuperAdmin = ({ hotelAdminId, searchQuery }: HotelsSuperAdminProps) 
     }, [hotelAdminId]);
 
     useEffect(() => {
-        setFilteredHotels(hotels)
+        if (!searchQuery) setFilteredHotels(hotels)
     }, [hotels])
 
     useEffect(() => {
         if (searchQuery) {
-            fetchHotelsBySearch(searchQuery).then((data) => {
+            fetchHotelsBySearch(hotelAdminId, searchQuery).then((data) => {
                 if (Array.isArray(data)) {
                     setFilteredHotels(data);
                 } else {

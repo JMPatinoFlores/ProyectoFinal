@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Hotel } from './hotels.entity';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { CreateHotelDto } from './hotels.dtos';
 import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
 import { UpdateHotelDto } from './hotels.updateDto';
@@ -53,7 +53,12 @@ export class HotelsRepository {
       .leftJoinAndSelect('reviews.customer', 'customer') // Join with the customer related to the review
       .where('hotel.id = :id', { id })
       .andWhere('hotel.isDeleted = false')
-      .andWhere('reviews.isDeleted = false')
+      .andWhere(
+        new Brackets(qb => {
+          qb.where('reviews.isDeleted = false')
+            .orWhere('reviews.id IS NULL');
+        })
+      )
       .getOne();
 
     if (!hotelFound) {
@@ -96,7 +101,7 @@ export class HotelsRepository {
     return newHotel.id;
   }
 
-  async searchHotels(query?: string): Promise<Hotel[]> {
+  async searchHotels(hotelAdminId: string, query?: string): Promise<Hotel[]> {
     if (!query) {
       return [];
     }
@@ -105,18 +110,28 @@ export class HotelsRepository {
 
     return await this.hotelDbRepository
       .createQueryBuilder('hotel')
-      .where('unaccent(LOWER(hotel.name)) ILIKE unaccent(:searchTerm)', {
-        searchTerm,
-      })
-      .orWhere('unaccent(LOWER(hotel.country)) ILIKE unaccent(:searchTerm)', {
-        searchTerm,
-      })
-      .orWhere('unaccent(LOWER(hotel.city)) ILIKE unaccent(:searchTerm)', {
-        searchTerm,
-      })
-      .orWhere(
-        'unaccent(LOWER(hotel.description)) ILIKE unaccent(:searchTerm)',
-        { searchTerm },
+      .leftJoinAndSelect('hotel.hotelAdmin', 'hotelAdmin')
+      .where('hotelAdmin.id = :hotelAdminId', { hotelAdminId })
+      .andWhere('hotel.isDeleted = false')
+      .andWhere(
+        new Brackets(qb => {
+          qb.where('unaccent(LOWER(hotel.country)) ILIKE unaccent(:searchTerm)', {
+            searchTerm,
+          })
+          .orWhere('unaccent(LOWER(hotel.name)) ILIKE unaccent(:searchTerm)', {
+            searchTerm,
+          })
+          .orWhere('unaccent(LOWER(hotel.email)) ILIKE unaccent(:searchTerm)', {
+            searchTerm,
+          })
+          .orWhere('unaccent(LOWER(hotel.city)) ILIKE unaccent(:searchTerm)', {
+            searchTerm,
+          })
+          .orWhere(
+            'unaccent(LOWER(hotel.description)) ILIKE unaccent(:searchTerm)',
+            { searchTerm },
+          )
+        })
       )
       .getMany();
   }
@@ -166,7 +181,7 @@ export class HotelsRepository {
     if (!foundHotel) throw new NotFoundException('Hotel not found');
     if (foundHotel.isDeleted === true)
       throw new BadRequestException('Hotel was eliminated');
-    await this.hotelDbRepository.update(id, { isDeleted: true });
+    await this.hotelDbRepository.update({id}, { isDeleted: true });
     return id;
   }
 
