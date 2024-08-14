@@ -1,50 +1,231 @@
+"use client";
+
+import { UserContext } from "@/context/userContext";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
+import { useContext, useState } from "react";
 
 function Navbar() {
-  return (
-    <header className="flex items-center h-16 px-4 bg-[#F1F1F1] bg-opacity-5">
-      <Link
-        href="/"
-        className="flex items-center gap-2 font-semibold md:text-base "
-      >
-        <img src="/logo.png" alt="Logo" className="w-6 h-6 mr-5" />
-      </Link>
+  const [isOpen, setIsOpen] = useState(false);
+  const { isLogged, logOut } = useContext(UserContext);
+  const { data: session } = useSession();
 
-      <nav className="text-md font-medium">
-        <Link
-          href="#"
-          className="font-medium mr-6 hover:text-[#f83f3a] hover:border-b-2 hover:border-[#f83f3a] transition duration-300"
-        >
-          Inicio
+  if (session) {
+    return (
+      <div className="h-16 header sticky top-0 bg-white shadow-md flex items-center justify-between px-8 py-02 z-50">
+        <Link href="/" className="flex w-3/12 items-center">
+          <Image
+            src={"/logo.png"}
+            alt="logo"
+            width={40}
+            height={40}
+            className="hover:scale-105 hover:rotate-12 transition duration-100"
+            style={{ width: "auto", height: "auto" }}
+          />
+          <h2 className=" hover:text-red-500 duration-200 font-semibold text-lg p-2">
+            RutaViajera{" "}
+          </h2>
         </Link>
-        <Link
-          href="#"
-          className="font-medium mr-6 hover:text-[#f83f3a] hover:border-b-2 hover:border-[#f83f3a] transition duration-300"
-        >
-          Mapa
-        </Link>
-        <Link
-          href="#"
-          className="font-medium mr-6 hover:text-[#f83f3a] hover:border-b-2 hover:border-[#f83f3a] transition duration-300"
-        >
-          Mis reservas
-        </Link>
-      </nav>
-
-      <div className="relative flex-1 ml-auto sm:flex-initial">
-        <input
-          type="search"
-          placeholder="Buscar..."
-          className="pl-8 py-1 w-[300px] border border-2px border-[#000000] rounded-md"
-        />
-        <Link href="#">
-          <button className=" bg-[#f83f3a] text-white rounded-md p-1 px-2 ml-3 hover:bg-[#e63946]">
-            Iniciar Sesión
-          </button>
-        </Link>
+        <div className="hidden md:flex text-lg font-medium">
+          <div className="flex items-center">
+            <Link
+              href="/home"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer active"
+            >
+              Inicio
+            </Link>
+            <Link
+              href="/services"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Servicios
+            </Link>
+            <Link
+              href="/recommendations"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Recomendaciones
+            </Link>
+            <Link
+              href="/team"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Nosotros
+            </Link>
+          </div>
+        </div>
+        <div className="w-3/12 hidden md:flex justify-end items-center">
+          <Link
+            href="/dashboard"
+            className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+          >
+            Panel de control
+          </Link>
+            <button
+              onClick={logOut}
+              className="p-2 flex justify-center items-center text-white rounded-md bg-red-500 hover:bg-red-600 font-medium"
+            >
+              <Image
+                src={"/logout.png"}
+                alt="logout"
+                width={24}
+                height={24}
+                className="mr-2"
+              />
+              Salir
+            </button>
+        </div>
       </div>
-    </header>
-  );
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="h-16 header sticky top-0 bg-white shadow-md flex items-center justify-between px-8 py-02 z-50">
+        <Link href="/" className="flex w-3/12 items-center">
+          <Image
+            src={"/logo.png"}
+            alt="logo"
+            width={40}
+            height={40}
+            className="hover:scale-105 hover:rotate-12 transition duration-100"
+            style={{ width: "auto", height: "auto" }}
+          />
+          <h2 className=" hover:text-red-500 duration-200 font-semibold text-lg p-2">
+            RutaViajera{" "}
+          </h2>
+        </Link>
+        <div className="hidden md:flex text-lg font-medium">
+          <div className="flex items-center">
+            <Link
+              href="/home"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer active"
+            >
+              Inicio
+            </Link>
+            <Link
+              href="/services"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Servicios
+            </Link>
+            <Link
+              href="/recommendations"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Recomendaciones
+            </Link>
+            <Link
+              href="/team"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Nosotros
+            </Link>
+          </div>
+        </div>
+        {isLogged ? (
+          <div className="w-3/12 hidden md:flex justify-end items-center">
+            <Link
+              href="/dashboard"
+              className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+            >
+              Panel de control
+            </Link>
+              <button
+                onClick={logOut}
+                className="p-2 flex justify-center items-center text-white rounded-md bg-red-500 hover:bg-red-600 font-medium"
+              >
+                <Image
+                  src={"/logout.png"}
+                  alt="logout"
+                  width={24}
+                  height={24}
+                  className="mr-2"
+                />
+                Salir
+              </button>
+          </div>
+        ) : (
+          <div className="w-3/12 hidden md:flex justify-end items-center font-medium">
+            <div>
+              <Link href="/login">
+                <button className="mr-2 hover:text-red-500 duration-200 text-lg p-2">
+                  Ingresar
+                </button>
+              </Link>
+              <Link href="/register">
+                <button className="p-2 text-white rounded-md bg-red-500 hover:bg-red-600">
+                  Registrarse
+                </button>
+              </Link>
+            </div>
+          </div>
+        )}
+
+        <div className="md:hidden">
+          <button onClick={() => setIsOpen(!isOpen)} className="text-red-500">
+            <Image src={"/menu.png"} alt="menu" width={32} height={32} />
+          </button>
+        </div>
+        {isOpen && (
+          <div className="absolute top-20 left-0 w-full bg-white shadow-md md:hidden">
+            <div className="flex flex-col justify-center items-center">
+              <Link
+                href="/home"
+                className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer active"
+              >
+                Inicio
+              </Link>
+              <Link
+                href="/services"
+                className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+              >
+                Servicios
+              </Link>
+              <Link
+                href="/recommendations"
+                className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+              >
+                Recomendaciones
+              </Link>
+              <Link
+                href="/team"
+                className="p-4 border-b-2 border-red-500 border-opacity-0 hover:border-opacity-100 hover:text-red-500 duration-200 cursor-pointer"
+              >
+                Nosotros
+              </Link>
+              {isLogged ? (
+                <div className="flex justify-center">
+                  <Link href="/">
+                    <button
+                      onClick={logOut}
+                      className="p-2 flex justify-center items-center font-medium text-red-700"
+                    >
+                      Cerrar sesión
+                    </button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center">
+                  <Link href="/login">
+                    <button className="p-2 flex flex-col justify-center items-center font-medium">
+                      Iniciar sesión
+                    </button>
+                  </Link>
+                  <Link href="/register">
+                    <button className="p-2 flex justify-center items-center font-medium text-red-700">
+                      Registrarse
+                    </button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 }
 
 export default Navbar;

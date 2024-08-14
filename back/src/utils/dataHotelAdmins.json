@@ -1,0 +1,222 @@
+[
+  {
+    "name": "Administrador",
+    "lastName": "España",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "España",
+    "city": "Santiago de Compostela",
+    "address": "Praza de Camilo Díaz Baliño, 17, 1570",
+    "email": "admin1@mail.es",
+    "phone": "+34 619 20 92 61"
+  },
+  {
+    "name": "Administrador",
+    "lastName": "Ecuador",
+    "email": "admin1@mail.ec",
+    "password": "Aa123456+",
+    "country": "Ecuador",
+    "city": "Quito",
+    "address": "Mallorca N24-275 y Coruña (La Floresta)",
+    "birthDate": "01/01/1990",
+    "phone": "0997977072"
+  },
+  {
+    "name": "Administrador",
+    "lastName": "México",
+    "email": "admin1@mail.mx",
+    "password": "Aa123456+",
+    "country": "México",
+    "city": "Cancún",
+    "address": "Blvd. Kukulcan 9, Punta Cancun",
+    "birthDate": "01/01/1990",
+    "phone": "+52 656 257 1700"
+  },
+  {
+    "name": "Administrador",
+    "lastName": "Perú",
+    "email": "admin1@mail.pe",
+    "password": "Aa123456+",
+    "country": "Perú",
+    "city": "Lima",
+    "address": "Av Giuseppe Garibaldi 396, Jesús María 15072",
+    "birthDate": "01/01/1990",
+    "phone": "(511) 219-1600"
+  },
+  {
+    "name": "Marta",
+    "lastName": "Lopez",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Argentina",
+    "city": "Bogotá",
+    "address": "Street 32, City Center",
+    "email": "marta.lopez@mail.com",
+    "phone": "+944 532 897 436"
+  },
+  {
+    "name": "Sofia",
+    "lastName": "Torres",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Argentina",
+    "city": "Montevideo",
+    "address": "Street 87, City Center",
+    "email": "sofia.torres@mail.com",
+    "phone": "+904 411 465 485"
+  },
+  {
+    "name": "Marta",
+    "lastName": "Torres",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Argentina",
+    "city": "Lima",
+    "address": "Street 86, City Center",
+    "email": "marta.torres@mail.com",
+    "phone": "+301 403 816 578"
+  },
+  {
+    "name": "Laura",
+    "lastName": "Fernandez",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Colombia",
+    "city": "Buenos Aires",
+    "address": "Street 86, City Center",
+    "email": "laura.fernandez@mail.com",
+    "phone": "+783 303 258 557"
+  },
+  {
+    "name": "Laura",
+    "lastName": "Lopez",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "México",
+    "city": "Lima",
+    "address": "Street 50, City Center",
+    "email": "laura.lopez@mail.mx",
+    "phone": "+308 574 334 929"
+  },
+  {
+    "name": "Maria",
+    "lastName": "Ramos",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Uruguay",
+    "city": "Bogotá",
+    "address": "Street 58, City Center",
+    "email": "maria.ramos@mail.uy",
+    "phone": "+393 348 819 658"
+  },
+  {
+    "name": "Ana",
+    "lastName": "Lopez",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Uruguay",
+    "city": "Buenos Aires",
+    "address": "Street 85, City Center",
+    "email": "ana.lopez@mail.uy",
+    "phone": "+945 575 658 352"
+  },
+  {
+    "name": "Luis",
+    "lastName": "Martinez",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Perú",
+    "city": "Montevideo",
+    "address": "Street 56, City Center",
+    "email": "luis.martinez@mail.pe",
+    "phone": "+212 504 242 885"
+  },
+  {
+    "name": "Juan",
+    "lastName": "Vazquez",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "España",
+    "city": "Bogotá",
+    "address": "Street 29, City Center",
+    "email": "juan.vazquez@mail.es",
+    "phone": "+212 421 435 406"
+  },
+  {
+    "name": "Pedro",
+    "lastName": "Ramos",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "España",
+    "city": "Santiago",
+    "address": "Street 59, City Center",
+    "email": "pedro.ramos@mail.es",
+    "phone": "+979 984 124 862"
+  },
+  {
+    "name": "Luis",
+    "lastName": "Martinez",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Argentina",
+    "city": "Santiago",
+    "address": "Street 34, City Center",
+    "email": "luis.martinez@mail.ar",
+    "phone": "+277 630 279 671"
+  },
+  {
+    "name": "Ana",
+    "lastName": "Torres",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Perú",
+    "city": "Bogotá",
+    "address": "Street 18, City Center",
+    "email": "ana.torres@mail.pe",
+    "phone": "+560 284 295 973"
+  },
+  {
+    "name": "Esteban",
+    "lastName": "García",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Chile",
+    "city": "Santiago",
+    "address": "Avenida Los Libertadores 900, 750",
+    "email": "esteban.garcia@mail.cl",
+    "phone": "+56 2 2934 5678"
+  },
+  {
+    "name": "Carla",
+    "lastName": "Silva",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Brazil",
+    "city": "São Paulo",
+    "address": "Avenida Paulista 1234, Centro",
+    "email": "carla.silva@mail.br",
+    "phone": "+55 11 98765 4321"
+  },
+  {
+    "name": "Roberto",
+    "lastName": "Martínez",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Paraguay",
+    "city": "Asunción",
+    "address": "Calle Palma 456, Zona Centro",
+    "email": "roberto.martinez@mail.py",
+    "phone": "+595 21 234 567"
+  },
+  {
+    "name": "Sofia",
+    "lastName": "Ramírez",
+    "birthDate": "01/01/1990",
+    "password": "Aa123456+",
+    "country": "Bolivia",
+    "city": "La Paz",
+    "address": "Avenida Arce 789, Edificio Centenario",
+    "email": "sofia.ramirez@mail.bo",
+    "phone": "+591 2 345 6789"
+  }
+]
