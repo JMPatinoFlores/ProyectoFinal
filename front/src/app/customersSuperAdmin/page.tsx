@@ -11,7 +11,7 @@ function CustomersSuperAdmin() {
         setSearchQuery(searchQuery);
     };
 
-    const placeholder = "Busca clientes."
+    const placeholder = "Busca un cliente."
 
     return (
         <div>

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RoomsType } from "./roomstype.entity";
-import { Repository } from "typeorm";
+import { Brackets, Repository } from "typeorm";
 import { CreateRoomTypeDto } from "./roomstype.dtos";
 import { Hotel } from "src/hotels/hotels.entity";
 import { UpdateRoomsTypeDto } from "./romstype.udpateDto";
@@ -49,7 +49,7 @@ export class RoomsTypeRepository {
         const { hotelId, name, price, ...roomtypeData } = roomtypeDto;
         console.log('Received room type DTO:', roomtypeDto);
 
-        const nameRoomtypeFound = await this.roomstypeDbRepository.findOne({ where: { name: name, hotel: {id: hotelId} } });
+        const nameRoomtypeFound = await this.roomstypeDbRepository.findOne({ where: { name: name, hotel: { id: hotelId } } });
         console.log('Existing room type found:', nameRoomtypeFound);
         if (nameRoomtypeFound) throw new BadRequestException("this roomtype already exists");
 
@@ -78,15 +78,9 @@ export class RoomsTypeRepository {
     }
 
     async updateDbRoomstype(id: string, updateDbRoomstype: Partial<UpdateRoomsTypeDto>): Promise<string> {
-        const { hotelId, ...roomstypeData } = updateDbRoomstype;
         const roomstypeFound = await this.roomstypeDbRepository.findOne({ where: { id } });
         if (!roomstypeFound) throw new NotFoundException("Roomstype does not exists")
-        const hotelFound: Hotel = await this.hotelDbRepository.findOne({ where: { id: hotelId } });
-        if (!hotelFound) throw new NotFoundException("Hotel does not found");
-        await this.roomstypeDbRepository.update(id, {
-            ...roomstypeData,
-            hotel: hotelFound
-        });
+        await this.roomstypeDbRepository.update({id}, {...updateDbRoomstype});
         return id;
     }
 
@@ -94,7 +88,7 @@ export class RoomsTypeRepository {
         const roomtypeFound: RoomsType = await this.roomstypeDbRepository.findOne({ where: { id } });
         if (!roomtypeFound) throw new NotFoundException("Roomtype not found");
         if (roomtypeFound.isDeleted === true) throw new BadRequestException("RoomsType was eliminated");
-        await this.roomstypeDbRepository.update(id, { isDeleted: true });
+        await this.roomstypeDbRepository.update({ id }, { isDeleted: true });
         return id;
     }
 
@@ -113,6 +107,23 @@ export class RoomsTypeRepository {
             return listRoomstype;
         }
         else throw new NotFoundException("There are not roomstype");
+    }
+
+    async searchRoomTypes(hotelId: string, query?: string): Promise<RoomsType[]> {
+        const queryBuilder = this.roomstypeDbRepository
+            .createQueryBuilder('roomtype')
+            .where('roomtype.hotel.id = :hotelId', { hotelId });
+
+        if (query) {
+            console.log('buscando room types...');
+            const searchTerm = `%${query.toLowerCase()}%`;
+
+            queryBuilder
+                .andWhere('roomtype.isDeleted = false')
+                .andWhere('unaccent(LOWER(roomtype.name)) ILIKE unaccent(:searchTerm)', { searchTerm })
+        }
+
+        return await queryBuilder.getMany();
     }
 
 } 
