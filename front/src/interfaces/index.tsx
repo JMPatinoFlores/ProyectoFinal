@@ -127,7 +127,7 @@ export interface ICreateNumberOfRoom {
   roomsTypeId: string;
 }
 export interface IRoomType {
-  id: string | number | readonly string[] | undefined;
+  id: string;
   roomTypeId: string;
   name: string;
   capacity: number;

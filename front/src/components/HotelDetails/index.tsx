@@ -9,7 +9,7 @@ import Image from "next/image";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { validateFormBooking } from "@/helpers/validateData";
 import { useEffect, useState } from "react";
-import { getRoomTypesByHotelId, postBooking } from "@/lib/server/fetchHotels";
+import { postBooking } from "@/lib/server/fetchHotels";
 import GatewayPayment from "../PaymentGateaway";
 import { FaStar } from "react-icons/fa";
 
@@ -27,7 +27,6 @@ const extendedValidateFormBooking = (values: ICreateBooking) => {
 
   const today = getTodayDate();
 
-  // Validation for the roomTypesIdsAndDates array
   if (values.roomTypesIdsAndDates.length === 0) {
     errors.roomTypesIdsAndDates = [
       { roomTypeId: "", checkInDate: "", checkOutDate: "" },
@@ -64,7 +63,6 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
   const { isLoaded, mapCenter, marker } = useGoogleMapsDataLocation(hotel);
   const [userId, setUserId] = useState<string | null>(null);
   const [roomTypes, setRoomTypes] = useState<IRoomType[]>([]);
-  const [selectedHotelId, setSelectedHotelId] = useState<string>("");
   const [showConfirmBooking, setShowConfirmBooking] = useState(false);
 
   useEffect(() => {
@@ -79,7 +77,6 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
 
   useEffect(() => {
     if (hotel) {
-      // Usa roomstype directamente del hotel
       setRoomTypes(hotel.roomstype || []);
     }
   }, [hotel]);
@@ -91,7 +88,6 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
       { roomTypeId: "", checkInDate: "", checkOutDate: "" },
     ],
   };
-
 
   const handleSubmit = async (booking: ICreateBooking) => {
     const formData = {
@@ -212,6 +208,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
                                 {roomType.capacity}; Baños:{" "}
                                 {roomType.totalBathrooms}; Camas:{" "}
                                 {roomType.totalBeds}
+                              </option>
                             ))
                           ) : (
                             <option value="">
@@ -299,50 +296,48 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
             <h1>Tipos de habitación</h1>
             <div className="flex flex-wrap justify-center gap-4">
               {roomTypes.length > 0 ? (
-                roomTypes.map((roomType) => {
-                  console.log(roomType.images[0]);
-                  return (
-                    <div className="w-64 bg-white shadow-md rounded-lg overflow-hidden">
-                      {roomType.images && roomType.images.length > 0 ? (
-                        <div className="h-40 w-full bg-gray-200 overflow-hidden">
-                          <Image
-                            unoptimized
-                            src={roomType.images[0]}
-                            alt={hotel.name}
-                            width={400}
-                            height={300}
-                            className="object-cover w-full h-full"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-full h-40 bg-gray-200 flex items-center justify-center">
-                          <span className="text-gray-500">
-                            Imagen no disponible
-                          </span>
-                        </div>
-                      )}
-                      <div className="p-4">
-                        <h2 className="text-lg font-semibold">
-                          {roomType.name}
-                        </h2>
-                        <p className="text-gray-600 text-sm mb-2">
-                          ${roomType.price}/noche
-                        </p>
-                        <p className="text-gray-600 text-xs mb-1">
-                          Capacidad: {roomType.capacity}
-                        </p>
-                        <p className="text-gray-600 text-xs mb-1">
-                          Camas: {roomType.totalBeds}
-                        </p>
-                        <p className="text-gray-600 text-xs mb-1">
-                          Baños: {roomType.totalBathrooms}
-                        </p>
+                roomTypes.map((roomType) => (
+                  <div
+                    key={roomType.id}
+                    className="w-64 bg-white shadow-md rounded-lg overflow-hidden"
+                  >
+                    {roomType.images && roomType.images.length > 0 ? (
+                      <div className="h-40 w-full bg-gray-200 overflow-hidden">
+                        <Image
+                          unoptimized
+                          src={roomType.images[0]}
+                          alt={hotel.name}
+                          width={400}
+                          height={300}
+                          className="object-cover w-full h-full"
+                        />
                       </div>
+                    ) : (
+                      <div className="w-full h-40 bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500">
+                          Imagen no disponible
+                        </span>
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <h2 className="text-lg font-semibold">{roomType.name}</h2>
+                      <p className="text-gray-600 text-sm mb-2">
+                        ${roomType.price}/noche
+                      </p>
+                      <p className="text-gray-600 text-xs mb-1">
+                        Capacidad: {roomType.capacity}
+                      </p>
+                      <p className="text-gray-600 text-xs mb-1">
+                        Camas: {roomType.totalBeds}
+                      </p>
+                      <p className="text-gray-600 text-xs mb-1">
+                        Baños: {roomType.totalBathrooms}
+                      </p>
                     </div>
-                  );
-                })
+                  </div>
+                ))
               ) : (
-                <option value="">No hay tipos de habitación disponibles</option>
+                <p>No hay tipos de habitación disponibles</p>
               )}
             </div>
           </div>
