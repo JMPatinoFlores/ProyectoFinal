@@ -6,10 +6,10 @@ import { useContext } from "react";
 interface HotelAdminProps {
     hotelAdmin: IHotelAdminDetails;
     handleViewDetails: (hotelAdmin: IHotelAdminDetails) => void;
-    setFilteredHotelAdmins: React.Dispatch<React.SetStateAction<IHotelAdminDetails[]>>;
+    setHotelAdmins: React.Dispatch<React.SetStateAction<IHotelAdminDetails[]>>;
 }
 
-const HotelAdmin = ({ hotelAdmin, handleViewDetails, setFilteredHotelAdmins }: HotelAdminProps) => {
+const HotelAdmin = ({ hotelAdmin, handleViewDetails, setHotelAdmins }: HotelAdminProps) => {
     const { fetchDeleteHotelAdmin, fetchHotelAdmins } = useContext(SuperAdminContext);
 
     async function handleDelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -20,7 +20,7 @@ const HotelAdmin = ({ hotelAdmin, handleViewDetails, setFilteredHotelAdmins }: H
             const response = await fetchDeleteHotelAdmin(hotelAdmin.id);
             if (response) {
                 const hotelAdmins = await fetchHotelAdmins();
-                setFilteredHotelAdmins(hotelAdmins);
+                setHotelAdmins(hotelAdmins);
             } else {
                 alert('Hubo un error al eliminar el administrador de hotel.')
             }

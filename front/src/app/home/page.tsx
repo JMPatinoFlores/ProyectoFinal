@@ -33,9 +33,11 @@ function Home() {
     setQueryParams(query);
   }
 
+  const placeholder = "Busca hoteles."
+
   return (
     <div>
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar placeholder={placeholder} onSearch={handleSearch} />
       <ProductsList queryParams={queryParams} searchQuery={searchQuery} />
       <HotelsFilter onFilter={buildQueryString} />
     </div>

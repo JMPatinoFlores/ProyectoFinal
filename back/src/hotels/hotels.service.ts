@@ -23,8 +23,8 @@ export class HotelsService {
     return await this.hotelsDbRepository.createDbHotel(hotelDto);
   }
 
-  async searchHotels(query: string) {
-    return await this.hotelsDbRepository.searchHotels(query);
+  async searchHotels(hotelAdminId: string, query: string) {
+    return await this.hotelsDbRepository.searchHotels(hotelAdminId, query);
   }
 
   async getFilteredHotels(rating: number, country: string, city: string, minPrice: number, maxPrice: number) {
