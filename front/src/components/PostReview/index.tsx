@@ -55,10 +55,19 @@ export function PostReview() {
             initialValues={initialValues}
             onSubmit={handleSubmit}
             validate={(values) => {
-              const errors: Partial<IReview> = {};
-              if (values.rating === 0) {
-                alert("Selecciona tu calificación");
+              const errors: Partial<IPostReview> = {};
+
+              // Validación del comentario
+              if (!values.comment) {
+                errors.comment = "Comentario requerido";
+              } else if (values.comment.length > 100) {
+                errors.comment =
+                  "El comentario no debe tener más de 100 caracteres";
               }
+              if (values.rating < 1 || values.rating > 5) {
+                errors.rating = "Selecciona tu puntuación";
+              }
+
               return errors;
             }}
           >
@@ -82,7 +91,6 @@ export function PostReview() {
                             onClick={() => {
                               setFieldValue("rating", currentRate);
                               setRating(currentRate);
-                              console.log("Rating: ", currentRate);
                             }}
                           />
                           <FaStar

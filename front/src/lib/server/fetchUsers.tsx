@@ -142,6 +142,8 @@ export const getAllReviews = async () => {
     const response = await fetch("https://back-rutaviajera.onrender.com/reviews");
     if (response.ok) {
       const data = await response.json();
+      console.log(data);
+
       return data;
     } else {
       throw new Error("Error en la solicitud: " + response.status);
@@ -152,15 +154,19 @@ export const getAllReviews = async () => {
   }
 };
 
-export const putUpdateProfile = async (userId: string, profileData: IEditProfileUser) => {
+export const putUpdateProfile = async (
+  userId: string,
+  profileData: IEditProfileUser
+) => {
   try {
-      const token = typeof window !== "undefined" && localStorage.getItem("token");
+    const token =
+      typeof window !== "undefined" && localStorage.getItem("token");
 
     const response = await fetch(`https://back-rutaviajera.onrender.com/customers/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(profileData),
     });
@@ -176,18 +182,24 @@ export const putUpdateProfile = async (userId: string, profileData: IEditProfile
     throw new Error("Error al actualizar el perfil");
   }
 };
-export const putUpdateProfileHotelier = async (userId: string, profileData: IEditProfileHotelier) => {
+export const putUpdateProfileHotelier = async (
+  userId: string,
+  profileData: IEditProfileHotelier
+) => {
   try {
-      const token = typeof window !== "undefined" && localStorage.getItem("token");
-
-    const response = await fetch(`https://back-rutaviajera.onrender.com/hotel-admins/${userId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      body: JSON.stringify(profileData),
-    });
+    const token =
+      typeof window !== "undefined" && localStorage.getItem("token");
+    const response = await fetch(
+      `http://localhost:3000/hotel-admins/${userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(profileData),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Error al actualizar el perfil");
