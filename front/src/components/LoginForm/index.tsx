@@ -11,12 +11,39 @@ import { useRouter } from "next/navigation";
 import ForgotPassword from "../ForgotPassword";
 import GoogleLoginButton from "../GoogleLoginButton";
 import { SuperAdminContext } from "@/context/superAdminContext";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContent, ToastOptions, Slide, Id } from "react-toastify";
 
+export const defaultToastOptions: ToastOptions = {
+  position: "top-center",
+  autoClose: 1000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: false,
+  draggable: true,
+  progress: undefined,
+  theme: "colored",
+  transition: Slide,
+};
+type ToastType = "success" | "error" | "info" | "warning" | "default";
+
+export const showToast = (
+  type: ToastType,
+  content: ToastContent,
+  options: Partial<ToastOptions> = {}
+): Id | undefined => {
+  const optionsToApply = { ...defaultToastOptions, ...options };
+  switch (type) {
+    case "success":
+      return toast.success(content, optionsToApply);
+    case "error":
+      return toast.error(content, optionsToApply);
+  }
+};
 export default function LoginForm() {
-  const { login } = useContext(UserContext);
-  const {signIn} = useContext(SuperAdminContext)
+  const { login, user } = useContext(UserContext);
+  const { signIn } = useContext(SuperAdminContext);
   const router = useRouter();
-
   const initialValues: ILogin = {
     email: "",
     password: "",
@@ -27,27 +54,21 @@ export default function LoginForm() {
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
     try {
-      const success = await login(values)
+      const success = await login(values);
       if (success) {
-        alert("Iniciaste sesión correctamente");
+        showToast("success", <p>¡Bienvenido!</p>);
         router.push("/home");
       } else {
-        alert("Error al iniciar sesión");
-      }
-      if (!success) {
-        const access = await signIn(values)
+        const access = await signIn(values);
         if (access) {
-          alert('Iniciaste sesión correctamente')
-          router.push("/superAdmin")
+          alert("Iniciaste sesión correctamente");
+          router.push("/superAdmin");
         } else {
-          alert("Error al iniciar sesión")
+          showToast("error", <p>Correo o contraseña incorrectos</p>);
         }
       }
       setSubmitting(false);
-    } catch (error) {
-      
-    }
-
+    } catch (error) {}
   };
 
   return (
