@@ -16,6 +16,8 @@ import {
 } from "@/lib/server/fetchUsers";
 import { jwtDecode } from "jwt-decode";
 import { createContext, useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export const UserContext = createContext<IUserContextType>({
   user: null,
@@ -110,17 +112,29 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
+  const router = useRouter();
   const logOut = () => {
-    const confirm = window.confirm("¿Seguro que quieres cerrar sesión?");
-    if (confirm) {
+    const confirm = Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Tu sesión se cerrará.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if(result.isConfirmed)
+      {
+      router.push("/");
       setUser(null);
       setIsLogged(false);
       setIsAdmin(false);
       if (typeof window !== "undefined") {
         localStorage.removeItem("user");
         localStorage.removeItem("token");
-      }
-    }
+      }}
+    })
   };
 
   useEffect(() => {

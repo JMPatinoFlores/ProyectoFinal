@@ -34,9 +34,14 @@ export class HotelsRepository {
   }
 
   async getHotelsByHotelAdminId(hotelAdminId: string): Promise<Hotel[]> {
-    const hotels = await this.hotelDbRepository.find({ where: { hotelAdmin: { id: hotelAdminId } } })
-    if (hotels.length === 0) throw new NotFoundException('No se encontraron hoteles para ese hotel admin.')
-    return hotels
+    const hotels = await this.hotelDbRepository.find({
+      where: { hotelAdmin: { id: hotelAdminId } },
+    });
+    if (hotels.length === 0)
+      throw new NotFoundException(
+        'No se encontraron hoteles para ese hotel admin.',
+      );
+    return hotels;
   }
 
   async getDbHotelById(id: string): Promise<Hotel> {
@@ -45,7 +50,7 @@ export class HotelsRepository {
       .leftJoinAndSelect('hotel.roomstype', 'roomstype')
       .leftJoinAndSelect('roomstype.rooms', 'room')
       .leftJoinAndSelect('hotel.reviews', 'reviews')
-      .leftJoinAndSelect('reviews.customer', 'customer')  // Join with the customer related to the review
+      .leftJoinAndSelect('reviews.customer', 'customer') // Join with the customer related to the review
       .where('hotel.id = :id', { id })
       .andWhere('hotel.isDeleted = false')
       .andWhere(
@@ -69,7 +74,6 @@ export class HotelsRepository {
 
     return hotelFound;
   }
-
 
   async createDbHotel(hotelDto: CreateHotelDto): Promise<string> {
     const { hotel_admin_id, name, email, ...hotelData } = hotelDto;
@@ -159,10 +163,14 @@ export class HotelsRepository {
     updateHotelDto: Partial<UpdateHotelDto>,
   ): Promise<string> {
     const { ...hotelData } = updateHotelDto;
-    const hotel = await this.hotelDbRepository.findOneBy({id})
+    const hotel = await this.hotelDbRepository.findOneBy({ id });
     if (!hotel) throw new NotFoundException('Hotel not found');
-    await this.hotelDbRepository.update({id}, {
-      ...hotelData});
+    await this.hotelDbRepository.update(
+      { id },
+      {
+        ...hotelData,
+      },
+    );
     return id;
   }
 
@@ -198,32 +206,37 @@ export class HotelsRepository {
   }
 
   async addHotels() {
-    const hotelAdmins = await this.hotelAdminRepository.find()
-    if (hotelAdmins.length === 0) throw new BadRequestException('Es necesario que haya al menos 1 hotel admin en la BBDD.')
+    const hotelAdmins = await this.hotelAdminRepository.find();
+    if (hotelAdmins.length === 0)
+      throw new BadRequestException(
+        'Es necesario que haya al menos 1 hotel admin en la BBDD.',
+      );
 
-    await Promise.all(data?.map(async (e, index) => {
-      const hotels = new Hotel();
-      hotels.name = e.name;
-      hotels.description = e.description;
-      hotels.email = e.email;
-      hotels.country = e.country;
-      hotels.city = e.city;
-      hotels.address = e.address;
-      hotels.location = e.location;
-      hotels.totalRooms = e.totalRooms;
-      hotels.services = e.services;
-      hotels.rating = e.rating;
-      hotels.images = e.images;
-      hotels.price = e.price;
-      const i = Math.floor(Math.random() * hotelAdmins.length);
-      hotels.hotelAdmin = hotelAdmins[i]
-      await this.hotelDbRepository
-        .createQueryBuilder()
-        .insert()
-        .into(Hotel)
-        .values(hotels)
-        .execute();
-    }))
+    await Promise.all(
+      data?.map(async (e, index) => {
+        const hotels = new Hotel();
+        hotels.name = e.name;
+        hotels.description = e.description;
+        hotels.email = e.email;
+        hotels.country = e.country;
+        hotels.city = e.city;
+        hotels.address = e.address;
+        hotels.location = e.location;
+        hotels.totalRooms = e.totalRooms;
+        hotels.services = e.services;
+        hotels.rating = e.rating;
+        hotels.images = e.images;
+        hotels.price = e.price;
+        const i = Math.floor(Math.random() * hotelAdmins.length);
+        hotels.hotelAdmin = hotelAdmins[i];
+        await this.hotelDbRepository
+          .createQueryBuilder()
+          .insert()
+          .into(Hotel)
+          .values(hotels)
+          .execute();
+      }),
+    );
 
     return 'Added Hotels';
   }
