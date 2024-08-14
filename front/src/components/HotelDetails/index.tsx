@@ -204,10 +204,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
                                 key={String(roomType.id)}
                                 value={roomType.id}
                               >
-                                {roomType.name}; ${roomType.price}; Capacidad:{" "}
-                                {roomType.capacity}; Baños:{" "}
-                                {roomType.totalBathrooms}; Camas:{" "}
-                                {roomType.totalBeds}
+                                {roomType.name}
                               </option>
                             ))
                           ) : (

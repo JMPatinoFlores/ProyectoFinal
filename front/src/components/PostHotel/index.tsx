@@ -13,6 +13,7 @@ import { HotelContext } from "@/context/hotelContext";
 import PreviewImage from "../PreviewImage";
 import { postHotel } from "@/lib/server/fetchHotels";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 interface HotelRegisterProps {}
 
@@ -303,10 +304,18 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     try {
       const data = await postHotel(formData);
       console.log("Data:", data);
-      if (!data) {
+      if (!data.error) {
         console.log(data);
       }
     } catch (error) {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Hotel creado exitosamente",
+        text: "Cierra sesión, vuelve a iniciarla y crea tus tipos de habitaciones",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       router.push("/post-hotel-types");
       console.log(error);
     } 
