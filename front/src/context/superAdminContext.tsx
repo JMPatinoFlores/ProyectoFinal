@@ -9,6 +9,8 @@ import {
   IHotelOfSuperAdmin,
   ILoginUser,
   IReviewOfSuperAdmin,
+  IRoomOfSuperAdmin,
+  IRoomTypeOfSuperAdmin,
   ISuperAdmin,
   ISuperAdminContextType,
 } from "@/interfaces";
@@ -18,6 +20,8 @@ import {
   deleteHotelAdmin,
   deleteHotelOfHotelAdmin,
   deleteReviewOfHotel,
+  deleteRoomById,
+  deleteRoomTypeOfHotel,
   getAllBookings,
   getAllCustomers,
   getAllHotelAdmins,
@@ -25,9 +29,12 @@ import {
   getCustomerById,
   getHotelAdminById,
   getHotelById,
+  getRoomsByRoomTypeId,
   updateCustomerDetails,
   updateHotelAdminDetails,
   updateHotelDetails,
+  updateRoomDetails,
+  updateRoomTypeDetails,
 } from "@/lib/server/fetchSuperAdmins";
 import { postLogin } from "@/lib/server/fetchUsers";
 import { jwtDecode } from "jwt-decode";
@@ -75,10 +82,17 @@ export const SuperAdminContext = createContext<ISuperAdminContextType>({
   ) => Promise.resolve(false),
   fetchHotelAdminsBySearch: async (searchQuery: string) =>
     Promise.resolve([] as IHotelAdminDetails[]),
-  fetchHotelsBySearch: async (searchQuery: string) => Promise.resolve([] as IHotelOfSuperAdmin[]),
+  fetchHotelsBySearch: async (hotelAdminId: string, searchQuery: string) => Promise.resolve([] as IHotelOfSuperAdmin[]),
   fetchCustomersBySearch: async (searchQuery: string) =>
     Promise.resolve([] as ICustomerDetails[]),
-  fetchReviewsBySearch: async (hotelId: string, searchQuery: string) => Promise.resolve([] as IReviewOfSuperAdmin[])
+  fetchReviewsBySearch: async (hotelId: string, searchQuery: string) => Promise.resolve([] as IReviewOfSuperAdmin[]),
+  fetchDeleteRoomTypeOfHotel: async (roomtypeId: string) => Promise.resolve(false),
+  fetchUpdateRoomTypeDetails: async (roomtypeId: string, selectedRoomType: Partial<IRoomTypeOfSuperAdmin> | null) => Promise.resolve(false),
+  fetchRoomTypesBySearch: async (hotelId: string, searchQuery: string) => Promise.resolve([] as IRoomTypeOfSuperAdmin[]),
+  fetchRoomsByRoomTypeId: async (roomTypeId: string) => Promise.resolve([] as IRoomOfSuperAdmin[]),
+  fetchDeleteRoom: async (roomId: string) => Promise.resolve(false),
+  fetchUpdateRoom: async (roomId: string, selectedRoom: Partial<IRoomOfSuperAdmin>) => Promise.resolve(false),
+  fetchRoomsBySearch: async (roomTypeId: string, searchQuery: string) => Promise.resolve([] as IRoomOfSuperAdmin[])
 });
 
 // SuperAdmin Provider
@@ -412,10 +426,10 @@ export const SuperAdminProvider = ({
   );
 
   const fetchHotelsBySearch = useCallback(
-    async (searchQuery: string): Promise<IHotelOfSuperAdmin[]> => {
+    async (hotelAdminId: string, searchQuery: string): Promise<IHotelOfSuperAdmin[]> => {
       try {
         const response = await fetch(
-          `http://localhost:3000/hotels/search?search=${searchQuery}`
+          `http://localhost:3000/hotels/search?hotelAdminId=${hotelAdminId}&search=${searchQuery}`
         );
         console.log(response);
         
@@ -461,6 +475,126 @@ export const SuperAdminProvider = ({
     }, []
   )
 
+  const fetchDeleteRoomTypeOfHotel = useCallback(
+    async (roomtypeId: string): Promise<boolean> => {
+      const deleted = await deleteRoomTypeOfHotel(roomtypeId);
+      return deleted;
+    },
+    []
+  );
+
+  const fetchUpdateRoomTypeDetails = useCallback(
+    async (
+      roomtypeId: string,
+      selectedRoomType: Partial<IRoomTypeOfSuperAdmin> | null
+    ): Promise<boolean> => {
+      try {
+        const updated = await updateRoomTypeDetails(
+          roomtypeId,
+          selectedRoomType
+        );
+        if (updated) {
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.log("Error en el fetchUpdateRoomTypeDetails: ", error);
+        return false;
+      }
+    },
+    []
+  );
+
+  const fetchRoomTypesBySearch = useCallback(
+    async (hotelId: string, searchQuery: string): Promise<IRoomTypeOfSuperAdmin[]> => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/roomstype/search?search=${searchQuery}&hotelId=${hotelId}`
+        );
+        console.log(response);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          return data;
+        } else {
+          console.error("fetchRroomTypesBySearch did not return an array.");
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching room types by search:", error);
+        return [];
+      }
+    }, []
+  )
+
+  const fetchRoomsByRoomTypeId = useCallback(async (roomTypeId: string): Promise<IRoomOfSuperAdmin[]> => {
+    try {
+      const data = await getRoomsByRoomTypeId(roomTypeId);
+      return data;
+    } catch (error) {
+      console.error("Error fetching rooms of room type:", error);
+      return [];
+    }
+  }, []);
+
+  const fetchDeleteRoom = useCallback(
+    async (roomId: string): Promise<boolean> => {
+      const deleted = await deleteRoomById(roomId);
+      return deleted;
+    },
+    []
+  );
+
+  const fetchUpdateRoom = useCallback(
+    async (
+      roomId: string,
+      selectedRoom: Partial<IRoomOfSuperAdmin>
+    ): Promise<boolean> => {
+      try {
+        const updated = await updateRoomDetails(
+          roomId,
+          selectedRoom
+        );
+        if (updated) {
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.log("Error en el fetchUpdateRoom: ", error);
+        return false;
+      }
+    },
+    []
+  );
+
+  const fetchRoomsBySearch = useCallback(
+    async (roomTypeId: string, searchQuery: string): Promise<IRoomOfSuperAdmin[]> => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/rooms/search?search=${searchQuery}&roomTypeId=${roomTypeId}`
+        );
+        console.log(response);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          return data;
+        } else {
+          console.error("fetchRoomsBySearch did not return an array.");
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching reviews by search:", error);
+        return [];
+      }
+    }, []
+  )
+
   return (
     <SuperAdminContext.Provider
       value={{
@@ -489,7 +623,14 @@ export const SuperAdminProvider = ({
         fetchCustomersBySearch,
         fetchDeleteReviewOfHotel,
         fetchHotelsBySearch,
-        fetchReviewsBySearch
+        fetchReviewsBySearch,
+        fetchDeleteRoomTypeOfHotel,
+        fetchUpdateRoomTypeDetails,
+        fetchRoomTypesBySearch,
+        fetchRoomsByRoomTypeId,
+        fetchDeleteRoom,
+        fetchUpdateRoom,
+        fetchRoomsBySearch
       }}
     >
       {children}

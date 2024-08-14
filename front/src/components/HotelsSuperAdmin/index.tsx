@@ -46,12 +46,12 @@ const HotelsSuperAdmin = ({ hotelAdminId, searchQuery }: HotelsSuperAdminProps) 
     }, [hotelAdminId]);
 
     useEffect(() => {
-        setFilteredHotels(hotels)
+        if (!searchQuery) setFilteredHotels(hotels)
     }, [hotels])
 
     useEffect(() => {
         if (searchQuery) {
-            fetchHotelsBySearch(searchQuery).then((data) => {
+            fetchHotelsBySearch(hotelAdminId, searchQuery).then((data) => {
                 if (Array.isArray(data)) {
                     setFilteredHotels(data);
                 } else {
@@ -178,6 +178,9 @@ const HotelsSuperAdmin = ({ hotelAdminId, searchQuery }: HotelsSuperAdminProps) 
                             </button>
                             <Link href={`/reviewsHotelSuperAdmin/${hotel.id}`} className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]">
                                 Ver Reseñas
+                            </Link>
+                            <Link href={`/roomTypesHotel/${hotel.id}`} className="bg-[#f83f3a] text-white rounded-md p-1 px-2 hover:bg-[#e63946]">
+                                Ver Tipos de Cuarto
                             </Link>
                         </div>
                     </div>

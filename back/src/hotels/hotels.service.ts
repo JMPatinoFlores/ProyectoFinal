@@ -12,7 +12,7 @@ export class HotelsService {
   }
 
   async getHotelsByHotelAdminId(hotelAdminId: string) {
-    return await this.hotelsDbRepository.getHotelsByHotelAdminId(hotelAdminId)
+    return await this.hotelsDbRepository.getHotelsByHotelAdminId(hotelAdminId);
   }
 
   async getDbHotelById(id: string) {
@@ -23,12 +23,24 @@ export class HotelsService {
     return await this.hotelsDbRepository.createDbHotel(hotelDto);
   }
 
-  async searchHotels(query: string) {
-    return await this.hotelsDbRepository.searchHotels(query);
+  async searchHotels(hotelAdminId: string, query: string) {
+    return await this.hotelsDbRepository.searchHotels(hotelAdminId, query);
   }
 
-  async getFilteredHotels(rating: number, country: string, city: string, minPrice: number, maxPrice: number) {
-    return await this.hotelsDbRepository.getFilteredHotels(rating, country, city, minPrice, maxPrice)
+  async getFilteredHotels(
+    rating: number,
+    country: string,
+    city: string,
+    minPrice: number,
+    maxPrice: number,
+  ) {
+    return await this.hotelsDbRepository.getFilteredHotels(
+      rating,
+      country,
+      city,
+      minPrice,
+      maxPrice,
+    );
   }
 
   async updateDbHotel(id: string, updateHotelDto: Partial<UpdateHotelDto>) {

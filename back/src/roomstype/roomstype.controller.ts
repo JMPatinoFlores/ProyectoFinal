@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { RoomsTypeService } from './roomstype.service';
@@ -17,7 +18,8 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/guards/roles.enum';
 import { Roles } from 'src/decorators/roles.decorator';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { RoomsType } from './roomstype.entity';
 
 @ApiTags('Roomstype')
 @Controller('roomstype')
@@ -79,6 +81,16 @@ export class RoomsTypeController {
   @UseGuards(AuthGuard, RolesGuard)
   getDbRoomstypeDeleted() {
     return this.roomstypeDbService.getDbRoomstypeDeleted();
+  }
+
+  @ApiOperation({ summary: 'Lista todos los room types de un hotel con base en una search query y el id del hotel.' })
+  @ApiQuery({ name: 'search', required: true, description: 'buscar...', example: 'Deluxe' })
+  @ApiResponse({ status: 206, description: 'List of room types matches :)' })
+  @ApiResponse({ status: 404, description: 'There are no room types :(' })
+  @Get('search')
+  async searchRoomTypes(@Query('hotelId') hotelId: string, @Query('search') query?: string): Promise<RoomsType[]> {
+    console.log('Received search term:', query);
+    return await this.roomstypeDbService.searchRoomTypes(hotelId, query);
   }
 
   @ApiOperation({summary: 'List only one roomtype by ID'})

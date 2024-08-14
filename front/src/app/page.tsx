@@ -1,6 +1,6 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import ReviewSlider from "@/components/ReviewsSlider";
 
 export default function Landing() {
   return (
@@ -87,15 +87,7 @@ export default function Landing() {
         <h3 className="font-medium text-gray-800 mb-4">
           ¿Qué dicen nuestros clientes?
         </h3>
-        <div className="border border-black rounded-md w-full sm:w-3/4 lg:w-1/2 p-4">
-          <h3 className="font-semibold mb-2">Juana Martinez</h3>
-          <p className="text-center">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque error
-            laudantium natus aliquid maiores, aspernatur animi nesciunt eum
-            ipsum. Tempora nobis voluptas quo. Nisi deserunt dolores sit iusto
-            provident quod?
-          </p>
-        </div>
+        <ReviewSlider />
       </div>
     </div>
   );

@@ -127,6 +127,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         return data;
       } catch (error) {
         console.error("Error al obtener hoteles por admin:", error);
+        setHotels([]);
         return [];
       }
     },

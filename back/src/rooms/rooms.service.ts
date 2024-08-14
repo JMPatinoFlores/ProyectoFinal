@@ -147,4 +147,11 @@ export class RoomsService{
         await this.hotelRepository.save(hotelFound);
     }
 
+    async getRoomsByRoomTypeId(id: string) {
+        return await this.roomsDbRepository.getRoomsByRoomTypeId(id)
+    }
+    
+    async searchRooms(roomTypeId: string, query: string) {
+        return await this.roomsDbRepository.searchRoom(roomTypeId, query)
+    }
 }

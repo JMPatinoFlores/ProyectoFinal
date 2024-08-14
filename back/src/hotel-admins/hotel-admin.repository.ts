@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HotelAdmins } from './hotelAdmins.entity';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import {
   CreateHotelAdminDto,
   UpdateHotelAdminInfoDto,
@@ -17,7 +17,7 @@ export class HotelAdminRepository {
     @InjectRepository(HotelAdmins)
     private hotelAdminsRepository: Repository<HotelAdmins>,
     private readonly mailService: MailService,
-  ) {}
+  ) { }
 
   //! Validar ID
 
@@ -59,23 +59,27 @@ export class HotelAdminRepository {
     }
     const searchTerm = `%${query.toLowerCase()}%`;
 
-    // Consulta SQL con la función unaccent
     return await this.hotelAdminsRepository
-      .createQueryBuilder('hotel-admin')
-      .where('unaccent(LOWER(hotel-admin.name)) ILIKE unaccent(:searchTerm)', {
-        searchTerm,
-      })
-      .orWhere(
-        'unaccent(LOWER(hotel-admin.lastName)) ILIKE unaccent(:searchTerm)',
-        {
-          searchTerm,
-        },
-      )
-      .orWhere(
-        'unaccent(LOWER(hotel-admin.email)) ILIKE unaccent(:searchTerm)',
-        {
-          searchTerm,
-        },
+      .createQueryBuilder('hotelAdmin')
+      .where('hotelAdmin.isDeleted = false')
+      .andWhere(
+        new Brackets(qb => {
+          qb.where('unaccent(LOWER(hotelAdmin.name)) ILIKE unaccent(:searchTerm)', {
+            searchTerm,
+          })
+            .orWhere(
+              'unaccent(LOWER(hotelAdmin.lastName)) ILIKE unaccent(:searchTerm)',
+              {
+                searchTerm,
+              },
+            )
+            .orWhere(
+              'unaccent(LOWER(hotelAdmin.email)) ILIKE unaccent(:searchTerm)',
+              {
+                searchTerm,
+              },
+            )
+        })
       )
       .getMany();
   }
@@ -87,7 +91,7 @@ export class HotelAdminRepository {
       throw new BadRequestException('ID inválido');
     }
     const hotelAdmin = await this.hotelAdminsRepository.findOne({
-      where: { id: id, isDeleted: false },
+      where: { id: id, isDeleted: false, hotels: { isDeleted: false } },
       relations: {
         hotels: true,
       },

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customers } from './customers.entity';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { CreateCustomerDto } from './customers.dto';
 import { IdDto } from 'src/dto/id.dto';
 import { validate } from 'class-validator';
@@ -13,7 +13,7 @@ export class CustomersRepository {
     @InjectRepository(Customers)
     private customersRepository: Repository<Customers>,
     private readonly mailService: MailService,
-  ) {}
+  ) { }
 
   //! Validar ID
 
@@ -27,11 +27,7 @@ export class CustomersRepository {
   //!Obtener todos los clientes
 
   async getAllCustomers(page: number, limit: number) {
-    const skip = (page - 1) * limit;
-    const customers = await this.customersRepository.find({
-      take: limit,
-      skip: skip,
-    });
+    const customers = await this.customersRepository.find({where: {isDeleted: false}});
     return customers.map(({ password, ...userNoPassword }) => userNoPassword);
   }
 
@@ -92,15 +88,20 @@ export class CustomersRepository {
     // Consulta SQL con la función unaccent
     return await this.customersRepository
       .createQueryBuilder('customer')
-      .where('unaccent(LOWER(customer.name)) ILIKE unaccent(:searchTerm)', {
-        searchTerm,
-      })
-      .orWhere('unaccent(LOWER(customer.lastName)) ILIKE unaccent(:searchTerm)', {
-        searchTerm,
-      })
-      .orWhere('unaccent(LOWER(customer.email)) ILIKE unaccent(:searchTerm)', {
-        searchTerm,
-      })
+      .where('customer.isDeleted = false')
+      .andWhere(
+        new Brackets(qb => {
+          qb.where('unaccent(LOWER(customer.name)) ILIKE unaccent(:searchTerm)', {
+            searchTerm,
+          })
+            .orWhere('unaccent(LOWER(customer.lastName)) ILIKE unaccent(:searchTerm)', {
+              searchTerm,
+            })
+            .orWhere('unaccent(LOWER(customer.email)) ILIKE unaccent(:searchTerm)', {
+              searchTerm,
+            })
+        })
+      )
       .getMany();
   }
 

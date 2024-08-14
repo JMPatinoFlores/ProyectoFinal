@@ -34,7 +34,25 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
                 const bookings = await fetchBookingsByCustomerId(customerId);
                 const customer = await fetchCustomerById(customerId)
                 if (bookings && customer) {
-                    setBookings(bookings);
+                    const bookingsToRender: IBookingOfSuperAdmin[] = []
+                    for (const booking of bookings) {
+                        const bookingDateArray = new Date(booking.date).toISOString().split('T')[0].split('-')
+                        let toSumToIndex = 1
+                        bookingDateArray.forEach((data, index) => {
+                            bookingDateArray.unshift(bookingDateArray[index + toSumToIndex])
+                            toSumToIndex += 1
+                        })
+                        bookingDateArray.pop()
+                        bookingDateArray.pop()
+                        bookingDateArray.shift()
+    
+                        const bookingDate = bookingDateArray.join('/')
+
+                        bookingsToRender.push({...booking, date: bookingDate})
+                    }
+                    setBookings(bookingsToRender);
+                    setCustomerName(`${customer.name} ${customer.lastName}`);
+                } else if (customer) {
                     setCustomerName(`${customer.name} ${customer.lastName}`);
                 } else {
                     console.warn('No data found for the given customerId');
@@ -49,17 +67,6 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
     }, [bookings]);
 
     const handleViewDetails = (booking: IBookingOfSuperAdmin) => {
-        const bookingDateArray = new Date(booking.date).toISOString().split('T')[0].split('-')
-        let toSumToIndex = 1
-        bookingDateArray.forEach((data, index) => {
-            bookingDateArray.unshift(bookingDateArray[index + toSumToIndex])
-            toSumToIndex += 1
-        })
-        bookingDateArray.pop()
-        bookingDateArray.pop()
-        bookingDateArray.shift()
-        
-        const bookingDate = bookingDateArray.join('/')
         const availabilities: Partial<IAvailabilityOfSuperAdmin>[] = []
         booking.bookingDetails.availabilities.forEach(availability => {
             if (availability.startDate && availability.endDate) {
@@ -69,7 +76,7 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
                     bookingAvailabilityStartDateArray.unshift(bookingAvailabilityStartDateArray[index + toSumToIndexStartDate])
                     toSumToIndexStartDate += 1
                 })
-                
+
                 bookingAvailabilityStartDateArray.pop()
                 bookingAvailabilityStartDateArray.pop()
                 bookingAvailabilityStartDateArray.shift()
@@ -89,9 +96,9 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
                 }
                 availabilities.push(newAvailability)
             }
-            
+
         })
-        setSelectedBooking({...booking, date: bookingDate, bookingDetails: {...booking.bookingDetails, availabilities}});
+        setSelectedBooking({ ...booking, bookingDetails: { ...booking.bookingDetails, availabilities } });
         setIsModalOpen(true);
     };
 
@@ -107,7 +114,7 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
         )
         : [];
     console.log(paginatedBookings);
-    
+
 
     return (
         <div className="flex-1 p-6">
@@ -120,8 +127,14 @@ const BookingsSuperAdmin = ({ customerId }: BookingsSuperAdminProps) => {
                 {paginatedBookings.length > 0 ? paginatedBookings.map((booking) => (
                     <div key={booking.id} className="relative p-4 bg-gray-100 rounded-lg shadow-md flex flex-col">
                         <div className="mb-2">
-                            <p>Fecha: {booking.date}</p>
-                            <p>Hotel: {booking.bookingDetails.hotel.name}</p>
+                            <div className="flex">
+                                <p className="font-bold mr-2">Fecha:</p>
+                                <p>{booking.date}</p>
+                            </div>
+                            <div className="flex">
+                                <p className="font-bold mr-2">Hotel:</p>
+                                <p>{booking.bookingDetails.hotel.name}</p>
+                            </div>
                         </div>
                         <div className="flex flex-wrap gap-2 mt-auto">
                             <button

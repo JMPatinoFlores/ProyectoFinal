@@ -11,9 +11,11 @@ function CustomersSuperAdmin() {
         setSearchQuery(searchQuery);
     };
 
+    const placeholder = "Busca un cliente."
+
     return (
         <div>
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar placeholder={placeholder} onSearch={handleSearch} />
             <Customers searchQuery={searchQuery} />
         </div>
     );

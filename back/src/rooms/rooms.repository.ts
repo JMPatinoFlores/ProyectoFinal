@@ -102,16 +102,10 @@ export class RoomsRepository{
     }
 
     async updateDbRoom(id: string, updateroomDto: Partial<UpdateRoomDto>): Promise<string>{
-        const {roomsTypeId, ...roomData} = updateroomDto;
         const roomFound: Room = await this.roomDbRepository.findOne({where: {id}});
         if(!roomFound) throw new NotFoundException("this room does not exists");
-        const roomstypeFound: RoomsType = await this.roomstypeDbRepository.findOne({where:{id:roomsTypeId}});
-        if(!roomstypeFound) throw new NotFoundException(" this roomstype does not exists");
 
-        await this.roomDbRepository.update(id, {
-            ...roomData,
-            roomtype:roomstypeFound
-        });
+        await this.roomDbRepository.update({ id }, {...updateroomDto});
 
         return id;
     }
@@ -121,7 +115,7 @@ export class RoomsRepository{
         
         if(!roomFound) throw new NotFoundException("Room not found");
         if(roomFound.isDeleted === true) throw new BadRequestException("Room was eliminated");
-        await this.roomDbRepository.update(id, {isDeleted:true});
+        await this.roomDbRepository.update({id}, {isDeleted:true});
         return this.roomDbRepository.findOne({
             where: { id },
             relations: ['roomtype']
@@ -149,5 +143,26 @@ export class RoomsRepository{
         else throw new NotFoundException("there are not rooms eliminated");
     }
 
+    async getRoomsByRoomTypeId(id: string): Promise<Room[]> {
+        const rooms = await this.roomDbRepository.find({ where: { isDeleted: false, roomtype: { id: id }, } })
+        if (rooms.length === 0) throw new NotFoundException('Ese room type no tiene cuartos.')
+        return rooms
+    }
 
+    async searchRoom(roomTypeId: string, query?: string): Promise<Room[]> {
+        const queryBuilder = this.roomDbRepository
+            .createQueryBuilder('room')
+            .where('room.roomtype.id = :roomTypeId', { roomTypeId });
+
+        if (query) {
+            console.log('buscando room ...');
+            const searchTerm = `%${query.toLowerCase()}%`;
+
+            queryBuilder
+                .andWhere('room.isDeleted = false')
+                .andWhere('unaccent(LOWER(room.roomNumber)) ILIKE unaccent(:searchTerm)', { searchTerm })
+        }
+
+        return await queryBuilder.getMany();
+    }
 }
