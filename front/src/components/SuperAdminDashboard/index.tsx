@@ -109,7 +109,7 @@ export default function SuperAdmin() {
                             </Link>
                         </div>
                         <div className="flex-1 mx-2 text-center">
-                            <Link href="/superAdminsSuperAdmin" className="block p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            <Link href="/superAdmins" className="block p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
                                 <h4 className="text-md font-semibold">Super Admins</h4>
                                 <p className="text-sm text-gray-600">Haz click para crear super admins.</p>
                             </Link>
