@@ -157,22 +157,54 @@ export const getRoomsByHotel = async (hotelId: string) => {
   return data;
 };
 
-export const postBooking = async (booking: ICreateBooking) => {
+export const postBooking = async (booking: {
+  customerId: string;
+  hotelId: string;
+  roomTypesIdsAndDates: {
+    roomTypeId: string;
+    checkInDate: string;
+    checkOutDate: string;
+  }[];
+  totalPayment: number;
+}) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
-  const response = await fetch(
-    "https://back-rutaviajera.onrender.com/bookings",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(booking),
+  try {
+    const response = await fetch(
+      "https://back-rutaviajera.onrender.com/bookings",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(booking),
+      }
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Error en la solicitud: " + response.status);
     }
-  );
-  const data = await response.json();
-  return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
+
+// export const postBooking = async (booking: ICreateBooking) => {
+//   const token = typeof window !== "undefined" && localStorage.getItem("token");
+//   const response = await fetch("https://back-rutaviajera.onrender.com/bookings", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${token}`,
+//     },
+//     body: JSON.stringify(booking),
+//   });
+//   const data = await response.json();
+//   return data;
+// };
 
 export const getRoomTypesByHotelId = async (
   hotelId: string

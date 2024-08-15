@@ -78,6 +78,18 @@ function MyHotels() {
         </div>
         <div className="flex justify-end">
           <Link
+            href={"/rooms-number"}
+            className="flex px-4 py-3 text-white bg-red-500 hover:bg-red-600 focus:bg-red-700 rounded-md mr-3"
+          >
+            Añadir Número de Habitación 
+          </Link>
+          <Link
+            href={"/post-hotel-types"}
+            className="flex px-4 py-3 text-white bg-red-500 hover:bg-red-600 focus:bg-red-700 rounded-md mr-3"
+          >
+            Añadir Tipo de Habitación
+          </Link>
+          <Link
             href={"/post-hotel"}
             className="flex px-4 py-3 text-white bg-red-500 hover:bg-red-600 focus:bg-red-700 rounded-md"
           >

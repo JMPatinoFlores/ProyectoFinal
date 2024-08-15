@@ -65,6 +65,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
   const [roomTypes, setRoomTypes] = useState<IRoomType[]>([]);
   const [showConfirmBooking, setShowConfirmBooking] = useState(false);
   const [messageRoomOccupied, setMessageRoomOccupied] = useState(false)
+  const [totalPayment, setTotalPayment] = useState(0);
 
   useEffect(() => {
     const token =
@@ -91,6 +92,14 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
   };
 
   const handleSubmit = async (booking: ICreateBooking) => {
+    const totalDays = calculateTotalDays(booking.roomTypesIdsAndDates);
+    const totalPayment = calculateTotalPayment(
+      totalDays,
+      booking.roomTypesIdsAndDates,
+      roomTypes
+    );
+    setTotalPayment(totalPayment);
+
     const formData = {
       customerId: booking.customerId,
       hotelId: booking.hotelId,
@@ -99,6 +108,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
         checkInDate: item.checkInDate,
         checkOutDate: item.checkOutDate,
       })),
+      totalPayment,
     };
     try {
       const response = await postBooking(formData);
@@ -112,6 +122,43 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
     } catch (error) {
       console.log("Error al realizar la reserva: ", error);
     }
+  };
+
+  const calculateTotalDays = (
+    roomTypesIdsAndDates: { checkInDate: string; checkOutDate: string }[]
+  ) => {
+    const totalDays = roomTypesIdsAndDates.reduce((acc, current) => {
+      const checkInDate = new Date(current.checkInDate);
+      const checkOutDate = new Date(current.checkOutDate);
+      const days = Math.round(
+        (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 3600 * 24)
+      );
+      return acc + days;
+    }, 0);
+    return totalDays;
+  };
+
+  const calculateTotalPayment = (
+    totalDays: number,
+    roomTypesIdsAndDates: {
+      roomTypeId: string;
+      checkInDate: string;
+      checkOutDate: string;
+    }[],
+    roomTypes: IRoomType[]
+  ) => {
+    const totalPayment = roomTypesIdsAndDates.reduce((acc, current) => {
+      const roomType = roomTypes.find(
+        (roomType) => roomType.id === current.roomTypeId
+      );
+      if (roomType) {
+        const price = roomType.price;
+        const days = totalDays;
+        return acc + price * days;
+      }
+      return acc;
+    }, 0);
+    return totalPayment;
   };
 
   if (!hotel)
@@ -213,10 +260,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
                                 key={String(roomType.id)}
                                 value={roomType.id}
                               >
-                                {roomType.name}; ${roomType.price}; Capacidad:{" "}
-                                {roomType.capacity}; Baños:{" "}
-                                {roomType.totalBathrooms}; Camas:{" "}
-                                {roomType.totalBeds}
+                                {roomType.name}
                               </option>
                             ))
                           ) : (
@@ -301,8 +345,15 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
               </div>
             )}
             {showConfirmBooking && (
-              <div className="flex flex-col items-center mb-[-990px] mt-[10px]">
-                <GatewayPayment />
+              <div className="flex flex-col items-center mt-3 mb-[90px]">
+                <div className="bg-gray-100 p-4 rounded-lg shadow-md mb-1">
+                  <h2 className="text-lg font-semibold">
+                    Total a pagar: ${totalPayment}
+                  </h2>
+                </div>
+                <div className="flex justify-center mb-[-990px] mt-[10px]">
+                  <GatewayPayment totalPayment={totalPayment} />
+                </div>
               </div>
             )}
           </div>

@@ -3,6 +3,7 @@ import { ICreateNumberOfRoom, IRoomType } from "@/interfaces";
 import { getRoomTypesByHotelId, postRoom } from "@/lib/server/fetchHotels";
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function RoomNumberForm() {
   const [roomTypes, setRoomTypes] = useState<IRoomType[]>([]);
@@ -65,9 +66,19 @@ export default function RoomNumberForm() {
 
     try {
       const response = await postRoom(formData);
-      setSubmitting(false);
+      if(!response.error) {
+        setSubmitting(false);
+      } else {
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Opps...",
+          text: "Tal vez ya tengas una habitación con este número",
+          timer: 3000,
+        });
+      }
     } catch (error) {
-      console.error("Error: ", error);
+      console.error(error);
     }
   };
 
