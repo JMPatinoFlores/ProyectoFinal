@@ -4,21 +4,25 @@ import { validatePostHotel } from "@/helpers/validateData";
 import { IHotelRegister, ILocationDetail } from "@/interfaces";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Image from "next/image";
-import Link from "next/link";
 import continueImage from "../../../public/continue.png";
 import { useContext, useState } from "react";
 import useGoogleMapsData from "@/lib/googleMaps/googleMapsData";
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import { HotelContext } from "@/context/hotelContext";
 import PreviewImage from "../PreviewImage";
-import { postHotel } from "@/lib/server/fetchHotels";
 import { useRouter } from "next/navigation";
+import { postHotel } from "@/lib/server/fetchHotels";
 
 interface HotelRegisterProps {}
 
 const HotelRegister: React.FC<HotelRegisterProps> = () => {
   const { addHotel } = useContext(HotelContext);
   const router = useRouter();
+  const [hotelLocation, setHotelLocation] = useState<ILocationDetail | null>(
+    null
+  );
+  const { mapCenter, marker } = useGoogleMapsData(hotelLocation);
+
   const initialValues: IHotelRegister = {
     name: "",
     description: "",
@@ -230,10 +234,60 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     "Zimbabue",
   ];
 
-  const [hotelLocation, setHotelLocation] = useState<ILocationDetail | null>(
-    null
-  );
-  const { isLoaded, mapCenter, marker } = useGoogleMapsData(hotelLocation);
+  const handleSubmit = async (
+    values: IHotelRegister,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+  ) => {
+    const token =
+      typeof window !== "undefined" && localStorage.getItem("token");
+    let hotelAdminId = "";
+
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+      hotelAdminId = decodedToken.id;
+    }
+
+    let imageUrls: string[] = [];
+    if (values.images && values.images.length > 0) {
+      try {
+        for (const file of values.images) {
+          if (file instanceof File) {
+            const imageUrl = await uploadImageToCloudinary(file);
+            imageUrls.push(imageUrl);
+          } else if (typeof file === "string") {
+            imageUrls.push(file);
+          }
+        }
+      } catch (error) {
+        console.log("Error al subir la imagen: ", error);
+        alert("Error al subir la imagen. Inténtalo de nuevo.");
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    const formData = {
+      ...values,
+      images: imageUrls,
+      hotel_admin_id: hotelAdminId,
+    };
+
+    console.log("Datos que se envían al backend:", formData);
+
+    try {
+      const success = await postHotel(formData);
+      if (success) {
+        router.push("/post-hotel-types");
+      } else {
+        alert("Error al registrar el hotel. Inténtalo de nuevo.");
+      }
+    } catch (error) {
+      console.error("Error al registrar el hotel:", error);
+      alert("Error al registrar el hotel. Inténtalo de nuevo.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const uploadImageToCloudinary = async (file: string | File): Promise<string> => {
     const formData = new FormData();
@@ -262,54 +316,6 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
       console.error("Error al subir la imagen a Cloudinary:", error);
       throw new Error("Error al subir la imagen");
     }
-  };
-
-  const handleSubmit = async (
-    values: IHotelRegister,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
-  ) => {
-    const token =
-      typeof window !== "undefined" && localStorage.getItem("token");
-    let hotelAdminId = "";
-
-    if (token) {
-      const decodedToken = JSON.parse(atob(token.split(".")[1]));
-      hotelAdminId = decodedToken.id;
-    }
-
-    let imageUrls: string[] = [];
-    if (values.images && values.images.length > 0) {
-      try {
-        for (const file of values.images) {
-          const imageUrl = await uploadImageToCloudinary(file);
-          imageUrls.push(imageUrl);
-        }
-      } catch (error) {
-        console.log("Error al subir la imagen: ", error);
-        alert("Error al subir la imagen. Intentalo de nuevo");
-        setSubmitting(false);
-        return;
-      }
-    }
-
-    const formData = {
-      ...values,
-      images: imageUrls,
-      hotel_admin_id: hotelAdminId,
-    };
-
-    console.log("Datos enviados al backend:", formData);
-
-    try {
-      const data = await postHotel(formData);
-      console.log("Data:", data);
-      if (!data) {
-        console.log(data);
-      }
-    } catch (error) {
-      router.push("/post-hotel-types");
-      console.log(error);
-    } 
   };
 
   return (
@@ -517,10 +523,19 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
                       <input
                         type="file"
                         multiple
-                        onChange={(e) => {
+                        onChange={async (e) => {
                           if (e.target.files && e.target.files.length > 0) {
                             const files = Array.from(e.target.files);
-                            setFieldValue("images", files);
+                            const uploadedUrls = [];
+
+                            for (const file of files) {
+                              const imageUrl = await uploadImageToCloudinary(
+                                file
+                              );
+                              uploadedUrls.push(imageUrl);
+                            }
+
+                            setFieldValue("images", uploadedUrls);
                           }
                         }}
                         className="formInput"

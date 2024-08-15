@@ -33,7 +33,7 @@ function Home() {
     setQueryParams(query);
   }
 
-  const placeholder = "Busca hoteles."
+  const placeholder = "Busca hoteles.";
 
   return (
     <div>

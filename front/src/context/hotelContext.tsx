@@ -8,6 +8,7 @@ import {
   IHotelRegister,
 } from "@/interfaces";
 import {
+  deleteHotel,
   getBookingByHotel,
   getHotelById,
   getHotels,
@@ -30,6 +31,7 @@ export const HotelContext = createContext<IHotelContextType>({
   fetchHotelsByFilters: async () => [],
   fetchHotelsByAdmin: async () => [],
   updateHotelDetails: async () => false,
+  deleteHotelById: async () => false,
 });
 
 export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
@@ -44,7 +46,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         await fetchHotels();
         return true;
       }
-      return false;
+      return true;
     } catch (error) {
       console.error("Error al agregar el hotel:", error);
       return false;
@@ -122,9 +124,12 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     async (id: string): Promise<IHotel[]> => {
       try {
         const data = await getHotelsByAdminId(id);
-        setHotels(data);
-        console.log(data);
-        return data;
+
+        const filteredData = data.filter((hotel: IHotel) => !hotel.isDeleted);
+
+        setHotels(filteredData);
+        console.log(filteredData);
+        return filteredData;
       } catch (error) {
         console.error("Error al obtener hoteles por admin:", error);
         setHotels([]);
@@ -174,6 +179,23 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const deleteHotelById = async (hotelId: string): Promise<boolean> => {
+    try {
+      const success = await deleteHotel(hotelId);
+      if (success) {
+        setHotels(
+          (prevHotels) =>
+            prevHotels?.filter((hotel) => hotel.id !== hotelId) ?? []
+        );
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error eliminando hotel:", error);
+      return false;
+    }
+  };
+
   useEffect(() => {
     const storedHotels =
       typeof window !== "undefined" && localStorage.getItem("hotels");
@@ -198,6 +220,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
         fetchHotelsByFilters,
         fetchHotelsByAdmin,
         updateHotelDetails,
+        deleteHotelById,
       }}
     >
       {children}
