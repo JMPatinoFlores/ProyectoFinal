@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { SuperAdminContext } from "../../context/superAdminContext";
 import { IRoomOfSuperAdmin } from "@/interfaces";
 import Modal from "../ModalRooms"; // Import the Modal component
+import Sidebar from "../SidebarSuperAdmin";
 
 interface RoomsOfRoomTypeProps {
     roomTypeId: string;
@@ -17,6 +18,11 @@ const RoomsOfRoomType = ({ roomTypeId, searchQuery }: RoomsOfRoomTypeProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(18); // 10 rooms per column, 3 columns, 2 sets = 30 rooms per page
     const { fetchRoomsByRoomTypeId, fetchDeleteRoom, fetchUpdateRoom, fetchRoomsBySearch } = useContext(SuperAdminContext);
+    const [isSidebarVisible, setSidebarVisible] = useState(false);
+
+    const toggleSidebar = () => {
+        setSidebarVisible(!isSidebarVisible);
+    };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
@@ -50,7 +56,7 @@ const RoomsOfRoomType = ({ roomTypeId, searchQuery }: RoomsOfRoomTypeProps) => {
             fetchRoomsBySearch(roomTypeId, searchQuery).then((data) => {
                 if (Array.isArray(data)) {
                     console.log(data);
-                    
+
                     setFilteredRooms(data);
                 } else {
                     console.error("fetchRoomsBySearch did not return an array.");
@@ -117,42 +123,58 @@ const RoomsOfRoomType = ({ roomTypeId, searchQuery }: RoomsOfRoomTypeProps) => {
         : [];
 
     return (
-        <div className="flex-1 p-6">
-            <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-                <h1 className="text-2xl text-center md:text-3xl font-bold flex-grow mb-4 md:mb-0">
-                    Habitaciones
-                </h1>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 p-4"> {/* Responsive columns */}
-                {paginatedRooms.map((room) => (
-                    <div key={room.id} className="p-2 border-b border-r border-l border-t border-gray-350 flex flex-col md:grid md:grid-cols-3 gap-6"> {/* Responsive layout for room items */}
-                        <span className="font-semibold w-full p-2 bg-gray-200 rounded-md">Número: {room.roomNumber}</span>
-                        <button
-                            className="bg-[#f83f3a] text-white rounded-md p-2 w-full hover:bg-[#e63946]"
-                            onClick={() => handleDeleteRoom(room.id)}
-                        >
-                            Eliminar
-                        </button>
-                        <button
-                            className="bg-[#f83f3a] text-white rounded-md p-2 w-full hover:bg-[#e63946]"
-                            onClick={() => openModal(room.id, room.roomNumber)}
-                        >
-                            Actualizar
-                        </button>
-                    </div>
-                ))}
-            </div>
-            <div className="flex justify-center space-x-4 mt-6">
-                {currentPage > 1 && (
-                    <button onClick={handlePrevPage} className="bg-[#f83f3a] text-white rounded-md p-2 px-4 hover:bg-[#e63946]">
-                        Anterior
+        <div className="flex">
+            <Sidebar setSidebarVisible={setSidebarVisible} toggleSidebar={toggleSidebar} isSidebarVisible={isSidebarVisible} />
+
+            <div className="p-8 w-full">
+                <div className="xs:flex-1  flex-col md:flex-row justify-between items-center">
+                    <button
+                        onClick={toggleSidebar}
+                        className="md:hidden mb-4 inline-flex p-2 bg-gray-200 rounded-md hover:bg-gray-300"
+                    >
+                        <div>
+                            <div className="w-[35px] h-[5px] bg-black my-[6px]"></div>
+                            <div className="w-[35px] h-[5px] bg-black my-[6px]"></div>
+                            <div className="w-[35px] h-[5px] bg-black my-[6px]"></div>
+                        </div>
                     </button>
-                )}
-                {filteredRooms.length > currentPage * itemsPerPage && (
-                    <button onClick={handleNextPage} className="bg-[#f83f3a] text-white rounded-md p-2 px-4 hover:bg-[#e63946]">
-                        Siguiente
-                    </button>
-                )}
+                </div>
+                <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+                    <h1 className="text-2xl text-center md:text-3xl font-bold flex-grow mb-4 md:mb-0">
+                        Habitaciones
+                    </h1>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> {/* Responsive columns */}
+                    {paginatedRooms.map((room) => (
+                        <div key={room.id} className="border-b border-r border-l border-t border-gray-350 flex flex-col md:grid md:grid-cols-3 gap-2"> {/* Responsive layout for room items */}
+                            <span className="font-semibold w-full p-2 text-center bg-gray-200 rounded-md">Número: {room.roomNumber}</span>
+                            <button
+                                className="bg-[#f83f3a] text-white rounded-md p-2 w-full hover:bg-[#e63946]"
+                                onClick={() => handleDeleteRoom(room.id)}
+                            >
+                                Eliminar
+                            </button>
+                            <button
+                                className="bg-[#f83f3a] text-white rounded-md p-2 w-full hover:bg-[#e63946]"
+                                onClick={() => openModal(room.id, room.roomNumber)}
+                            >
+                                Actualizar
+                            </button>
+                        </div>
+                    ))}
+                </div>
+                <div className="flex justify-center space-x-4 mt-6">
+                    {currentPage > 1 && (
+                        <button onClick={handlePrevPage} className="bg-[#f83f3a] text-white rounded-md p-2 px-4 hover:bg-[#e63946]">
+                            Anterior
+                        </button>
+                    )}
+                    {filteredRooms.length > currentPage * itemsPerPage && (
+                        <button onClick={handleNextPage} className="bg-[#f83f3a] text-white rounded-md p-2 px-4 hover:bg-[#e63946]">
+                            Siguiente
+                        </button>
+                    )}
+                </div>
             </div>
             {/* Render the modal */}
             <Modal
