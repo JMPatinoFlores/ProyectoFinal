@@ -81,6 +81,8 @@ export interface IUserContextType {
   getBookings: (customerId: string) => Promise<void>;
   getHotelsByAdmin: (adminId: string) => Promise<void>;
   addNewHotel: (newHotel: IHotel) => void;
+  getBookingsByHotel: (hotelId: string) => Promise<IBooking[]>;
+  bookings: IBooking[];
   logOut: () => void;
 }
 
@@ -293,6 +295,7 @@ export interface IBooking {
   date: string;
   isDeleted: boolean;
   bookingDetails: IBookingDetails;
+  customer: ICustomer;
 }
 
 export interface IBookingDetails {
@@ -302,6 +305,20 @@ export interface IBookingDetails {
   status: string;
   hotel: IHotel;
   availabilities: IAvailabilities[];
+}
+
+export interface ICustomer {
+  isAdmin: boolean;
+  id: string;
+  name: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  country: string;
+  city: string;
+  address: string;
+  birthDate: string;
+  isDeleted: boolean;
 }
 
 export interface IAvailabilities {

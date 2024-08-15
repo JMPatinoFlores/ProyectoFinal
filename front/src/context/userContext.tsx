@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  IBooking,
   IDecodeToken,
   IHotel,
   ILoginUser,
@@ -37,6 +38,8 @@ export const UserContext = createContext<IUserContextType>({
   getBookings: async () => {},
   getHotelsByAdmin: async () => {},
   addNewHotel: async () => {},
+  getBookingsByHotel: async () => [],
+  bookings: [],
   logOut: () => {},
 });
 
@@ -45,6 +48,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [reviews, setReviews] = useState<IReviewResponse[]>([]);
+  const [bookings, setBookings] = useState<IBooking[]>([]);
 
   const customerRegister = async (
     user: Omit<IUser, "id">
@@ -140,6 +144,38 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
+  const getBookingsByHotel = async (hotelId: string): Promise<IBooking[]> => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error(
+        "No se encontró el token. Por favor, inicie sesión de nuevo."
+      );
+      return [];
+    }
+
+    try {
+      const response = await fetch(
+        `https://back-rutaviajera.onrender.com/bookings/hotel/${hotelId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al obtener reservas");
+      }
+
+      const data: IBooking[] = await response.json();
+      setBookings(data); // Guardamos las reservas en el estado
+      return data;
+    } catch (error) {
+      console.error("Error al obtener reservas:", error);
+      return [];
+    }
+  };
+
   const getReviews = useCallback(async () => {
     try {
       const data = await getAllReviews();
@@ -231,6 +267,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         getBookings,
         getHotelsByAdmin,
         addNewHotel,
+        getBookingsByHotel,
+        bookings,
         logOut,
       }}
     >

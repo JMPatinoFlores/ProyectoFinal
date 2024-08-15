@@ -5,6 +5,7 @@ import { IBooking } from "@/interfaces";
 import { cancelBooking, fetchCustomerBookings } from "@/lib/server/fetchUsers";
 import Link from "next/link";
 import { useCallback, useContext, useEffect, useState } from "react";
+import HotelBookings from "../HotelBookings";
 
 function Bookings() {
   const { isAdmin, user, isLogged, getBookings } = useContext(UserContext);
@@ -70,7 +71,7 @@ function Bookings() {
                 </tr>
               </thead>
               <tbody className="text-gray-600 text-sm font-light">
-                {user?.bookings?.map((booking) => (
+                {bookings.map((booking) => (
                   <tr
                     key={booking.id}
                     className="border-b border-gray-200 hover:bg-gray-100"
@@ -127,9 +128,15 @@ function Bookings() {
               </tbody>
             </table>
           ) : (
-            <div className="flex justify-center items-center">
-              <h3>Aún no tienes reservas</h3>
-              <Link href={"/home"}>Explorar</Link>
+            <div className="flex flex-col justify-center items-center">
+              {user?.hotels?.map((hotel) => (
+                <div key={hotel.id} className="w-full mb-6">
+                  <h2 className="text-2xl font-bold decoration-orange-500 underline underline-offset-8">
+                    {hotel.name}
+                  </h2>
+                  <HotelBookings hotelId={hotel.id} />
+                </div>
+              ))}
             </div>
           )}
         </div>

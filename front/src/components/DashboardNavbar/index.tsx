@@ -52,19 +52,6 @@ function DashboardNavbar() {
                 className="rounded-lg"
               />
             </Link>
-            <Link
-              href="/dashboard/customers"
-              className="flex items-center justify-center p-3 hover:text-gray-400 hover:bg-gray-700 focus:text-gray-700 focus:bg-gray-700 rounded-lg"
-            >
-              <span className="sr-only">Mis clientes</span>
-              <Image
-                src="/customers.png"
-                alt="Mis clientes"
-                width={48}
-                height={48}
-                className="rounded-lg"
-              />
-            </Link>
           </div>
         ) : (
           <Link

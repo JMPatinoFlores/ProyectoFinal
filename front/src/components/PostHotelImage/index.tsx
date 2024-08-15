@@ -3,7 +3,6 @@
 import { validationSchema } from "@/helpers/validateData";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useState } from "react";
-import PreviewImage from "../PreviewImage";
 
 interface FormValues {
   image: File | null;
@@ -98,7 +97,6 @@ export default function PostHotelImage() {
               >
                 {uploading ? "Subiendo..." : "Subir imagen"}
               </button>
-              {selectedFile && <PreviewImage file={selectedFile} />}
             </Form>
           )}
         </Formik>
