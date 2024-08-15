@@ -17,10 +17,12 @@ export default function PreviewImage({ file }: PreviewImageProps) {
   });
 
   useEffect(() => {
+    console.log("File:", file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
+        console.log("FileReader onload triggered with result:", reader.result);
         if (reader.result) {
           const img = new Image();
           img.src = reader.result as string;
@@ -30,6 +32,8 @@ export default function PreviewImage({ file }: PreviewImageProps) {
           };
         }
       };
+    } else {
+      console.log("File is not defined");
     }
   }, [file]);
 

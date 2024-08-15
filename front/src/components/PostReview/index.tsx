@@ -1,7 +1,7 @@
 "use client";
 
 import { UserContext } from "@/context/userContext";
-import { ICreateReview, IPostReview, IReview } from "@/interfaces";
+import { ICreateReview, IPostReview, IReview, IReviewErrors } from "@/interfaces";
 import { postReview } from "@/lib/server/fetchUsers";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useParams } from "next/navigation";
@@ -49,13 +49,13 @@ export function PostReview() {
   return (
     <div className="w-full m-2">
       {!isAdmin && (
-        <div>
+        <div className="">
           <h3 className="font-light">¿Cómo calificarías tu experiencia?</h3>
           <Formik
             initialValues={initialValues}
             onSubmit={handleSubmit}
             validate={(values) => {
-              const errors: Partial<IPostReview> = {};
+              const errors: Partial<IReviewErrors> = {};
 
               // Validación del comentario
               if (!values.comment) {
