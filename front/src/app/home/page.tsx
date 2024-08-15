@@ -23,15 +23,24 @@ function Home() {
           value !== undefined && value !== null && value !== "" && value !== 0
         );
       })
-      .map(
-        (key) =>
-          `${encodeURIComponent(key)}=${encodeURIComponent(
-            String(params[key])
-          )}`
-      )
+      .map((key) => {
+        // Handling accented characters
+        const unaccentedValue = removeAccents(String(params[key]));
+        return `${encodeURIComponent(key)}=${encodeURIComponent(
+          unaccentedValue
+        )}`;
+      })
       .join("&");
+  
+    console.log(query);
     setQueryParams(query);
   }
+  
+  // Function to remove accents from a string
+  function removeAccents(str: string): string {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+  
 
   const placeholder = "Busca hoteles.";
 

@@ -100,7 +100,40 @@ export class HotelsRepository {
     return await this.hotelDbRepository.save(newHotel);
   }
 
-  async searchHotels(hotelAdminId: string, query?: string): Promise<Hotel[]> {
+  async searchHotels(query?: string): Promise<Hotel[]> {
+    if (!query) {
+      return [];
+    }
+    console.log('buscando hotel...');
+    const searchTerm = `%${query.toLowerCase()}%`;
+
+    return await this.hotelDbRepository
+      .createQueryBuilder('hotel')
+      .where('hotel.isDeleted = false')
+      .andWhere(
+        new Brackets(qb => {
+          qb.where('unaccent(LOWER(hotel.country)) ILIKE unaccent(:searchTerm)', {
+            searchTerm,
+          })
+          .orWhere('unaccent(LOWER(hotel.name)) ILIKE unaccent(:searchTerm)', {
+            searchTerm,
+          })
+          .orWhere('unaccent(LOWER(hotel.email)) ILIKE unaccent(:searchTerm)', {
+            searchTerm,
+          })
+          .orWhere('unaccent(LOWER(hotel.city)) ILIKE unaccent(:searchTerm)', {
+            searchTerm,
+          })
+          .orWhere(
+            'unaccent(LOWER(hotel.description)) ILIKE unaccent(:searchTerm)',
+            { searchTerm },
+          )
+        })
+      )
+      .getMany();
+  }
+
+  async searchHotelsByHotelAdminId(hotelAdminId: string, query?: string): Promise<Hotel[]> {
     if (!query) {
       return [];
     }

@@ -89,16 +89,28 @@ export class HotelsController {
   ) {
     return await this.hotelDbService.getHotelsByHotelAdminId(hotelAdminId);
   }
+
+
     
+  @ApiOperation({summary: 'List all Hotels matches for the requested word'})
+  @ApiQuery({ name: 'search', required: true, description: 'buscar...', example: 'Peru' })
+  @ApiResponse({ status: 206, description: 'List of Hotels matches :)'})
+  @ApiResponse({ status: 404, description: 'There are not hotels :('})
+  @Get('search')
+  async searchHotels(@Query('search') query?: string): Promise<Hotel[]> {
+    console.log('Received search term:', query);
+    return await this.hotelDbService.searchHotels(query);
+  }
+
   @ApiOperation({summary: 'List all Hotels matches for the requested word'})
   @ApiQuery({ name: 'hotelAdminId', required: true, description: 'Id del hotel admin' })
   @ApiQuery({ name: 'search', required: true, description: 'buscar...', example: 'Peru' })
   @ApiResponse({ status: 206, description: 'List of Hotels matches :)'})
   @ApiResponse({ status: 404, description: 'There are not hotels :('})
-  @Get('search')
-  async searchHotels(@Query('hotelAdminId') hotelAdminId: string, @Query('search') query?: string): Promise<Hotel[]> {
+  @Get('search/hotelAdmin')
+  async searchHotelsByHotelAdminId(@Query('hotelAdminId') hotelAdminId: string, @Query('search') query?: string): Promise<Hotel[]> {
     console.log('Received search term:', query);
-    return await this.hotelDbService.searchHotels(hotelAdminId, query);
+    return await this.hotelDbService.searchHotelsByHotelAdminId(hotelAdminId, query);
   }
 
   @ApiOperation({ summary: 'List all Hotels deleted' })
