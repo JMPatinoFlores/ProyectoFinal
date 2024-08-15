@@ -62,6 +62,8 @@ export const postLogin = async (credentials: ILogin) => {
       },
       body: JSON.stringify(credentials),
     });
+    console.log(response);
+    
     if (response.ok) {
       const data = await response.json();
       return data;
