@@ -11,6 +11,10 @@ import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import GoogleCustomerRegisterButton from "../GoogleRegisterButton";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContent, ToastOptions, Slide, Id } from "react-toastify";
+import { showToast } from "../LoginForm";
+
 
 export default function RegisterForm() {
   const { customerRegister } = useContext(UserContext);
@@ -236,14 +240,14 @@ export default function RegisterForm() {
       const success = await customerRegister(values);
 
       if (success) {
-        alert("Usuario registrado correctamente");
+        showToast("success", <p>¡Registro Exitoso!</p>);
         await router.push("/login");
       } else {
-        alert("Primer error");
+        showToast("error", <p>Error al realizar registro</p>);
         console.log(success);
       }
     } catch (error) {
-      alert("Segundo error");
+      showToast("error", <p>Error al realizar registro</p>);
     } finally {
       setSubmitting(false);
     }

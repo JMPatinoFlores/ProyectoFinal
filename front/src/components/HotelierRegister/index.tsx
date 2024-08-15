@@ -10,6 +10,9 @@ import { UserContext } from "@/context/userContext";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import GoogleHotelierRegisterButton from "../GoogleHotelierRegisterButton";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContent, ToastOptions, Slide, Id } from "react-toastify";
+import { showToast } from "../LoginForm";
 
 export default function HotelierRegisterForm() {
   const { hotelierRegister } = useContext(UserContext);
@@ -235,10 +238,10 @@ export default function HotelierRegisterForm() {
     console.log(success);
 
     if (success) {
-      alert("Usuario registrado correctamente");
+      showToast("success", <>¡Registro exitoso!</>)
       router.push("/login");
     } else {
-      alert("Error al registrar usuario");
+      showToast("error", <p>Error al registrar al usuario</p>);
     }
     setSubmitting(false);
   };
