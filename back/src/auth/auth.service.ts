@@ -19,7 +19,6 @@ import {
 import { MailService } from 'src/email-notify/mail.service';
 import { MoreThan, Repository } from 'typeorm';
 import { HotelAdmins } from 'src/hotel-admins/hotelAdmins.entity';
-import { Request } from 'express';
 import { Customers } from 'src/customers/customers.entity';
 import { GoogleRegisterUserDetails } from './types/google-register-user-details.type';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -51,7 +50,7 @@ export class AuthService {
     const foundCustomer =
       await this.customersRepository.getCustomerByEmail(email);
     if (foundCustomer) throw new BadRequestException('Email ya registrado');
-    
+
     //* Hasheo de la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -138,7 +137,7 @@ export class AuthService {
           address: customer.address,
           birthDate: customer.birthDate,
           bookings: customer.bookings,
-          reviews: customer.reviews
+          reviews: customer.reviews,
         },
         token,
       };
@@ -175,7 +174,7 @@ export class AuthService {
     if (superAdmin) {
       const validPassword = await bcrypt.compare(password, superAdmin.password);
       console.log(validPassword);
-      
+
       if (!validPassword)
         throw new BadRequestException('Credenciales incorrectas');
 
@@ -219,7 +218,7 @@ export class AuthService {
       customer.passwordResetExpires = expirationDate;
       await this.customersRepository.saveCustomerChanges(customer);
 
-      const resetUrl = `http://localhost:3001/reset-password/${token}`;
+      const resetUrl = `https://rutaviajera.vercel.app/reset-password/${token}`;
 
       await this.mailService.sendMail(
         customer.email,
@@ -232,7 +231,7 @@ export class AuthService {
       adminHotel.passwordResetExpires = expirationDate;
       await this.hotelAdminRepository.saveAdminChanges(adminHotel);
 
-      const resetUrl = `http://localhost:3001/reset-password/${token}`;
+      const resetUrl = `https://rutaviajera.vercel.app/reset-password/${token}`;
 
       await this.mailService.sendMail(
         adminHotel.email,
@@ -242,7 +241,7 @@ export class AuthService {
       );
     }
 
-    const resetUrl = `http://localhost:3001/reset-password/${token}`;
+    const resetUrl = `https://rutaviajera.vercel.app/reset-password/${token}`;
 
     await this.mailService.sendMail(
       customer.email,
