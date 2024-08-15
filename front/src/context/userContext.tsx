@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ICustomerBooking,
   IDecodeToken,
   ILoginUser,
   IReviewResponse,
@@ -10,6 +11,7 @@ import {
 } from "@/interfaces";
 import {
   getAllReviews,
+  getBookingsByCustomer,
   postAdminRegister,
   postCustomerRegister,
   postLogin,
@@ -31,6 +33,8 @@ export const UserContext = createContext<IUserContextType>({
   hotelierRegister: async () => false,
   getReviews: async () => {},
   reviews: [],
+  getBookings: async () => [],
+  bookings: [],
   logOut: () => {},
 });
 
@@ -39,6 +43,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [reviews, setReviews] = useState<IReviewResponse[]>([]);
+  const [bookings, setBookings] = useState<ICustomerBooking[]>([]);
 
   const customerRegister = async (
     user: Omit<IUser, "id">
@@ -112,6 +117,19 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
+  const getBookings = useCallback(
+    async (customerId: string) => {
+      try {
+        const data = await getBookingsByCustomer(customerId, bookings);
+        setBookings(data);
+        console.log("Reservas obtenidas:", data);
+      } catch (error) {
+        console.error("Error en obteniendo reservas", error);
+      }
+    },
+    [bookings]
+  );
+
   const router = useRouter();
   const logOut = () => {
     const confirm = Swal.fire({
@@ -124,17 +142,17 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       confirmButtonText: "Sí, cerrar sesión",
       cancelButtonText: "Cancelar",
     }).then((result) => {
-      if(result.isConfirmed)
-      {
-      router.push("/");
-      setUser(null);
-      setIsLogged(false);
-      setIsAdmin(false);
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-      }}
-    })
+      if (result.isConfirmed) {
+        router.push("/");
+        setUser(null);
+        setIsLogged(false);
+        setIsAdmin(false);
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
+        }
+      }
+    });
   };
 
   useEffect(() => {
@@ -171,6 +189,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         customerRegister,
         getReviews,
         reviews,
+        getBookings,
+        bookings,
         logOut,
       }}
     >

@@ -6,7 +6,9 @@ const getToken = () => {
 };
 
 import {
+  IBooking,
   ICreateReview,
+  ICustomerBooking,
   IEditProfileHotelier,
   IEditProfileUser,
   ILogin,
@@ -17,11 +19,14 @@ import {
 
 export const postCustomerRegister = async (user: Omit<IUser, "id">) => {
   try {
-    const response = await fetch("https://back-rutaviajera.onrender.com/auth/cxSignUp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-    });
+    const response = await fetch(
+      "https://back-rutaviajera.onrender.com/auth/cxSignUp",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      }
+    );
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -36,11 +41,14 @@ export const postCustomerRegister = async (user: Omit<IUser, "id">) => {
 
 export const postAdminRegister = async (user: Omit<IUser, "id">) => {
   try {
-    const response = await fetch("https://back-rutaviajera.onrender.com/auth/adminSignUp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-    });
+    const response = await fetch(
+      "https://back-rutaviajera.onrender.com/auth/adminSignUp",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      }
+    );
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -55,13 +63,16 @@ export const postAdminRegister = async (user: Omit<IUser, "id">) => {
 
 export const postLogin = async (credentials: ILogin) => {
   try {
-    const response = await fetch("https://back-rutaviajera.onrender.com/auth/SignIn", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    });
+    const response = await fetch(
+      "https://back-rutaviajera.onrender.com/auth/SignIn",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      }
+    );
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -114,14 +125,17 @@ export const postReview = async (review: ICreateReview) => {
   const token = getToken();
   console.log("Token:", token);
   try {
-    const response = await fetch("https://back-rutaviajera.onrender.com/reviews", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(review),
-    });
+    const response = await fetch(
+      "https://back-rutaviajera.onrender.com/reviews",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(review),
+      }
+    );
 
     if (response.ok) {
       const data = await response.text();
@@ -139,7 +153,9 @@ export const postReview = async (review: ICreateReview) => {
 
 export const getAllReviews = async () => {
   try {
-    const response = await fetch("https://back-rutaviajera.onrender.com/reviews");
+    const response = await fetch(
+      "https://back-rutaviajera.onrender.com/reviews"
+    );
     if (response.ok) {
       const data = await response.json();
       console.log(data);
@@ -154,6 +170,32 @@ export const getAllReviews = async () => {
   }
 };
 
+export const getBookingsByCustomer = async (
+  id: string,
+  bookings: ICustomerBooking[]
+) => {
+  const token = typeof window !== "undefined" && localStorage.getItem("token");
+  const response = await fetch(
+    `https://back-rutaviajera.onrender.com/customers/${id}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(bookings),
+    }
+  );
+  if (response.ok) {
+    const data = await response.json();
+    console.log(data);
+
+    return data;
+  } else {
+    throw new Error("Error en la solicitud: " + response.status);
+  }
+};
+
 export const putUpdateProfile = async (
   userId: string,
   profileData: IEditProfileUser
@@ -162,14 +204,17 @@ export const putUpdateProfile = async (
     const token =
       typeof window !== "undefined" && localStorage.getItem("token");
 
-    const response = await fetch(`https://back-rutaviajera.onrender.com/customers/${userId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(profileData),
-    });
+    const response = await fetch(
+      `https://back-rutaviajera.onrender.com/customers/${userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(profileData),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Error al actualizar el perfil");

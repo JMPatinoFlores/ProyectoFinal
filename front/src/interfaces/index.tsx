@@ -79,6 +79,8 @@ export interface IUserContextType {
   hotelierRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   getReviews: () => void;
   reviews: IReview[];
+  getBookings: (customerId: string) => void;
+  bookings: ICustomerBooking[];
   logOut: () => void;
 }
 
@@ -292,6 +294,12 @@ export interface IBooking {
   userId: string;
 }
 
+export interface ICustomerBooking {
+  bookingId: string;
+  date: string;
+  status: boolean;
+}
+
 export interface IBookingDetails {
   bookingDetailsId: string;
   price: number;
@@ -423,12 +431,24 @@ export interface ISuperAdminContextType {
   ) => Promise<IReviewOfSuperAdmin[]>;
   fetchDeleteReviewOfHotel: (reviewId: string) => Promise<boolean>;
   fetchDeleteRoomTypeOfHotel: (roomtypeId: string) => Promise<boolean>;
-  fetchUpdateRoomTypeDetails: (roomtypeId: string, selectedRoomType: Partial<IRoomTypeOfSuperAdmin> | null) => Promise<boolean>;
-  fetchRoomTypesBySearch: (hotelId: string, searchQuery: string) => Promise<IRoomTypeOfSuperAdmin[]>;
+  fetchUpdateRoomTypeDetails: (
+    roomtypeId: string,
+    selectedRoomType: Partial<IRoomTypeOfSuperAdmin> | null
+  ) => Promise<boolean>;
+  fetchRoomTypesBySearch: (
+    hotelId: string,
+    searchQuery: string
+  ) => Promise<IRoomTypeOfSuperAdmin[]>;
   fetchRoomsByRoomTypeId: (roomTypeId: string) => Promise<IRoomOfSuperAdmin[]>;
   fetchDeleteRoom: (roomId: string) => Promise<boolean>;
-  fetchUpdateRoom: (roomId: string, selectedRoom: Partial<IRoomOfSuperAdmin>) => Promise<boolean>;
-  fetchRoomsBySearch: (roomTypeId: string, searchQuery: string) => Promise<IRoomOfSuperAdmin[]>;
+  fetchUpdateRoom: (
+    roomId: string,
+    selectedRoom: Partial<IRoomOfSuperAdmin>
+  ) => Promise<boolean>;
+  fetchRoomsBySearch: (
+    roomTypeId: string,
+    searchQuery: string
+  ) => Promise<IRoomOfSuperAdmin[]>;
 }
 
 export interface IHotelAdminDetails {
@@ -506,7 +526,7 @@ export interface IRoomTypeOfSuperAdmin {
   price: number;
   images: string[];
   isDeleted: boolean;
-  rooms: IRoomOfSuperAdmin[]
+  rooms: IRoomOfSuperAdmin[];
 }
 
 export interface IRoomOfSuperAdmin {
