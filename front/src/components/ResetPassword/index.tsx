@@ -37,7 +37,7 @@ export default function ResetPassword({ token }: ResetPasswordProps) {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/auth/reset-password`,
+        `https://back-rutaviajera.onrender.com/auth/reset-password`,
         {
           method: "POST",
           headers: {
