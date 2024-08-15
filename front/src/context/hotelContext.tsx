@@ -12,7 +12,7 @@ import {
   getBookingByHotel,
   getHotelById,
   getHotels,
-  getHotelsByAdminId,
+  fetchHotelsByAdminId,
   getRoomsByHotel,
   postHotel,
   updateHotel,
@@ -123,7 +123,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchHotelsByAdmin = useCallback(
     async (id: string): Promise<IHotel[]> => {
       try {
-        const data = await getHotelsByAdminId(id);
+        const data = await fetchHotelsByAdminId(id);
 
         const filteredData = data.filter((hotel: IHotel) => !hotel.isDeleted);
 

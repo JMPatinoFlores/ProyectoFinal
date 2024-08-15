@@ -207,7 +207,7 @@ export const putUpdateProfileHotelier = async (
     const token =
       typeof window !== "undefined" && localStorage.getItem("token");
     const response = await fetch(
-      `http://localhost:3000/hotel-admins/${userId}`,
+      `https://back-rutaviajera.onrender.com/${userId}`,
       {
         method: "PUT",
         headers: {

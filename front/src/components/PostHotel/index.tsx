@@ -8,9 +8,7 @@ import continueImage from "../../../public/continue.png";
 import { useContext, useState } from "react";
 import useGoogleMapsData from "@/lib/googleMaps/googleMapsData";
 import { GoogleMap, Marker } from "@react-google-maps/api";
-import PreviewImage from "../PreviewImage";
 import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
 import { postHotel } from "@/lib/server/fetchHotels";
 import { UserContext } from "@/context/userContext";
 import Link from "next/link";
@@ -18,7 +16,7 @@ import Link from "next/link";
 interface HotelRegisterProps {}
 
 const HotelRegister: React.FC<HotelRegisterProps> = () => {
-  const { isAdmin } = useContext(UserContext);
+  const { user, isAdmin, addNewHotel } = useContext(UserContext);
   const router = useRouter();
   const [hotelLocation, setHotelLocation] = useState<ILocationDetail | null>(
     null
@@ -37,7 +35,7 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     services: [],
     rating: 1,
     images: [] as File[],
-    hotel_admin_id: "",
+    hotel_admin_id: user?.id || "",
   };
 
   const countryOptions = [
@@ -240,13 +238,11 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     values: IHotelRegister,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    const token =
-      typeof window !== "undefined" && localStorage.getItem("token");
-    let hotelAdminId = "";
-
-    if (token) {
-      const decodedToken = JSON.parse(atob(token.split(".")[1]));
-      hotelAdminId = decodedToken.id;
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No se encontró el token. Por favor, inicie sesión de nuevo.");
+      setSubmitting(false);
+      return;
     }
 
     let imageUrls: string[] = [];
@@ -271,18 +267,25 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     const formData = {
       ...values,
       images: imageUrls,
-      hotel_admin_id: hotelAdminId,
+      hotel_admin_id: user?.id || "",
     };
 
     console.log("Datos que se envían al backend:", formData);
 
     try {
-      const success = await postHotel(formData);
-      alert("Error al registrar el hotel");
-      console.error("Error al registrar el hotel:", success.error);
+      const createdHotel = await postHotel(formData);
+      if (createdHotel) {
+        addNewHotel(createdHotel);
+        alert("Hotel registrado exitosamente");
+        router.push("/post-hotel-types");
+      } else {
+        alert("Error al registrar el hotel");
+      }
     } catch (error) {
-      router.push("/post-hotel-types");
-      alert("Hotel registrado exitosamente");
+      console.error("Error al registrar el hotel:", error);
+      alert(
+        "Hubo un error al registrar el hotel. Por favor, intenta de nuevo."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -512,8 +515,6 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
                       placeholder="Total de Cuartos"
                     />
                   </div>
-
-                  {/* Adicion del campo de imagen */}
                   <div className="formDiv flex-1 mr-2">
                     <label htmlFor="images" className="formLabel">
                       Imagen del hotel
@@ -548,17 +549,6 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
                       className="text-red-500"
                     />
                   </div>
-
-                  {values.images && values.images.length > 0 && (
-                    <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden">
-                      {values.images
-                        .filter((item): item is File => item instanceof File)
-                        .map((file, index) => (
-                          <PreviewImage key={index} file={file} />
-                        ))}
-                    </div>
-                  )}
-
                   <div>
                     <button
                       type="submit"

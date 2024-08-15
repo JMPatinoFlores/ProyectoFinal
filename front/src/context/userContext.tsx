@@ -2,6 +2,7 @@
 
 import {
   IDecodeToken,
+  IHotel,
   ILoginUser,
   IReviewResponse,
   IUser,
@@ -35,6 +36,7 @@ export const UserContext = createContext<IUserContextType>({
   reviews: [],
   getBookings: async () => {},
   getHotelsByAdmin: async () => {},
+  addNewHotel: async () => {},
   logOut: () => {},
 });
 
@@ -106,6 +108,25 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Error en el inicio de sesión:", error);
       return false;
     }
+  };
+
+  const addNewHotel = (newHotel: IHotel) => {
+    setUser((prevUser) => {
+      if (!prevUser) return null;
+
+      return {
+        ...prevUser,
+        hotels: [...(prevUser.hotels || []), newHotel],
+      };
+    });
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        ...user,
+        hotels: [...(user?.hotels || []), newHotel],
+      })
+    );
   };
 
   const getHotelsByAdmin = useCallback(async (adminId: string) => {
@@ -209,6 +230,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         reviews,
         getBookings,
         getHotelsByAdmin,
+        addNewHotel,
         logOut,
       }}
     >

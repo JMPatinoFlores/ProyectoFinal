@@ -6,7 +6,13 @@ import {
 } from "@/interfaces";
 
 export const postHotel = async (hotel: IHotelRegister) => {
-  const token = typeof window !== "undefined" && localStorage.getItem("token");
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error(
+      "No se encontró el token. Por favor, inicie sesión de nuevo."
+    );
+  }
+
   try {
     const response = await fetch(
       "https://back-rutaviajera.onrender.com/hotels",
@@ -19,12 +25,14 @@ export const postHotel = async (hotel: IHotelRegister) => {
         body: JSON.stringify(hotel),
       }
     );
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error("Error en la solicitud: " + response.status);
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error en la solicitud:", errorData);
+      throw new Error(`Error en la solicitud: ${response.status}`);
     }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(error);
     throw error;

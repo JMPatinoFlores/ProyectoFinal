@@ -80,6 +80,7 @@ export interface IUserContextType {
   reviews: IReview[];
   getBookings: (customerId: string) => Promise<void>;
   getHotelsByAdmin: (adminId: string) => Promise<void>;
+  addNewHotel: (newHotel: IHotel) => void;
   logOut: () => void;
 }
 
