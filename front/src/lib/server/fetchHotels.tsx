@@ -233,7 +233,7 @@ export const getRoomTypesByHotelId = async (
         capacity: item.capacity,
         totalBathrooms: item.totalBathrooms,
         totalBeds: item.totalBeds,
-        image: item.image,
+        images: item.images,
         price: item.price,
       }));
     } else {
