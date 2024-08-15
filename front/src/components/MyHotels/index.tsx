@@ -9,23 +9,21 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/free-mode";
 import { FreeMode, Pagination } from "swiper/modules";
-import { HotelContext } from "@/context/hotelContext";
 import EditHotelModal from "../EditHotelModal";
 import { IAdminHotel } from "@/interfaces";
-import { updateHotel } from "@/lib/server/fetchHotels";
+import { deleteHotel, updateHotel } from "@/lib/server/fetchHotels";
 
 function MyHotels() {
-  const { user } = useContext(UserContext);
-  const { hotels, fetchHotelsByAdmin, deleteHotelById } =
-    useContext(HotelContext);
+  const { user, getHotelsByAdmin } = useContext(UserContext);
   const [selectedHotel, setSelectedHotel] = useState<IAdminHotel | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const hotels = user?.hotels || [];
 
   useEffect(() => {
-    if (user?.id) {
-      fetchHotelsByAdmin(user.id);
+    if (user?.id && user.isAdmin) {
+      getHotelsByAdmin(user.id);
     }
-  }, [user, fetchHotelsByAdmin]);
+  }, [user, getHotelsByAdmin]);
 
   const handleEditClick = (hotel: IAdminHotel) => {
     setSelectedHotel(hotel);
@@ -43,19 +41,20 @@ function MyHotels() {
         const hotelId = selectedHotel.id;
         const updatedData = await updateHotel(hotelId, updatedHotel);
         console.log("Hotel actualizado", updatedData);
+        getHotelsByAdmin(user?.id || "");
       } catch (error) {
         console.error("Error al actualizar el hotel:", error);
       }
     }
     handleCloseModal();
   };
-
   const handleDeleteHotel = async (hotelId: string) => {
     try {
-      const success = await deleteHotelById(hotelId);
+      const success = await deleteHotel(hotelId);
       if (success) {
+        getHotelsByAdmin(user?.id || "");
         handleCloseModal();
-        window.location.reload();
+        alert("El hotel ha sido eliminado exitosamente.");
       }
     } catch (error) {
       console.error("Error eliminando hotel:", error);

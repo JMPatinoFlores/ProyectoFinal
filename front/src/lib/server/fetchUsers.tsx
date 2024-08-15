@@ -6,9 +6,7 @@ const getToken = () => {
 };
 
 import {
-  IBooking,
   ICreateReview,
-  ICustomerBooking,
   IEditProfileHotelier,
   IEditProfileUser,
   ILogin,
@@ -170,32 +168,6 @@ export const getAllReviews = async () => {
   }
 };
 
-export const getBookingsByCustomer = async (
-  id: string,
-  bookings: ICustomerBooking[]
-) => {
-  const token = typeof window !== "undefined" && localStorage.getItem("token");
-  const response = await fetch(
-    `https://back-rutaviajera.onrender.com/customers/${id}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(bookings),
-    }
-  );
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data);
-
-    return data;
-  } else {
-    throw new Error("Error en la solicitud: " + response.status);
-  }
-};
-
 export const putUpdateProfile = async (
   userId: string,
   profileData: IEditProfileUser
@@ -245,15 +217,68 @@ export const putUpdateProfileHotelier = async (
         body: JSON.stringify(profileData),
       }
     );
-
     if (!response.ok) {
       throw new Error("Error al actualizar el perfil");
     }
-
     const data = await response.json();
     return data;
   } catch (error) {
     console.error("Error en la solicitud:", error);
     throw new Error("Error al actualizar el perfil");
   }
+};
+
+export const fetchCustomerBookings = async (customerId: string) => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("No se encontró el token de autenticación.");
+  }
+
+  const response = await fetch(
+    `https://back-rutaviajera.onrender.com/bookings/customer/${customerId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Error en la solicitud: ${response.status} - ${response.statusText}`
+    );
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+export const cancelBooking = async (bookingId: string) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No se encontró el token de autenticación.");
+  }
+  const response = await fetch(
+    `https://back-rutaviajera.onrender.com/bookings/cancel/${bookingId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const text = await response.text();
+  if (
+    response.status === 201 &&
+    text.includes("Booking cancelado exitosamente")
+  ) {
+    return true;
+  }
+  throw new Error(
+    `Error en la solicitud: ${response.status} - ${response.statusText}: ${text}`
+  );
 };

@@ -18,7 +18,7 @@ export interface IUserResponse extends IUser {
   isAdmin: boolean;
   hotels?: IHotel[];
   reviews?: IReview[];
-  bookings?: IBookingDetails[];
+  bookings?: IBooking[];
 }
 
 export interface ILogin {
@@ -74,13 +74,12 @@ export interface IUserContextType {
   isAdmin: boolean;
   setIsAdmin: (isAdmin: boolean) => void;
   login: (credentials: ILogin) => Promise<boolean>;
-  // googleLogin: (token: string, user: IUserResponse) => Promise<boolean>;
   customerRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   hotelierRegister: (user: Omit<IUser, "id">) => Promise<boolean>;
   getReviews: () => void;
   reviews: IReview[];
-  getBookings: (customerId: string) => void;
-  bookings: ICustomerBooking[];
+  getBookings: (customerId: string) => Promise<void>;
+  getHotelsByAdmin: (adminId: string) => Promise<void>;
   logOut: () => void;
 }
 
@@ -287,26 +286,27 @@ export interface IHotelAdmin {
 }
 
 export interface IBooking {
-  bookingId: string;
+  id: string;
   date: string;
-  time: string;
-  status: boolean;
-  userId: string;
-}
-
-export interface ICustomerBooking {
-  bookingId: string;
-  date: string;
-  status: boolean;
+  isDeleted: boolean;
+  bookingDetails: IBookingDetails;
 }
 
 export interface IBookingDetails {
-  bookingDetailsId: string;
-  price: number;
-  checkInDate: string;
-  checkOutDate: string;
-  status: boolean;
-  bookingId: string;
+  id: string;
+  total: number;
+  isDeleted: boolean;
+  status: string;
+  hotel: IHotel;
+  availabilities: IAvailabilities[];
+}
+
+export interface IAvailabilities {
+  id: string;
+  startDate: string;
+  endDate: string;
+  isAvailable: boolean;
+  isDeleted: boolean;
 }
 
 export interface IBookingForm {

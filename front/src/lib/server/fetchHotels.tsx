@@ -79,7 +79,7 @@ export const getHotelById = async (id: string) => {
   }
 };
 
-export const getHotelsByAdminId = async (id: string) => {
+export const fetchHotelsByAdminId = async (id: string) => {
   const token = localStorage.getItem("token");
 
   if (!token) {
@@ -258,11 +258,10 @@ export const deleteHotel = async (hotelId: string) => {
   const text = await response.text();
   try {
     if (response.status === 400 && text.includes("Hotel was eliminated")) {
-      // El servidor dice que el hotel fue eliminado, pero manda un error.
-      return true; // Retorna éxito en lugar de fallar
+      return true;
     }
 
-    const data = JSON.parse(text); // Intenta parsear la respuesta
+    const data = JSON.parse(text);
     if (!response.ok) {
       throw new Error(
         `Error en la solicitud: ${response.status} - ${response.statusText}: ${data.message}`

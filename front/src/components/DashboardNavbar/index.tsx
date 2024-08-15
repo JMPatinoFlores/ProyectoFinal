@@ -9,7 +9,7 @@ function DashboardNavbar() {
   const { isAdmin } = useContext(UserContext);
 
   return (
-    <div className="flex flex-col justify-between h-screen bg-gray-800 text-gray-500 items-center w-32">
+    <div className="flex flex-col justify-between h-screen bg-gray-800 text-gray-500 items-center">
       <nav className="flex flex-col mx-4 my-6 space-y-4">
         <Link
           href="/dashboard/profile"

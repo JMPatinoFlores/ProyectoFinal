@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ICustomerBooking,
   IDecodeToken,
   ILoginUser,
   IReviewResponse,
@@ -10,8 +9,8 @@ import {
   IUserResponse,
 } from "@/interfaces";
 import {
+  fetchCustomerBookings,
   getAllReviews,
-  getBookingsByCustomer,
   postAdminRegister,
   postCustomerRegister,
   postLogin,
@@ -20,6 +19,7 @@ import { jwtDecode } from "jwt-decode";
 import { createContext, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { fetchHotelsByAdminId } from "@/lib/server/fetchHotels";
 
 export const UserContext = createContext<IUserContextType>({
   user: null,
@@ -33,8 +33,8 @@ export const UserContext = createContext<IUserContextType>({
   hotelierRegister: async () => false,
   getReviews: async () => {},
   reviews: [],
-  getBookings: async () => [],
-  bookings: [],
+  getBookings: async () => {},
+  getHotelsByAdmin: async () => {},
   logOut: () => {},
 });
 
@@ -43,7 +43,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [reviews, setReviews] = useState<IReviewResponse[]>([]);
-  const [bookings, setBookings] = useState<ICustomerBooking[]>([]);
 
   const customerRegister = async (
     user: Omit<IUser, "id">
@@ -91,6 +90,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           birthDate: data.user.birthDate,
           isAdmin: decodedToken.isAdmin,
           hotels: data.user.hotels,
+          reviews: data.user.reviews,
+          bookings: data.user.bookings,
         };
 
         setUser(user);
@@ -107,6 +108,17 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const getHotelsByAdmin = useCallback(async (adminId: string) => {
+    try {
+      const data = await fetchHotelsByAdminId(adminId);
+      setUser((prevUser) =>
+        prevUser ? { ...prevUser, hotels: data } : prevUser
+      );
+    } catch (error) {
+      console.error("Error al obtener los hoteles del admin:", error);
+    }
+  }, []);
+
   const getReviews = useCallback(async () => {
     try {
       const data = await getAllReviews();
@@ -117,20 +129,19 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const getBookings = useCallback(
-    async (customerId: string) => {
-      try {
-        const data = await getBookingsByCustomer(customerId, bookings);
-        setBookings(data);
-        console.log("Reservas obtenidas:", data);
-      } catch (error) {
-        console.error("Error en obteniendo reservas", error);
-      }
-    },
-    [bookings]
-  );
+  const getBookings = useCallback(async (customerId: string) => {
+    try {
+      const data = await fetchCustomerBookings(customerId);
+      setUser((prevUser) =>
+        prevUser ? { ...prevUser, bookings: data } : prevUser
+      );
+    } catch (error) {
+      console.error("Error al obtener las reservas:", error);
+    }
+  }, []);
 
   const router = useRouter();
+
   const logOut = () => {
     const confirm = Swal.fire({
       title: "¿Estás seguro?",
@@ -162,18 +173,25 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         setIsLogged(true);
         const decodedToken = jwtDecode<IDecodeToken>(token);
         setIsAdmin(decodedToken.isAdmin);
+
+        if (decodedToken.id) {
+          getBookings(decodedToken.id);
+          if (decodedToken.isAdmin) {
+            getHotelsByAdmin(decodedToken.id);
+          }
+        }
       } else {
         setIsLogged(false);
       }
 
-      const user = localStorage.getItem("user");
-      if (user) {
-        setUser(JSON.parse(user) as IUserResponse);
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser) as IUserResponse);
       } else {
         setUser(null);
       }
     }
-  }, []);
+  }, [getBookings, getHotelsByAdmin]);
 
   return (
     <UserContext.Provider
@@ -190,7 +208,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         getReviews,
         reviews,
         getBookings,
-        bookings,
+        getHotelsByAdmin,
         logOut,
       }}
     >
