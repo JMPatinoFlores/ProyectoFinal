@@ -20,7 +20,11 @@ const Page = () => {
     }
   }, [id, fetchHotelById]);
 
-  return <HotelDetail hotel={hotel}   />;
+  return (
+    <div className="flex justify-center items-center">
+      <HotelDetail hotel={hotel} />
+    </div>
+  );
 };
 
 export default Page;
