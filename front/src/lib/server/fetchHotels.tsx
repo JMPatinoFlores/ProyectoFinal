@@ -8,14 +8,17 @@ import {
 export const postHotel = async (hotel: IHotelRegister) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
   try {
-    const response = await fetch("https://back-rutaviajera.onrender.com/hotels", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(hotel),
-    });
+    const response = await fetch(
+      "https://back-rutaviajera.onrender.com/hotels",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(hotel),
+      }
+    );
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -30,14 +33,17 @@ export const postHotel = async (hotel: IHotelRegister) => {
 
 export const postRoomType = async (roomType: IRoomType) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
-  const response = await fetch("https://back-rutaviajera.onrender.com/roomstype", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(roomType),
-  });
+  const response = await fetch(
+    "https://back-rutaviajera.onrender.com/roomstype",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(roomType),
+    }
+  );
 
   const data = await response.text();
   return data;
@@ -59,9 +65,12 @@ export const postRoom = async (room: ICreateNumberOfRoom) => {
 
 export const getHotelById = async (id: string) => {
   try {
-    const response = await fetch(`https://back-rutaviajera.onrender.com/hotels/${id}`, {
-      cache: "no-cache",
-    });
+    const response = await fetch(
+      `https://back-rutaviajera.onrender.com/hotels/${id}`,
+      {
+        cache: "no-cache",
+      }
+    );
     const hotel = await response.json();
     return hotel;
   } catch (error) {
@@ -104,7 +113,9 @@ export const getHotelsByAdminId = async (id: string) => {
 
 export const getHotels = async () => {
   try {
-    const response = await fetch("https://back-rutaviajera.onrender.com/hotels");
+    const response = await fetch(
+      "https://back-rutaviajera.onrender.com/hotels"
+    );
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -148,14 +159,17 @@ export const getRoomsByHotel = async (hotelId: string) => {
 
 export const postBooking = async (booking: ICreateBooking) => {
   const token = typeof window !== "undefined" && localStorage.getItem("token");
-  const response = await fetch("https://back-rutaviajera.onrender.com/bookings", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(booking),
-  });
+  const response = await fetch(
+    "https://back-rutaviajera.onrender.com/bookings",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(booking),
+    }
+  );
   const data = await response.json();
   return data;
 };
@@ -203,14 +217,17 @@ export const getRoomTypesByHotelId = async (
 export const updateHotel = async (hotelId: string, hotelData: any) => {
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`https://back-rutaviajera.onrender.com/hotels/${hotelId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(hotelData),
-  });
+  const response = await fetch(
+    `https://back-rutaviajera.onrender.com/hotels/${hotelId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(hotelData),
+    }
+  );
 
   if (!response.ok) {
     throw new Error(`Error en la actualización del hotel: ${response.status}`);
@@ -218,4 +235,42 @@ export const updateHotel = async (hotelId: string, hotelData: any) => {
 
   const data = await response.json();
   return data;
+};
+
+export const deleteHotel = async (hotelId: string) => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("No se encontró el token de autenticación.");
+  }
+
+  const response = await fetch(
+    `https://back-rutaviajera.onrender.com/hotels/${hotelId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const text = await response.text();
+  try {
+    if (response.status === 400 && text.includes("Hotel was eliminated")) {
+      // El servidor dice que el hotel fue eliminado, pero manda un error.
+      return true; // Retorna éxito en lugar de fallar
+    }
+
+    const data = JSON.parse(text); // Intenta parsear la respuesta
+    if (!response.ok) {
+      throw new Error(
+        `Error en la solicitud: ${response.status} - ${response.statusText}: ${data.message}`
+      );
+    }
+    return data;
+  } catch (error) {
+    console.error("Error parseando JSON:", error, text);
+    throw new Error("Respuesta del servidor no es JSON válido.");
+  }
 };

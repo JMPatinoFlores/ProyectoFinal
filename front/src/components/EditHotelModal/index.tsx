@@ -7,9 +7,15 @@ interface IEditHotelModalProps {
   hotel: IAdminHotel | null;
   onClose: () => void;
   onSave: (updatedHotel: Partial<IAdminHotel>) => void;
+  onDelete: (hotelId: string) => Promise<void>;
 }
 
-function EditHotelModal({ hotel, onClose, onSave }: IEditHotelModalProps) {
+function EditHotelModal({
+  hotel,
+  onClose,
+  onSave,
+  onDelete,
+}: IEditHotelModalProps) {
   const [name, setName] = useState(hotel?.name);
   const [description, setDescription] = useState(hotel?.description);
   const [email, setEmail] = useState(hotel?.email);
@@ -34,9 +40,25 @@ function EditHotelModal({ hotel, onClose, onSave }: IEditHotelModalProps) {
     onSave(updatedHotel);
   };
 
+  const handleDelete = async () => {
+    if (hotel?.id) {
+      const confirmed = confirm(
+        "¿Estás seguro de que deseas eliminar este hotel?"
+      );
+      if (confirmed) {
+        try {
+          await onDelete(hotel.id);
+          onClose();
+        } catch (error) {
+          console.error("Error eliminando hotel:", error);
+        }
+      }
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
         <h2 className="text-2xl font-bold mb-4">Editar Hotel</h2>
         <form className="space-y-4">
           <div>
@@ -102,20 +124,21 @@ function EditHotelModal({ hotel, onClose, onSave }: IEditHotelModalProps) {
             />
           </div>
         </form>
-        <div className="flex justify-end mt-4 space-x-2">
+        <div className="flex justify-between mt-4 space-x-2">
           <button
-            className="bg-gray-500 text-white px-4 py-2 rounded-md"
+            className="bg-gray-900 text-white px-4 py-2 rounded-md"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            className="bg-red-500 text-white px-4 py-2 rounded-md"
             onClick={handleSave}
           >
             Guardar
           </button>
         </div>
+        <button onClick={handleDelete}>Borrar hotel</button>
       </div>
     </div>
   );

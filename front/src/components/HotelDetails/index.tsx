@@ -171,7 +171,14 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
                 center={mapCenter}
                 zoom={12}
               >
-                {marker && <Marker position={marker.getPosition()} />}
+                {marker && marker.getPosition() && (
+                  <Marker
+                    position={{
+                      lat: (marker.getPosition()?.lat() || 0) as number,
+                      lng: (marker.getPosition()?.lng() || 0) as number,
+                    }}
+                  />
+                )}
               </GoogleMap>
             )}
           </div>
