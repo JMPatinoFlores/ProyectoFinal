@@ -13,7 +13,7 @@ export class CustomerGoogleStrategy extends PassportStrategy(Strategy, 'google-c
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/auth/api/callback/google/register/customer',
+      callbackURL: 'https://back-rutaviajera.onrender.com/auth/api/callback/google/register/customer',
       scope: ['profile', 'email'],
       state: true,
     });

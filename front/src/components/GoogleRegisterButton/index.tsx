@@ -10,7 +10,7 @@ const GoogleCustomerRegisterButton = () => {
 
   const handleGoogleRegister = () => {
     window.location.href =
-      "http://localhost:3000/auth/api/google/register/customer";
+      "https://back-rutaviajera.onrender.com/auth/api/google/register/customer";
   };
 
   useEffect(() => {
