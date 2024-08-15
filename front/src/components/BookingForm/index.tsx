@@ -1,12 +1,13 @@
 "use client";
 
 import { validateFormBooking } from "@/helpers/validateData";
-import { ICreateBooking, IRoomType } from "@/interfaces";
+import { ICreateBooking } from "@/interfaces";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Image from "next/image";
+import GatewayPayment from "../PaymentGateaway";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getRoomTypesByHotelId, postBooking } from "@/lib/server/fetchHotels";
+import { postBooking } from "@/lib/server/fetchHotels";
 
 const getTodayDate = () => {
   const today = new Date();
@@ -54,8 +55,6 @@ interface TokenPayload {
 export default function BookingForm() {
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
-    const [roomTypes, setRoomTypes] = useState<IRoomType[]>([]);
-    const [selectedHotelId, setSelectedHotelId] = useState<string>("");
 
   useEffect(() => {
     const token =
@@ -73,25 +72,6 @@ export default function BookingForm() {
       { roomTypeId: "", checkInDate: "", checkOutDate: "" },
     ],
   };
-
-   useEffect(() => {
-     if (selectedHotelId) {
-       const fetchRoomsTypes = async () => {
-         try {
-           const data = await getRoomTypesByHotelId(selectedHotelId);
-           if (Array.isArray(data)) {
-             setRoomTypes(data);
-           } else {
-             console.error("Error: Expected array but received:", data);
-           }
-         } catch (error) {
-           console.error("Error fetching room types:", error);
-         }
-       };
-
-       fetchRoomsTypes();
-     }
-   }, [selectedHotelId]);
 
   const handleSubmit = async (values: ICreateBooking) => {
     try {
@@ -123,25 +103,6 @@ export default function BookingForm() {
               <Form className="space-y-4">
                 {values.roomTypesIdsAndDates.map((item, index) => (
                   <div key={index} className="space-y-4">
-                    <div className="formDiv flex-1 mb-2">
-                      <label htmlFor="roomType" className="formLabel">
-                        Tipo de Habitación
-                      </label>
-                      <Field
-                        as="select"
-                        name="roomsTypeId"
-                        className="formInput"
-                      >
-                        <option value="">
-                          Seleccione un tipo de habitación
-                        </option>
-                        {/* {roomTypes.map((roomType) => (
-                          <option key={String(roomType.id)} value={roomType.id}>
-                            {roomType.name}
-                          </option>
-                        ))} */}
-                      </Field>
-                    </div>
                     <div className="formDiv flex-1 mb-2">
                       <label
                         htmlFor={`roomTypesIdsAndDates[${index}].checkInDate`}
