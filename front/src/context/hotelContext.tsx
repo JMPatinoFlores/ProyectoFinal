@@ -102,7 +102,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     async (queryParams: string): Promise<IHotelDetail[]> => {
       try {
         const response = await fetch(
-          `http://localhost:3000/hotels/filters?${queryParams}`
+          `https://back-rutaviajera.onrender.com/hotels/filters?${queryParams}`
         );
         console.log(response);
         
