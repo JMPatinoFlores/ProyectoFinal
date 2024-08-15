@@ -11,9 +11,8 @@ import { GoogleMap, Marker } from "@react-google-maps/api";
 import { HotelContext } from "@/context/hotelContext";
 import PreviewImage from "../PreviewImage";
 import { useRouter } from "next/navigation";
-import { postHotel } from "@/lib/server/fetchHotels";
-import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { postHotel } from "@/lib/server/fetchHotels";
 
 interface HotelRegisterProps {}
 
@@ -278,20 +277,17 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
 
     try {
       const success = await postHotel(formData);
-      if (success) {
-        router.push("/post-hotel-types");
-      } else {
-        alert("Error al registrar el hotel. Inténtalo de nuevo.");
-      }
-    } catch (error) {
-      console.error("Error al registrar el hotel:", error);
-      alert("Error al registrar el hotel. Inténtalo de nuevo.");
+        alert("Error al registrar el hotel");
+        console.error("Error al registrar el hotel:", success.error);
+      } catch (error) {
+      router.push("/post-hotel-types");
+      alert("Hotel registrado exitosamente");        
     } finally {
       setSubmitting(false);
     }
   };
 
-  const uploadImageToCloudinary = async (file: string | File): Promise<string> => {
+  const uploadImageToCloudinary = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append(
@@ -318,62 +314,6 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
       console.error("Error al subir la imagen a Cloudinary:", error);
       throw new Error("Error al subir la imagen");
     }
-  };
-
-  const handleSubmit = async (
-    values: IHotelRegister,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
-  ) => {
-    const token =
-      typeof window !== "undefined" && localStorage.getItem("token");
-    let hotelAdminId = "";
-
-    if (token) {
-      const decodedToken = JSON.parse(atob(token.split(".")[1]));
-      hotelAdminId = decodedToken.id;
-    }
-
-    let imageUrls: string[] = [];
-    if (values.images && values.images.length > 0) {
-      try {
-        for (const file of values.images) {
-          const imageUrl = await uploadImageToCloudinary(file);
-          imageUrls.push(imageUrl);
-        }
-      } catch (error) {
-        console.log("Error al subir la imagen: ", error);
-        alert("Error al subir la imagen. Intentalo de nuevo");
-        setSubmitting(false);
-        return;
-      }
-    }
-
-    const formData = {
-      ...values,
-      images: imageUrls,
-      hotel_admin_id: hotelAdminId,
-    };
-
-    console.log("Datos enviados al backend:", formData);
-
-    try {
-      const data = await postHotel(formData);
-      console.log("Data:", data);
-      if (!data.error) {
-        console.log(data);
-      }
-    } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "Hotel creado exitosamente",
-        text: "Cierra sesión, vuelve a iniciarla y crea tus tipos de habitaciones",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      router.push("/post-hotel-types");
-      console.log(error);
-    } 
   };
 
   return (

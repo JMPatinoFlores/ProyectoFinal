@@ -159,7 +159,7 @@ export interface IHotelRegister {
   totalRooms: number;
   services: string[];
   rating: number;
-  images: File[] | string[];
+  images: string[] | File[];
   hotel_admin_id: string;
 }
 
