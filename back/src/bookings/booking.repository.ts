@@ -198,6 +198,12 @@ export class BookingRepository {
     return bookings;
   }
 
+async getBookingsAndItsCustomerByHotelId(id: string) {
+  const bookings = await this.bookingDBRepository.find({where: {bookingDetails: {hotel: {id: id}}}, relations: {customer: true, bookingDetails: {availabilities: true}}})
+  if (bookings.length === 0) throw new NotFoundException('No se encontraron bookings de ese hotel.')
+  return bookings
+}
+
   async createBooking(bookingData: CreateBookingDto) {
     const { customerId, hotelId, roomTypesIdsAndDates } = bookingData;
     const now = new Date().toISOString();

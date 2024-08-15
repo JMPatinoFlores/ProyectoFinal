@@ -62,4 +62,8 @@ export class BookingService {
   async softDeleteBooking(id: string) {
     return await this.bookingRepository.softDeleteBooking(id)
   }
+
+  async getBookingsAndItsCutomerByHotelId(id: string) {
+    return await this.bookingRepository.getBookingsAndItsCustomerByHotelId(id)
+  }
 }
