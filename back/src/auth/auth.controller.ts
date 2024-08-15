@@ -49,9 +49,9 @@ export class AuthController {
   async googleCustomerAuthRedirect(@Req() req: Request, @Res() res: Response) {
     const user: any = req.user;
     if (user !== null && typeof user === 'object' && !Array.isArray(user))
-      res.redirect('http://localhost:3001/login');
+      res.redirect('https://rutaviajera.vercel.app/login');
     if (typeof user === 'string')
-      res.redirect(`http://localhost:3001/register?${user}`);
+      res.redirect(`https://rutaviajera.vercel.app/register?${user}`);
   }
 
   @Get('api/google/register/hotelAdmin')
@@ -67,9 +67,9 @@ export class AuthController {
   ) {
     const user: any = req.user;
     if (user !== null && typeof user === 'object' && !Array.isArray(user))
-      res.redirect('http://localhost:3001/login');
+      res.redirect('https://rutaviajera.vercel.app/login');
     if (typeof user === 'string')
-      res.redirect(`http://localhost:3001/register?${user}`);
+      res.redirect(`https://rutaviajera.vercel.app/register?${user}`);
   }
 
   @Get('api/google/login')
@@ -89,12 +89,12 @@ export class AuthController {
       };
       const token = this.jwtService.sign(payload);
       if (payload.isAdmin)
-        res.redirect(`http://localhost:3001/dashboard?token=${token}`);
+        res.redirect(`https://rutaviajera.vercel.app/dashboard?token=${token}`);
       if (!payload.isAdmin)
-        res.redirect(`http://localhost:3001/home?token=${token}`);
+        res.redirect(`https://rutaviajera.vercel.app/home?token=${token}`);
     }
     if (typeof user === 'string') {
-      res.redirect(`http://localhost:3001/register?${user}=userDoesNotExist`);
+      res.redirect(`https://rutaviajera.vercel.app/register?${user}=userDoesNotExist`);
     }
   }
 
