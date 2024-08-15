@@ -11,9 +11,11 @@ function HotelAdminsSuperAdmin() {
     setSearchQuery(searchQuery);
   };
 
+  const placeholder = "Busca un administrador de hotel.";
+
   return (
     <div>
-      <SearchBar placeholder="Buscar por hotel" onSearch={handleSearch} />
+      <SearchBar placeholder={placeholder} onSearch={handleSearch} />
       <HotelAdmins searchQuery={searchQuery} />
     </div>
   );

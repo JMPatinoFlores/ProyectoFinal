@@ -18,9 +18,11 @@ function HotelsSuperAdminPage({ params }: Props) {
     setSearchQuery(searchQuery);
   };
 
+  const placeholder = "Busca un hotel.";
+
   return (
     <div>
-      <SearchBar placeholder="Buscar hoteles" onSearch={handleSearch} />
+      <SearchBar placeholder={placeholder} onSearch={handleSearch} />
       <HotelsSuperAdmin searchQuery={searchQuery} hotelAdminId={hotelAdminId} />
     </div>
   );

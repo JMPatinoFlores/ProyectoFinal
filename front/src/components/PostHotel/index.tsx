@@ -289,7 +289,7 @@ const HotelRegister: React.FC<HotelRegisterProps> = () => {
     }
   };
 
-  const uploadImageToCloudinary = async (file: File): Promise<string> => {
+  const uploadImageToCloudinary = async (file: string | File): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append(

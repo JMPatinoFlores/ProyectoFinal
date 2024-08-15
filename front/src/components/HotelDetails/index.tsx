@@ -64,6 +64,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
   const [userId, setUserId] = useState<string | null>(null);
   const [roomTypes, setRoomTypes] = useState<IRoomType[]>([]);
   const [showConfirmBooking, setShowConfirmBooking] = useState(false);
+  const [messageRoomOccupied, setMessageRoomOccupied] = useState(false)
 
   useEffect(() => {
     const token =
@@ -79,7 +80,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
     if (hotel) {
       setRoomTypes(hotel.roomstype || []);
     }
-  }, [hotel]);
+  }, [hotel]);  
 
   const initialValues: ICreateBooking = {
     customerId: userId || "",
@@ -99,13 +100,14 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
         checkOutDate: item.checkOutDate,
       })),
     };
-
     try {
       const response = await postBooking(formData);
       console.log("Datos de la reserva realizada:", response);
-      if (response) {
+      if (!response.error) {
         alert("Reserva hecha exitosamente");
         setShowConfirmBooking(true);
+      } else {
+        setMessageRoomOccupied(true)
       }
     } catch (error) {
       console.log("Error al realizar la reserva: ", error);
@@ -291,23 +293,27 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
                 </Form>
               )}
             </Formik>
+            {messageRoomOccupied && (
+              <div>
+                <p className="text-red-500 text-sm mt-1">
+                  No hay habitaciones disponibles para esta fecha
+                </p>
+              </div>
+            )}
             {showConfirmBooking && (
-              <div className="flex justify-center mb-[-1000px] mt-[10px]">
+              <div className="flex flex-col items-center mb-[-990px] mt-[10px]">
                 <GatewayPayment />
               </div>
             )}
           </div>
         </div>
-        <div className="flex flex-col items-center mt-4 mb-8">
+        <div className="flex flex-col items-center mt-4 mb-8 p-5">
           <div className="text-center font-semibold text-2xl mt-4">
             <h1>Tipos de habitación</h1>
             <div className="flex flex-wrap justify-center gap-4">
               {roomTypes.length > 0 ? (
                 roomTypes.map((roomType) => (
-                  <div
-                    key={roomType.id}
-                    className="w-64 bg-white shadow-md rounded-lg overflow-hidden"
-                  >
+                  <div className="w-64 bg-white shadow-md rounded-lg overflow-hidden">
                     {roomType.images && roomType.images.length > 0 ? (
                       <div className="h-40 w-full bg-gray-200 overflow-hidden">
                         <Image

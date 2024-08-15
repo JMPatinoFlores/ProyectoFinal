@@ -422,6 +422,13 @@ export interface ISuperAdminContextType {
     searchQuery: string
   ) => Promise<IReviewOfSuperAdmin[]>;
   fetchDeleteReviewOfHotel: (reviewId: string) => Promise<boolean>;
+  fetchDeleteRoomTypeOfHotel: (roomtypeId: string) => Promise<boolean>;
+  fetchUpdateRoomTypeDetails: (roomtypeId: string, selectedRoomType: Partial<IRoomTypeOfSuperAdmin> | null) => Promise<boolean>;
+  fetchRoomTypesBySearch: (hotelId: string, searchQuery: string) => Promise<IRoomTypeOfSuperAdmin[]>;
+  fetchRoomsByRoomTypeId: (roomTypeId: string) => Promise<IRoomOfSuperAdmin[]>;
+  fetchDeleteRoom: (roomId: string) => Promise<boolean>;
+  fetchUpdateRoom: (roomId: string, selectedRoom: Partial<IRoomOfSuperAdmin>) => Promise<boolean>;
+  fetchRoomsBySearch: (roomTypeId: string, searchQuery: string) => Promise<IRoomOfSuperAdmin[]>;
 }
 
 export interface IHotelAdminDetails {
@@ -486,7 +493,7 @@ export interface IHotelOfSuperAdmin {
   rating: string;
   images: string[];
   isDeleted: boolean;
-  roomtypes: IRoomTypeOfSuperAdmin[];
+  roomstype: IRoomTypeOfSuperAdmin[];
   reviews: IReviewOfSuperAdmin[];
 }
 
@@ -499,6 +506,7 @@ export interface IRoomTypeOfSuperAdmin {
   price: number;
   images: string[];
   isDeleted: boolean;
+  rooms: IRoomOfSuperAdmin[]
 }
 
 export interface IRoomOfSuperAdmin {
