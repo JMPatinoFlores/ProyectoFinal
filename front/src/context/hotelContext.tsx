@@ -12,7 +12,7 @@ import {
   getBookingByHotel,
   getHotelById,
   getHotels,
-  getHotelsByAdminId,
+  fetchHotelsByAdminId,
   getRoomsByHotel,
   postHotel,
   updateHotel,
@@ -102,7 +102,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     async (queryParams: string): Promise<IHotelDetail[]> => {
       try {
         const response = await fetch(
-          `https://back-rutaviajera.onrender.com/hotels/filters?${queryParams}`
+          `http://localhost:3000/hotels/filters?${queryParams}`
         );
         console.log(response);
         
@@ -127,7 +127,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchHotelsByAdmin = useCallback(
     async (id: string): Promise<IHotel[]> => {
       try {
-        const data = await getHotelsByAdminId(id);
+        const data = await fetchHotelsByAdminId(id);
 
         const filteredData = data.filter((hotel: IHotel) => !hotel.isDeleted);
 

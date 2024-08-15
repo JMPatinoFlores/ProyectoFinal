@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 function Team() {
@@ -64,7 +65,7 @@ function Team() {
                     className="text-muted-foreground hover:text-primary"
                     prefetch={false}
                   >
-                    <img
+                    <Image
                       src="./linkedin.svg"
                       alt="LinkedIn"
                       width={16}

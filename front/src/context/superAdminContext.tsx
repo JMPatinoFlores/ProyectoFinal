@@ -429,7 +429,7 @@ export const SuperAdminProvider = ({
     async (hotelAdminId: string, searchQuery: string): Promise<IHotelOfSuperAdmin[]> => {
       try {
         const response = await fetch(
-          `https://back-rutaviajera.onrender.com/hotels/search?hotelAdminId=${hotelAdminId}&search=${searchQuery}`
+          `https://back-rutaviajera.onrender.com/hotels/search/hotelAdmin?hotelAdminId=${hotelAdminId}&search=${searchQuery}`
         );
         console.log(response);
         

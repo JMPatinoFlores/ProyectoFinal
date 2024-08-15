@@ -1,7 +1,9 @@
 "use client";
 
 import {
+  IBooking,
   IDecodeToken,
+  IHotel,
   ILoginUser,
   IReviewResponse,
   IUser,
@@ -9,6 +11,7 @@ import {
   IUserResponse,
 } from "@/interfaces";
 import {
+  fetchCustomerBookings,
   getAllReviews,
   postAdminRegister,
   postCustomerRegister,
@@ -18,6 +21,7 @@ import { jwtDecode } from "jwt-decode";
 import { createContext, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { fetchHotelsByAdminId } from "@/lib/server/fetchHotels";
 
 export const UserContext = createContext<IUserContextType>({
   user: null,
@@ -31,6 +35,11 @@ export const UserContext = createContext<IUserContextType>({
   hotelierRegister: async () => false,
   getReviews: async () => {},
   reviews: [],
+  getBookings: async () => {},
+  getHotelsByAdmin: async () => {},
+  addNewHotel: async () => {},
+  getBookingsByHotel: async () => [],
+  bookings: [],
   logOut: () => {},
 });
 
@@ -39,6 +48,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [reviews, setReviews] = useState<IReviewResponse[]>([]);
+  const [bookings, setBookings] = useState<IBooking[]>([]);
 
   const customerRegister = async (
     user: Omit<IUser, "id">
@@ -86,6 +96,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           birthDate: data.user.birthDate,
           isAdmin: decodedToken.isAdmin,
           hotels: data.user.hotels,
+          reviews: data.user.reviews,
+          bookings: data.user.bookings,
         };
 
         setUser(user);
@@ -102,6 +114,68 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const addNewHotel = (newHotel: IHotel) => {
+    setUser((prevUser) => {
+      if (!prevUser) return null;
+
+      return {
+        ...prevUser,
+        hotels: [...(prevUser.hotels || []), newHotel],
+      };
+    });
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        ...user,
+        hotels: [...(user?.hotels || []), newHotel],
+      })
+    );
+  };
+
+  const getHotelsByAdmin = useCallback(async (adminId: string) => {
+    try {
+      const data = await fetchHotelsByAdminId(adminId);
+      setUser((prevUser) =>
+        prevUser ? { ...prevUser, hotels: data } : prevUser
+      );
+    } catch (error) {
+      console.error("Error al obtener los hoteles del admin:", error);
+    }
+  }, []);
+
+  const getBookingsByHotel = async (hotelId: string): Promise<IBooking[]> => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error(
+        "No se encontró el token. Por favor, inicie sesión de nuevo."
+      );
+      return [];
+    }
+
+    try {
+      const response = await fetch(
+        `https://back-rutaviajera.onrender.com/bookings/hotel/${hotelId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al obtener reservas");
+      }
+
+      const data: IBooking[] = await response.json();
+      setBookings(data); // Guardamos las reservas en el estado
+      return data;
+    } catch (error) {
+      console.error("Error al obtener reservas:", error);
+      return [];
+    }
+  };
+
   const getReviews = useCallback(async () => {
     try {
       const data = await getAllReviews();
@@ -112,7 +186,19 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
+  const getBookings = useCallback(async (customerId: string) => {
+    try {
+      const data = await fetchCustomerBookings(customerId);
+      setUser((prevUser) =>
+        prevUser ? { ...prevUser, bookings: data } : prevUser
+      );
+    } catch (error) {
+      console.error("Error al obtener las reservas:", error);
+    }
+  }, []);
+
   const router = useRouter();
+
   const logOut = () => {
     const confirm = Swal.fire({
       title: "¿Estás seguro?",
@@ -124,17 +210,17 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       confirmButtonText: "Sí, cerrar sesión",
       cancelButtonText: "Cancelar",
     }).then((result) => {
-      if(result.isConfirmed)
-      {
-      router.push("/");
-      setUser(null);
-      setIsLogged(false);
-      setIsAdmin(false);
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-      }}
-    })
+      if (result.isConfirmed) {
+        router.push("/");
+        setUser(null);
+        setIsLogged(false);
+        setIsAdmin(false);
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
+        }
+      }
+    });
   };
 
   useEffect(() => {
@@ -144,18 +230,25 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         setIsLogged(true);
         const decodedToken = jwtDecode<IDecodeToken>(token);
         setIsAdmin(decodedToken.isAdmin);
+
+        if (decodedToken.id) {
+          getBookings(decodedToken.id);
+          if (decodedToken.isAdmin) {
+            getHotelsByAdmin(decodedToken.id);
+          }
+        }
       } else {
         setIsLogged(false);
       }
 
-      const user = localStorage.getItem("user");
-      if (user) {
-        setUser(JSON.parse(user) as IUserResponse);
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser) as IUserResponse);
       } else {
         setUser(null);
       }
     }
-  }, []);
+  }, [getBookings, getHotelsByAdmin]);
 
   return (
     <UserContext.Provider
@@ -171,6 +264,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         customerRegister,
         getReviews,
         reviews,
+        getBookings,
+        getHotelsByAdmin,
+        addNewHotel,
+        getBookingsByHotel,
+        bookings,
         logOut,
       }}
     >
