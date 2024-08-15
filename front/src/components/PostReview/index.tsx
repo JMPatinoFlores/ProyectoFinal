@@ -49,7 +49,7 @@ export function PostReview() {
   return (
     <div className="w-full m-2">
       {!isAdmin && (
-        <div>
+        <div className="">
           <h3 className="font-light">¿Cómo calificarías tu experiencia?</h3>
           <Formik
             initialValues={initialValues}
