@@ -81,8 +81,10 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     async (searchQuery: string): Promise<IHotelDetail[]> => {
       try {
         const response = await fetch(
-          `http://localhost:3000/hotels/search?search=${searchQuery}`
+          `https://back-rutaviajera.onrender.com/hotels/search?search=${searchQuery}`
         );
+        console.log(response);
+        
         if (!response.ok) {
           throw new Error(`HTTP error status: ${response.status}`);
         }
@@ -100,8 +102,10 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     async (queryParams: string): Promise<IHotelDetail[]> => {
       try {
         const response = await fetch(
-          `http://localhost:3000/hotels/filters?${queryParams}`
+          `https://back-rutaviajera.onrender.com/hotels/filters?${queryParams}`
         );
+        console.log(response);
+        
         if (!response.ok) {
           throw new Error(`HTTP error status: ${response.status}`);
         }
