@@ -1,11 +1,11 @@
 "use client";
-
 import { UserContext } from "@/context/userContext";
 import Image from "next/image";
+import Link from "next/link";
 import { useContext } from "react";
 
 export default function Profile() {
-  const { isLogged, user } = useContext(UserContext);
+  const { isLogged, user, isAdmin } = useContext(UserContext);
   console.log(user);
 
   return (
@@ -21,7 +21,8 @@ export default function Profile() {
                 <div className="">
                   <h1 className="text-4xl font-bold">¡Hola, {user?.name}!</h1>
                 </div>
-                <button className="flex px-4 py-3 text-red-600 hover:text-red-700 focus:text-red-700 hover:bg-red-100 focus:bg-red-100 border border-red-600 rounded-md mr-2">
+                {isAdmin ? (
+                <Link href={"/edit-profile/hotelier"} className="flex px-4 py-3 text-red-600 hover:text-red-700 focus:text-red-700 hover:bg-red-100 focus:bg-red-100 border border-red-600 rounded-md mr-2">
                   <Image
                     src={"/edit.png"}
                     alt="Editar"
@@ -30,7 +31,19 @@ export default function Profile() {
                     className="invert mr-2"
                   />
                   Editar perfil
-                </button>
+                </Link>
+                ):(
+                  <Link href={"/edit-profile/customer"} className="flex px-4 py-3 text-red-600 hover:text-red-700 focus:text-red-700 hover:bg-red-100 focus:bg-red-100 border border-red-600 rounded-md mr-2">
+                  <Image
+                    src={"/edit.png"}
+                    alt="Editar"
+                    width={24}
+                    height={24}
+                    className="invert mr-2"
+                  />
+                  Editar perfil
+                </Link>
+                )}
               </div>
               <div>
                 <div className="border border-y-4 border-gray-900 p-4 rounded-lg w-2/3 mx-auto">
