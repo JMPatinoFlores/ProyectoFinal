@@ -75,7 +75,7 @@ export class HotelsRepository {
     return hotelFound;
   }
 
-  async createDbHotel(hotelDto: CreateHotelDto): Promise<string> {
+  async createDbHotel(hotelDto: CreateHotelDto): Promise<Hotel> {
     const { hotel_admin_id, name, email, ...hotelData } = hotelDto;
     const nameHotel = await this.hotelDbRepository.findOne({ where: { name } });
     if (nameHotel) throw new BadRequestException('this hotel exists');
@@ -97,8 +97,7 @@ export class HotelsRepository {
       email,
       hotelAdmin: hoteladminFound,
     });
-    await this.hotelDbRepository.save(newHotel);
-    return newHotel.id;
+    return await this.hotelDbRepository.save(newHotel);
   }
 
   async searchHotels(hotelAdminId: string, query?: string): Promise<Hotel[]> {
