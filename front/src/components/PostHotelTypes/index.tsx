@@ -3,7 +3,6 @@
 import { IRoomTypeRegister } from "@/interfaces";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Link from "next/link";
-import continueImage from "../../../public/continue.png";
 import createImage from "../../../public/create.png";
 import Image from "next/image";
 import { postRoomType } from "@/lib/server/fetchHotels";
@@ -13,7 +12,7 @@ import Swal from "sweetalert2";
 import { UserContext } from "@/context/userContext";
 
 export default function TypesRegister() {
-  const { isAdmin } = useContext(UserContext)
+  const { isAdmin, user } = useContext(UserContext);
   const router = useRouter();
   const [hotelId, setHotelId] = useState<string>("");
 
@@ -26,29 +25,23 @@ export default function TypesRegister() {
     price: 0,
     hotelId: hotelId,
     roomTypeId: "",
-    id: ""
+    id: "",
   });
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const userObject = JSON.parse(storedUser);
-        if (userObject.hotels && userObject.hotels.length > 0) {
-          const fetchedHotelId = userObject.hotels[0].id;
-          setHotelId(fetchedHotelId);
-          setInitialValues((prevValues) => ({
-            ...prevValues,
-            hotelId: fetchedHotelId,
-          }));
-        }
-      } catch (error) {
-        console.error("Error al parsear el hotelId desde localStorage:", error);
-      }
+    if (user && user.hotels && user.hotels.length > 0) {
+      const lastHotelId = user.hotels[user.hotels.length - 1].id;
+      setHotelId(lastHotelId);
+      setInitialValues((prevValues) => ({
+        ...prevValues,
+        hotelId: lastHotelId,
+      }));
     }
-  }, []);
+  }, [user]);
 
-  const uploadImageToCloudinary = async (file: string | File): Promise<string> => {
+  const uploadImageToCloudinary = async (
+    file: string | File
+  ): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append(
@@ -114,14 +107,14 @@ export default function TypesRegister() {
         showConfirmButton: true,
         timer: 4000,
       });
-      router.push("/rooms-number")
+      router.push("/rooms-number");
     } catch (error) {
       console.error(error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "Ha ocurrido un error",
-        timer: 4000
+        timer: 4000,
       });
     } finally {
       setSubmitting(false);
@@ -246,11 +239,11 @@ export default function TypesRegister() {
                       className="text-red-600 text-sm"
                     />
                   </div>
-                  <div className="flex mx-4 justify-center">
+                  <div className="flex justify-end mr-2">
                     <div>
                       <button
                         type="submit"
-                        className="w-full flex justify-center py-2 px-4 border border-black rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8263a]"
+                        className="py-2 px-4 border border-black rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8263a]"
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? (
@@ -268,29 +261,6 @@ export default function TypesRegister() {
                         )}
                       </button>
                     </div>
-                    {/* <div>
-                    <Link href={"#"}>
-                      <button
-                        type="submit"
-                        className="btn-secondary"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? (
-                          "Cargando..."
-                        ) : (
-                          <div className="flex items-center">
-                            <h1 className="mr-1">Continuar</h1>
-                            <Image
-                              src={continueImage}
-                              alt="Continuar"
-                              width={24}
-                              height={24}
-                            />
-                          </div>
-                        )}
-                      </button>
-                    </Link>
-                  </div> */}
                   </div>
                 </Form>
               )}

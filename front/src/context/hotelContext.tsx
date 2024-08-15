@@ -12,7 +12,7 @@ import {
   getBookingByHotel,
   getHotelById,
   getHotels,
-  getHotelsByAdminId,
+  fetchHotelsByAdminId,
   getRoomsByHotel,
   postHotel,
   updateHotel,
@@ -81,8 +81,10 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     async (searchQuery: string): Promise<IHotelDetail[]> => {
       try {
         const response = await fetch(
-          `http://localhost:3000/hotels/search?search=${searchQuery}`
+          `https://back-rutaviajera.onrender.com/hotels/search?search=${searchQuery}`
         );
+        console.log(response);
+        
         if (!response.ok) {
           throw new Error(`HTTP error status: ${response.status}`);
         }
@@ -100,8 +102,10 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
     async (queryParams: string): Promise<IHotelDetail[]> => {
       try {
         const response = await fetch(
-          `http://localhost:3000/hotels/filters?${queryParams}`
+          `https://back-rutaviajera.onrender.com/hotels/filters?${queryParams}`
         );
+        console.log(response);
+        
         if (!response.ok) {
           throw new Error(`HTTP error status: ${response.status}`);
         }
@@ -123,7 +127,7 @@ export const HotelProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchHotelsByAdmin = useCallback(
     async (id: string): Promise<IHotel[]> => {
       try {
-        const data = await getHotelsByAdminId(id);
+        const data = await fetchHotelsByAdminId(id);
 
         const filteredData = data.filter((hotel: IHotel) => !hotel.isDeleted);
 

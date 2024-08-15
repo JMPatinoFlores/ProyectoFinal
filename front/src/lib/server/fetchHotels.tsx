@@ -6,7 +6,13 @@ import {
 } from "@/interfaces";
 
 export const postHotel = async (hotel: IHotelRegister) => {
-  const token = typeof window !== "undefined" && localStorage.getItem("token");
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error(
+      "No se encontró el token. Por favor, inicie sesión de nuevo."
+    );
+  }
+
   try {
     const response = await fetch(
       "https://back-rutaviajera.onrender.com/hotels",
@@ -19,12 +25,14 @@ export const postHotel = async (hotel: IHotelRegister) => {
         body: JSON.stringify(hotel),
       }
     );
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error("Error en la solicitud: " + response.status);
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error en la solicitud:", errorData);
+      throw new Error(`Error en la solicitud: ${response.status}`);
     }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(error);
     throw error;
@@ -79,7 +87,7 @@ export const getHotelById = async (id: string) => {
   }
 };
 
-export const getHotelsByAdminId = async (id: string) => {
+export const fetchHotelsByAdminId = async (id: string) => {
   const token = localStorage.getItem("token");
 
   if (!token) {
@@ -290,11 +298,10 @@ export const deleteHotel = async (hotelId: string) => {
   const text = await response.text();
   try {
     if (response.status === 400 && text.includes("Hotel was eliminated")) {
-      // El servidor dice que el hotel fue eliminado, pero manda un error.
-      return true; // Retorna éxito en lugar de fallar
+      return true;
     }
 
-    const data = JSON.parse(text); // Intenta parsear la respuesta
+    const data = JSON.parse(text);
     if (!response.ok) {
       throw new Error(
         `Error en la solicitud: ${response.status} - ${response.statusText}: ${data.message}`

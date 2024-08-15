@@ -1,5 +1,3 @@
-"use client";
-
 import { IAdminHotel } from "@/interfaces";
 import { useState } from "react";
 
@@ -57,8 +55,8 @@ function EditHotelModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-full sm:max-w-lg md:max-w-md lg:max-w-lg xl:max-w-xl w-full relative">
         <h2 className="text-2xl font-bold mb-4">Editar Hotel</h2>
         <form className="space-y-4">
           <div>
@@ -138,7 +136,12 @@ function EditHotelModal({
             Guardar
           </button>
         </div>
-        <button onClick={handleDelete}>Borrar hotel</button>
+        <button
+          onClick={handleDelete}
+          className="text-sm text-red-600 p-2 flex justify-center items-center w-full"
+        >
+          Eliminar este hotel
+        </button>
       </div>
     </div>
   );
