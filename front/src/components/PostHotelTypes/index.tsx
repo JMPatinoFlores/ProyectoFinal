@@ -23,6 +23,8 @@ export default function TypesRegister() {
     images: [],
     price: 0,
     hotelId: hotelId,
+    roomTypeId: "",
+    id: ""
   });
 
   useEffect(() => {
