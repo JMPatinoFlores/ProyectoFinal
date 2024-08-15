@@ -16,7 +16,8 @@ import { updateHotel } from "@/lib/server/fetchHotels";
 
 function MyHotels() {
   const { user } = useContext(UserContext);
-  const { hotels, fetchHotelsByAdmin } = useContext(HotelContext);
+  const { hotels, fetchHotelsByAdmin, deleteHotelById } =
+    useContext(HotelContext);
   const [selectedHotel, setSelectedHotel] = useState<IAdminHotel | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -49,6 +50,18 @@ function MyHotels() {
     handleCloseModal();
   };
 
+  const handleDeleteHotel = async (hotelId: string) => {
+    try {
+      const success = await deleteHotelById(hotelId);
+      if (success) {
+        handleCloseModal();
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error eliminando hotel:", error);
+    }
+  };
+
   return (
     <div>
       {isModalOpen && (
@@ -56,6 +69,7 @@ function MyHotels() {
           hotel={selectedHotel}
           onClose={handleCloseModal}
           onSave={handleSaveChanges}
+          onDelete={handleDeleteHotel}
         />
       )}
       <div className="flex justify-between items-center mx-4 my-6">
