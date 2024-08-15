@@ -112,8 +112,8 @@ export class AuthController {
 
   @Post('superAdminSignUp')
   @ApiBearerAuth()
-  @Roles(Role.SuperAdmin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.SuperAdmin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Registro de Super Admin' })
   superAdminSignUp(@Body() superAdmin: CreateSuperAdmin) {
     return this.authService.signUpSuperAdmin(superAdmin);

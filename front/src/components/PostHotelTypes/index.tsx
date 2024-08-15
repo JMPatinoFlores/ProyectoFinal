@@ -9,6 +9,7 @@ import Image from "next/image";
 import { postRoomType } from "@/lib/server/fetchHotels";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function TypesRegister() {
   const router = useRouter();
@@ -22,6 +23,8 @@ export default function TypesRegister() {
     images: [],
     price: 0,
     hotelId: hotelId,
+    roomTypeId: "",
+    id: ""
   });
 
   useEffect(() => {
@@ -43,7 +46,7 @@ export default function TypesRegister() {
     }
   }, []);
 
-  const uploadImageToCloudinary = async (file: File): Promise<string> => {
+  const uploadImageToCloudinary = async (file: string | File): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append(
@@ -102,12 +105,22 @@ export default function TypesRegister() {
     try {
       const response = await postRoomType(formData);
       console.log("Datos enviados: ", response);
-      alert("Tipo de habitación registrado exitosamente");
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Tipo de habitación registrado exitosamente",
+        showConfirmButton: true,
+        timer: 4000,
+      });
       router.push("/rooms-number")
     } catch (error) {
       console.error(error);
-      alert("Error");
-      // router.push("/dashboard/myhotels");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Ha ocurrido un error",
+        timer: 4000
+      });
     } finally {
       setSubmitting(false);
     }

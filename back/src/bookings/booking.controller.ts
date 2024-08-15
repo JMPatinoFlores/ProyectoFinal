@@ -135,6 +135,16 @@ export class BookingController {
     return await this.bookingService.getBookingsByHotelAdminId(id, Number(page), Number(limit))
   }
 
+  @ApiOperation({ summary: 'Trae todos los bookings de un hotel.' })
+  @ApiBearerAuth()
+  @Roles(Role.Admin, Role.SuperAdmin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Get('hotel/:id')
+  @HttpCode(200)
+  async getBookingsAndItsCutomerByHotelId(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.bookingService.getBookingsAndItsCutomerByHotelId(id)
+  }
+
   @ApiOperation({ summary: 'Trae un booking por id.' })
   @ApiBearerAuth()
   @Roles(Role.Admin, Role.User)

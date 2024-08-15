@@ -138,6 +138,7 @@ export class AuthService {
           address: customer.address,
           birthDate: customer.birthDate,
           bookings: customer.bookings,
+          reviews: customer.reviews
         },
         token,
       };

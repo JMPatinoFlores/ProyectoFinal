@@ -18,6 +18,7 @@ export interface IUserResponse extends IUser {
   isAdmin: boolean;
   hotels?: IHotel[];
   reviews?: IReview[];
+  bookings?: IBookingDetails[];
 }
 
 export interface ILogin {
@@ -138,6 +139,8 @@ export interface IRoomType {
 }
 
 export interface IRoomTypeRegister {
+  id: string;
+  roomTypeId: string;
   name: string;
   capacity: number;
   totalBathrooms: number;
@@ -159,6 +162,21 @@ export interface IHotelRegister {
   services: string[];
   rating: number;
   images: string[] | File[];
+  hotel_admin_id: string;
+}
+
+export interface IHotelFormData {
+  name: string;
+  description: string;
+  email: string;
+  country: string;
+  city: string;
+  address: string;
+  location: number[];
+  totalRooms: number;
+  services: string[];
+  rating: number;
+  images: string[];
   hotel_admin_id: string;
 }
 
@@ -209,6 +227,7 @@ export interface IHotel {
   rating: number;
   reviews?: IReview[];
   hotelAdminId: string;
+  isDeleted: boolean;
 }
 
 export interface IHotelContextType {
@@ -226,6 +245,7 @@ export interface IHotelContextType {
     hotelId: string,
     hotelDetails: Partial<IAdminHotel>
   ) => Promise<boolean>;
+  deleteHotelById: (hotelId: string) => Promise<boolean>;
 }
 
 export interface IHotelResponse {
@@ -367,20 +387,50 @@ export interface ISuperAdminContextType {
     hotelAdminId: string
   ) => Promise<IHotelAdminDetails | undefined>;
   fetchHotelById: (hotelId: string) => Promise<IHotelOfSuperAdmin | undefined>;
-  fetchCustomerById: (customerId: string) => Promise<ICustomerDetails | undefined>;
-  fetchDeleteHotelOfHotelAdmin: (hotelId: string, hotelAdminId: string) => Promise<boolean>;
-  fetchDeleteBookingOfCustomer: (bookingId: string, customerId: string) => Promise<boolean>;
-  fetchUpdateHotelDetails: (hotelId: string, selectedHotel: Partial<IHotelOfSuperAdmin> | null, hotelAdminId: string) => Promise<boolean>;
-  fetchUpdateHotelAdminDetails: (hotelAdminId: string, selectedHotelAdmin: Partial<IHotelAdminDetails> | null) => Promise<boolean>;
-  fetchUpdateCustomerDetails: (customerId: string, selectedCustomer: Partial<ICustomerDetails> | null) => Promise<boolean>;
-  fetchHotelAdminsBySearch: (searchQuery: string) => Promise<IHotelAdminDetails[]>;
-  fetchHotelsBySearch: (hotelAdminId: string, searchQuery: string) => Promise<IHotelOfSuperAdmin[]>;
+  fetchCustomerById: (
+    customerId: string
+  ) => Promise<ICustomerDetails | undefined>;
+  fetchDeleteHotelOfHotelAdmin: (
+    hotelId: string,
+    hotelAdminId: string
+  ) => Promise<boolean>;
+  fetchDeleteBookingOfCustomer: (
+    bookingId: string,
+    customerId: string
+  ) => Promise<boolean>;
+  fetchUpdateHotelDetails: (
+    hotelId: string,
+    selectedHotel: Partial<IHotelOfSuperAdmin> | null,
+    hotelAdminId: string
+  ) => Promise<boolean>;
+  fetchUpdateHotelAdminDetails: (
+    hotelAdminId: string,
+    selectedHotelAdmin: Partial<IHotelAdminDetails> | null
+  ) => Promise<boolean>;
+  fetchUpdateCustomerDetails: (
+    customerId: string,
+    selectedCustomer: Partial<ICustomerDetails> | null
+  ) => Promise<boolean>;
+  fetchHotelAdminsBySearch: (
+    searchQuery: string
+  ) => Promise<IHotelAdminDetails[]>;
+  fetchHotelsBySearch: (
+    hotelAdminId: string,
+    searchQuery: string
+  ) => Promise<IHotelOfSuperAdmin[]>;
   fetchCustomersBySearch: (searchQuery: string) => Promise<ICustomerDetails[]>;
   fetchReviewsBySearch: (
     hotelId: string,
     searchQuery: string
   ) => Promise<IReviewOfSuperAdmin[]>;
   fetchDeleteReviewOfHotel: (reviewId: string) => Promise<boolean>;
+  fetchDeleteRoomTypeOfHotel: (roomtypeId: string) => Promise<boolean>;
+  fetchUpdateRoomTypeDetails: (roomtypeId: string, selectedRoomType: Partial<IRoomTypeOfSuperAdmin> | null) => Promise<boolean>;
+  fetchRoomTypesBySearch: (hotelId: string, searchQuery: string) => Promise<IRoomTypeOfSuperAdmin[]>;
+  fetchRoomsByRoomTypeId: (roomTypeId: string) => Promise<IRoomOfSuperAdmin[]>;
+  fetchDeleteRoom: (roomId: string) => Promise<boolean>;
+  fetchUpdateRoom: (roomId: string, selectedRoom: Partial<IRoomOfSuperAdmin>) => Promise<boolean>;
+  fetchRoomsBySearch: (roomTypeId: string, searchQuery: string) => Promise<IRoomOfSuperAdmin[]>;
 }
 
 export interface IHotelAdminDetails {
@@ -445,7 +495,7 @@ export interface IHotelOfSuperAdmin {
   rating: string;
   images: string[];
   isDeleted: boolean;
-  roomtypes: IRoomTypeOfSuperAdmin[];
+  roomstype: IRoomTypeOfSuperAdmin[];
   reviews: IReviewOfSuperAdmin[];
 }
 
@@ -458,6 +508,7 @@ export interface IRoomTypeOfSuperAdmin {
   price: number;
   images: string[];
   isDeleted: boolean;
+  rooms: IRoomOfSuperAdmin[]
 }
 
 export interface IRoomOfSuperAdmin {
@@ -540,4 +591,9 @@ export interface IReviewOfSuperAdmin {
   date: string;
   rating: number;
   customer: ICustomerOfSuperAdmin;
+}
+
+export interface IReviewErrors {
+  rating: string;
+  comment: string;
 }
