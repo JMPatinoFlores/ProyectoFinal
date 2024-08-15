@@ -42,7 +42,7 @@ export class CustomersRepository {
   async getCustomerByEmail(email: string) {
     return await this.customersRepository.findOne({
       where: { email },
-      relations: ['bookings'],
+      relations: {bookings: {bookingDetails: {hotel: true, availabilities: true}}, reviews: true},
     });
   }
 

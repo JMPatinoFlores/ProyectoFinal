@@ -21,7 +21,7 @@ function ProductCard({ hotel }: ProductCardProps) {
       <Link href={`/hotel-detail/${hotel.id}`} className="group block">
         <div className="overflow-hidden rounded-lg transition-shadow shadow-none group-hover:shadow-lg">
           <img
-            src={hotel.images}
+            src={hotel.images[0]}
             alt="Hotel Image"
             width={300}
             height={300}

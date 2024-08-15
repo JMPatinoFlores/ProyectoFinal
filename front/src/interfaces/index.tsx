@@ -140,6 +140,8 @@ export interface IRoomType {
 }
 
 export interface IRoomTypeRegister {
+  id: string;
+  roomTypeId: string;
   name: string;
   capacity: number;
   totalBathrooms: number;
@@ -160,7 +162,7 @@ export interface IHotelRegister {
   totalRooms: number;
   services: string[];
   rating: number;
-  images: File[] | string[];
+  images: string[] | File[];
   hotel_admin_id: string;
 }
 
@@ -609,4 +611,9 @@ export interface IReviewOfSuperAdmin {
   date: string;
   rating: number;
   customer: ICustomerOfSuperAdmin;
+}
+
+export interface IReviewErrors {
+  rating: string;
+  comment: string;
 }

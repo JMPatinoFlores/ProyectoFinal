@@ -8,10 +8,11 @@ import PostReview from "../PostReview";
 import Image from "next/image";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { validateFormBooking } from "@/helpers/validateData";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { postBooking } from "@/lib/server/fetchHotels";
 import GatewayPayment from "../PaymentGateaway";
 import { FaStar } from "react-icons/fa";
+import { UserContext } from "@/context/userContext";
 
 const getTodayDate = () => {
   const today = new Date();
@@ -64,7 +65,9 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
   const [userId, setUserId] = useState<string | null>(null);
   const [roomTypes, setRoomTypes] = useState<IRoomType[]>([]);
   const [showConfirmBooking, setShowConfirmBooking] = useState(false);
-  const [messageRoomOccupied, setMessageRoomOccupied] = useState(false)
+  const [messageRoomOccupied, setMessageRoomOccupied] = useState(false);
+  const [totalPayment, setTotalPayment] = useState(0);
+  const { isAdmin } = useContext(UserContext);
 
   useEffect(() => {
     const token =
@@ -80,7 +83,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
     if (hotel) {
       setRoomTypes(hotel.roomstype || []);
     }
-  }, [hotel]);  
+  }, [hotel]);
 
   const initialValues: ICreateBooking = {
     customerId: userId || "",
@@ -91,6 +94,14 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
   };
 
   const handleSubmit = async (booking: ICreateBooking) => {
+    const totalDays = calculateTotalDays(booking.roomTypesIdsAndDates);
+    const totalPayment = calculateTotalPayment(
+      totalDays,
+      booking.roomTypesIdsAndDates,
+      roomTypes
+    );
+    setTotalPayment(totalPayment);
+
     const formData = {
       customerId: booking.customerId,
       hotelId: booking.hotelId,
@@ -99,6 +110,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
         checkInDate: item.checkInDate,
         checkOutDate: item.checkOutDate,
       })),
+      totalPayment,
     };
     try {
       const response = await postBooking(formData);
@@ -107,11 +119,48 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
         alert("Reserva hecha exitosamente");
         setShowConfirmBooking(true);
       } else {
-        setMessageRoomOccupied(true)
+        setMessageRoomOccupied(true);
       }
     } catch (error) {
       console.log("Error al realizar la reserva: ", error);
     }
+  };
+
+  const calculateTotalDays = (
+    roomTypesIdsAndDates: { checkInDate: string; checkOutDate: string }[]
+  ) => {
+    const totalDays = roomTypesIdsAndDates.reduce((acc, current) => {
+      const checkInDate = new Date(current.checkInDate);
+      const checkOutDate = new Date(current.checkOutDate);
+      const days = Math.round(
+        (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 3600 * 24)
+      );
+      return acc + days;
+    }, 0);
+    return totalDays;
+  };
+
+  const calculateTotalPayment = (
+    totalDays: number,
+    roomTypesIdsAndDates: {
+      roomTypeId: string;
+      checkInDate: string;
+      checkOutDate: string;
+    }[],
+    roomTypes: IRoomType[]
+  ) => {
+    const totalPayment = roomTypesIdsAndDates.reduce((acc, current) => {
+      const roomType = roomTypes.find(
+        (roomType) => roomType.id === current.roomTypeId
+      );
+      if (roomType) {
+        const price = roomType.price;
+        const days = totalDays;
+        return acc + price * days;
+      }
+      return acc;
+    }, 0);
+    return totalPayment;
   };
 
   if (!hotel)
@@ -138,7 +187,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
   return (
     <div className="flex flex-col items-center mx-auto w-4/5 mt-8">
       <div className="w-full mb-4">
-        <div className="flex w-full h-96 mb-4">
+        <div className="flex flex-col lg:flex-row w-full h-auto lg:h-96 mb-4">
           <Image
             unoptimized
             src={hotel.images[0]}
@@ -147,26 +196,31 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
             height={300}
             className="object-cover rounded-lg flex-1 m-2"
           />
-          <div className="w-full mb-4 flex-1 m-4">
-            <div className="flex justify-between">
-              <h2 className="text-3xl font-bold text-center pb-4">
+          <div className="w-full lg:w-1/2 mb-4 flex-1 m-4">
+            <div className="flex flex-col lg:flex-row justify-between">
+              <h2 className="text-3xl font-bold text-center lg:text-left pb-4">
                 {hotel.name}
               </h2>
-              <Rating rating={hotel.rating} />
+              <div className="flex justify-center lg:justify-end">
+                <Rating rating={hotel.rating} />
+              </div>
             </div>
-            <hr className="hr-text mb-3" data-content="" />
-            <h2 className="text-2xl font-semibold">Descripción</h2>
-            <p className="pb-4">{hotel.description}</p>
-            <h2 className="text-2xl font-semibold">Servicios del Hotel</h2>
-            <ul className="list-disc pl-5">
-              {hotel.services.map((service, index) => (
-                <li key={index}>{service}</li>
-              ))}
-            </ul>
+            <hr className="hr-text mt-3 lg:mt-0 mb-3" data-content="" />
+            <div className="block">
+              <h2 className="text-2xl font-semibold">Descripción</h2>
+              <p className="pb-4">{hotel.description}</p>
+              <h2 className="text-2xl font-semibold">Servicios del Hotel</h2>
+              <ul className="list-disc pl-5">
+                {hotel.services.map((service, index) => (
+                  <li key={index}>{service}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-        <div className="flex">
-          <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden m-2 flex-1">
+
+        <div className="lg:flex block">
+          <div className="lg:relative w-full h-64 mb-4 rounded-lg overflow-hidden m-2 flex-1">
             {isLoaded && (
               <GoogleMap
                 mapContainerStyle={{ height: "400px", width: "100%" }}
@@ -184,128 +238,137 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
               </GoogleMap>
             )}
           </div>
-          <div className="flex-1 m-4">
-            <h2 className="font-semibold text-2xl">Reservar</h2>
-            <Formik
-              initialValues={initialValues}
-              onSubmit={handleSubmit}
-              validate={extendedValidateFormBooking}
-            >
-              {({ isSubmitting, values }) => (
-                <Form className="space-y-4">
-                  {values.roomTypesIdsAndDates.map((item, index) => (
-                    <div key={index} className="space-y-4">
-                      <div className="formDiv flex-1 mb-2">
-                        <label htmlFor="roomType" className="formLabel">
-                          Tipo de Habitación
-                        </label>
-                        <Field
-                          as="select"
-                          name={`roomTypesIdsAndDates[${index}].roomTypeId`}
-                          className="formInput"
-                        >
-                          <option value="">
-                            Seleccione un tipo de habitación
-                          </option>
-                          {roomTypes.length > 0 ? (
-                            roomTypes.map((roomType) => (
-                              <option
-                                key={String(roomType.id)}
-                                value={roomType.id}
-                              >
-                                {roomType.name}; ${roomType.price}; Capacidad:{" "}
-                                {roomType.capacity}; Baños:{" "}
-                                {roomType.totalBathrooms}; Camas:{" "}
-                                {roomType.totalBeds}
-                              </option>
-                            ))
-                          ) : (
+          {!isAdmin ? (
+            <div className="flex-1 m-4">
+              <h2 className="font-semibold text-2xl">Reservar</h2>
+              <Formik
+                initialValues={initialValues}
+                onSubmit={handleSubmit}
+                validate={extendedValidateFormBooking}
+              >
+                {({ isSubmitting, values }) => (
+                  <Form className="space-y-4">
+                    {values.roomTypesIdsAndDates.map((item, index) => (
+                      <div key={index} className="space-y-4">
+                        <div className="formDiv flex-1 mb-2">
+                          <label htmlFor="roomType" className="formLabel">
+                            Tipo de Habitación
+                          </label>
+                          <Field
+                            as="select"
+                            name={`roomTypesIdsAndDates[${index}].roomTypeId`}
+                            className="formInput"
+                          >
                             <option value="">
-                              No hay tipos de habitación disponibles
+                              Seleccione un tipo de habitación
                             </option>
-                          )}
-                        </Field>
-                      </div>
-                      <div className="formDiv flex-1 mb-4">
-                        <div className="flex space-x-4">
-                          <div className="w-1/2">
-                            <label
-                              htmlFor={`roomTypesIdsAndDates[${index}].checkInDate`}
-                              className="formLabel"
-                            >
-                              Fecha de entrada:
-                            </label>
-                            <Field
-                              type="date"
-                              name={`roomTypesIdsAndDates[${index}].checkInDate`}
-                              className="formInput"
-                            />
-                            <ErrorMessage
-                              name={`roomTypesIdsAndDates[${index}].checkInDate`}
-                              component="div"
-                              className="text-red-500 text-sm mt-1"
-                            />
-                          </div>
-                          <div className="w-1/2">
-                            <label
-                              htmlFor={`roomTypesIdsAndDates[${index}].checkOutDate`}
-                              className="formLabel"
-                            >
-                              Fecha de salida:
-                            </label>
-                            <Field
-                              type="date"
-                              name={`roomTypesIdsAndDates[${index}].checkOutDate`}
-                              className="formInput"
-                            />
-                            <ErrorMessage
-                              name={`roomTypesIdsAndDates[${index}].checkOutDate`}
-                              component="div"
-                              className="text-red-500 text-sm mt-1"
-                            />
+                            {roomTypes.length > 0 ? (
+                              roomTypes.map((roomType) => (
+                                <option
+                                  key={String(roomType.id)}
+                                  value={roomType.id}
+                                >
+                                  {roomType.name}
+                                </option>
+                              ))
+                            ) : (
+                              <option value="">
+                                No hay tipos de habitación disponibles
+                              </option>
+                            )}
+                          </Field>
+                        </div>
+                        <div className="formDiv flex-1 mb-4">
+                          <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+                            <div className="w-full lg:w-1/2">
+                              <label
+                                htmlFor={`roomTypesIdsAndDates[${index}].checkInDate`}
+                                className="formLabel"
+                              >
+                                Fecha de entrada:
+                              </label>
+                              <Field
+                                type="date"
+                                name={`roomTypesIdsAndDates[${index}].checkInDate`}
+                                className="formInput"
+                              />
+                              <ErrorMessage
+                                name={`roomTypesIdsAndDates[${index}].checkInDate`}
+                                component="div"
+                                className="text-red-500 text-sm mt-1"
+                              />
+                            </div>
+                            <div className="w-full lg:w-1/2">
+                              <label
+                                htmlFor={`roomTypesIdsAndDates[${index}].checkOutDate`}
+                                className="formLabel"
+                              >
+                                Fecha de salida:
+                              </label>
+                              <Field
+                                type="date"
+                                name={`roomTypesIdsAndDates[${index}].checkOutDate`}
+                                className="formInput"
+                              />
+                              <ErrorMessage
+                                name={`roomTypesIdsAndDates[${index}].checkOutDate`}
+                                component="div"
+                                className="text-red-500 text-sm mt-1"
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
 
-                  <div className="formDiv flex-1 mb-4 text-center">
-                    <button
-                      type="submit"
-                      className="btn-secondary w-full flex items-center justify-center"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        "Reservando..."
-                      ) : (
-                        <div className="flex items-center">
-                          <h1 className="mr-2">Reservar</h1>
-                          <Image
-                            src={"/continue.png"}
-                            alt="Continue"
-                            width={24}
-                            height={24}
-                          />
-                        </div>
-                      )}
-                    </button>
-                  </div>
-                </Form>
+                    <div className="formDiv flex-1 mb-4 text-center">
+                      <button
+                        type="submit"
+                        className="btn-secondary w-full flex items-center justify-center"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          "Reservando..."
+                        ) : (
+                          <div className="flex items-center">
+                            <h1 className="mr-2">Reservar</h1>
+                            <Image
+                              src={"/continue.png"}
+                              alt="Continue"
+                              width={24}
+                              height={24}
+                            />
+                          </div>
+                        )}
+                      </button>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
+
+              {messageRoomOccupied && (
+                <div>
+                  <p className="text-red-500 text-sm mt-1">
+                    No hay habitaciones disponibles para esta fecha
+                  </p>
+                </div>
               )}
-            </Formik>
-            {messageRoomOccupied && (
-              <div>
-                <p className="text-red-500 text-sm mt-1">
-                  No hay habitaciones disponibles para esta fecha
-                </p>
-              </div>
-            )}
-            {showConfirmBooking && (
-              <div className="flex flex-col items-center mb-[-990px] mt-[10px]">
-                <GatewayPayment />
-              </div>
-            )}
-          </div>
+              {showConfirmBooking && (
+                <div className="flex flex-col items-center mt-3 mb-[90px]">
+                  <div className="bg-gray-100 p-4 rounded-lg shadow-md mb-1">
+                    <h2 className="text-lg font-semibold">
+                      Total a pagar: ${totalPayment}
+                    </h2>
+                  </div>
+                  <div className="flex justify-center mb-[-990px] mt-[10px]">
+                    <GatewayPayment totalPayment={totalPayment} />
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex-1 m-4"></div>
+          )}
         </div>
         <div className="flex flex-col items-center mt-4 mb-8 p-5">
           <div className="text-center font-semibold text-2xl mt-4">
@@ -355,7 +418,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
             </div>
           </div>
         </div>
-        <div className="flex">
+        <div className="flex flex-col lg:flex-row">
           <div className="flex-1 m-2">
             <h2 className="font-semibold text-2xl mb-2">Opiniones</h2>
             {hotel?.reviews && hotel.reviews.length > 0 ? (
@@ -369,7 +432,7 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
                       <p className="font-light">
                         {review?.customer?.name} {review?.customer?.lastName}
                       </p>
-                      <p className="text-sm text-gray-600 ">{review.date}</p>
+                      <p className="text-sm text-gray-600">{review.date}</p>
                     </div>
                     <hr className="hr-text mb-3" data-content="" />
                     <div>
@@ -399,3 +462,5 @@ const HotelDetail: React.FC<Props> = ({ hotel }) => {
 };
 
 export default HotelDetail;
+
+// Otro responsive

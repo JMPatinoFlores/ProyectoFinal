@@ -1,3 +1,8 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "react-hooks/exhaustive-deps": "off", // Desactiva la regla de dependencias de useEffect
+    "next/no-img-element": "off", // Desactiva la advertencia sobre el uso de <img>
+    "react/jsx-key": "off" // Desactiva la advertencia de falta de prop key
+  }
 }
