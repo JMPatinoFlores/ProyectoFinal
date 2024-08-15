@@ -139,6 +139,8 @@ export interface IRoomType {
 }
 
 export interface IRoomTypeRegister {
+  id: string;
+  roomTypeId: string;
   name: string;
   capacity: number;
   totalBathrooms: number;
@@ -589,4 +591,9 @@ export interface IReviewOfSuperAdmin {
   date: string;
   rating: number;
   customer: ICustomerOfSuperAdmin;
+}
+
+export interface IReviewErrors {
+  rating: string;
+  comment: string;
 }
