@@ -17,6 +17,11 @@ const Customers = ({ searchQuery }: ICustomersProps) => {
     const [selectedCustomerToSend, setSelectedCustomerToSend] = useState<ICustomerDetails | null>(null);
     const [emailError, setEmailError] = useState<string | null>(null);
     const { fetchCustomers, fetchCustomersBySearch, fetchUpdateCustomerDetails } = useContext(SuperAdminContext);
+    const [isSidebarVisible, setSidebarVisible] = useState(false);
+
+    const toggleSidebar = () => {
+        setSidebarVisible(!isSidebarVisible);
+    };
 
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -134,14 +139,25 @@ const Customers = ({ searchQuery }: ICustomersProps) => {
         : [];
 
     return (
-        <div className="flex">
+        <div className="flex min-h-full">
+            <Sidebar setSidebarVisible={setSidebarVisible} toggleSidebar={toggleSidebar} isSidebarVisible={isSidebarVisible} />
             {/* <Sidebar /> */}
-            <div className="flex-1 p-6">
-                <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-                    <h1 className="text-2xl text-center md:text-3xl font-bold flex-grow mb-4 md:mb-0">
-                        Clientes
-                    </h1>
+            <div className="flex flex-col mx-auto p-6">
+                <div className="xs:flex-1  flex-col md:flex-row justify-between items-center">
+                    <button
+                        onClick={toggleSidebar}
+                        className="md:hidden mb-4 inline-flex p-2 bg-gray-200 rounded-md hover:bg-gray-300"
+                    >
+                        <div>
+                            <div className="w-[35px] h-[5px] bg-black my-[6px]"></div>
+                            <div className="w-[35px] h-[5px] bg-black my-[6px]"></div>
+                            <div className="w-[35px] h-[5px] bg-black my-[6px]"></div>
+                        </div>
+                    </button>
                 </div>
+                <h1 className="mx-auto flex text-2xl text-center md:text-3xl font-bold mb-4 md:mb-0">
+                    Clientes
+                </h1>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                     {paginatedCustomers.length > 0 ? (
                         paginatedCustomers.map((customer, index) => (
