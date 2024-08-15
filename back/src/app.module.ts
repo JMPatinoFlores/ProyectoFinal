@@ -59,7 +59,7 @@ import { SuperAdmins } from './super-admin/superAdmin.entity';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '90d' },
     }),
     TypeOrmModule.forFeature([Customers, HotelAdmins, SuperAdmins]),
     EmailNotifiModule,

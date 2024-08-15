@@ -139,7 +139,7 @@ export const getHotels = async () => {
 export const getHotelsBySearch = async (searchQuery: string) => {
   try {
     const response = await fetch(
-      `https://back-rutaviajera.onrender.com/api/hotels/search?search=${searchQuery}`
+      `http://localhost:3000/hotels/search?search=${searchQuery}`
     );
     if (response.ok) {
       const data = await response.json();

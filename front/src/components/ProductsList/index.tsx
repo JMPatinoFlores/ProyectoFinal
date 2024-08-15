@@ -31,6 +31,16 @@ function ProductsList({ searchQuery, queryParams }: IProductsListProps) {
           setFilteredHotels([]);
         }
       });
+    } else if (queryParams) {
+      fetchHotelsByFilters(queryParams).then((data) => {
+        if (Array.isArray(data)) {
+          setFilteredHotels(data);
+        } else {
+          setFilteredHotels([]);
+        }
+        console.log(data);
+        
+      });
     } else {
       fetchHotels().then((data) => {
         if (Array.isArray(data)) {
@@ -40,7 +50,7 @@ function ProductsList({ searchQuery, queryParams }: IProductsListProps) {
         }
       });
     }
-  }, [searchQuery, fetchHotels, fetchHotelsBySearch]);
+  }, [searchQuery, queryParams, fetchHotels, fetchHotelsBySearch]);
 
   const paginatedHotels = Array.isArray(filteredHotels)
     ? filteredHotels.slice(
